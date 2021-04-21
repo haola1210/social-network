@@ -1,4 +1,4 @@
-import React, {} from 'react';
+import React, { useState, } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -8,108 +8,88 @@ import {
   useParams
 } from "react-router-dom";
 
+import NavBar from "./components/NavBar/NavBar"
+import Home from "./components/Home/Home"
+import Search from "./components/Search/Search"
 import Login from "./components/Login/Login"
 import Register from "./components/Register/Register"
-import './App.css';
+import './App.scss';
 
-function App() {
-  return (
-    <Router>
-      <div>
-          {/* <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/about">About</Link>
-            </li>
-            <li>
-              <Link to="/users">Users</Link>
-            </li>
-            <li>
-              <Link to="/topics">Topics</Link>
-            </li>
-            <li>
-              <Link to="/login">Login</Link>
-            </li>
-          </ul> */}
+export default function App() {
+	const [state, setState] = useState({
+		isLogin: true,
+	});
+	
+	const {
+		isLogin,
+	} = state;
+  
+	return (
+		<Router>
+		<div>
+			{isLogin?<NavBar/>:null}
 
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path="/about">
-            <About />
-          </Route>
-          <Route path="/users">
-            <Users />
-          </Route>
-          <Route path="/topics">
-            <Topics />
-          </Route>
-          <Route path="/login">
-            <Login />
-          </Route>
-          <Route path="/register">
-            <Register />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
-  );
+			{/* A <Switch> looks through its children <Route>s and
+				renders the first one that matches the current URL. */}
+			<Switch>
+				<Route exact path="/login">
+					<Login />
+				</Route>
+				<Route path="/register">
+					<Register />
+				</Route>
+				<Route path="/search">
+					<Search />
+				</Route>
+				<Route path="/posts">
+					<Posts />
+				</Route>
+
+				<Route path="/">
+					<Home />
+				</Route>
+			</Switch>
+		</div>
+		</Router>
+	);
 }
 
-function Home() {
-  return <h2>Home</h2>;
+function Posts() {
+
+	let match = useRouteMatch();
+
+	return (
+		<div>
+		<h2>Posts</h2>
+
+		<ul>
+			<li>
+			<Link to={`${match.url}/components`}>Components</Link>
+			</li>
+			<li>
+			<Link to={`${match.url}/props-v-state`}>
+				Props v. State
+			</Link>
+			</li>
+		</ul>
+
+		{/* The Posts page has its own <Switch> with more routes
+			that build on the /Posts URL path. You can think of the
+			2nd <Route> here as an "index" page for all Posts, or
+			the page that is shown when no Post is selected */}
+		<Switch>
+			<Route path={`${match.path}/:PostId`}>
+			<Post />
+			</Route>
+			<Route path={match.path}>
+			<h3>Please select a Post.</h3>
+			</Route>
+		</Switch>
+		</div>
+	);
 }
 
-function About() {
-  return <h2>About</h2>;
+function Post() {
+	let { PostId } = useParams();
+	return <h3>Requested Post ID: {PostId}</h3>;
 }
-
-function Users() {
-  return <h2>Users</h2>;
-}
-
-function Topics() {
-  let match = useRouteMatch();
-
-  return (
-    <div>
-      <h2>Topics</h2>
-
-      <ul>
-        <li>
-          <Link to={`${match.url}/components`}>Components</Link>
-        </li>
-        <li>
-          <Link to={`${match.url}/props-v-state`}>
-            Props v. State
-          </Link>
-        </li>
-      </ul>
-
-      {/* The Topics page has its own <Switch> with more routes
-          that build on the /topics URL path. You can think of the
-          2nd <Route> here as an "index" page for all topics, or
-          the page that is shown when no topic is selected */}
-      <Switch>
-        <Route path={`${match.path}/:topicId`}>
-          <Topic />
-        </Route>
-        <Route path={match.path}>
-          <h3>Please select a topic.</h3>
-        </Route>
-      </Switch>
-    </div>
-  );
-}
-
-function Topic() {
-  let { topicId } = useParams();
-  return <h3>Requested topic ID: {topicId}</h3>;
-}
-
-export default App;
