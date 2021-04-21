@@ -4,9 +4,19 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.wrapper = React.createRef();
+  }
+  render() {
+    return <div ref={this.wrapper}><App /></div>;
+  }
+}
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <MyComponent/>
   </React.StrictMode>,
   document.getElementById('root')
 );
