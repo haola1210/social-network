@@ -13,6 +13,7 @@ import Home from "./components/Home/Home"
 import Search from "./components/Search/Search"
 import Login from "./components/Login/Login"
 import Register from "./components/Register/Register"
+import LeftNavBar from "./components/LeftNavBar/LeftNavBar"
 import './App.scss';
 
 export default function App() {
@@ -27,7 +28,8 @@ export default function App() {
 	return (
 		<Router>
 		<div>
-			{isLogin?<NavBar/>:null}
+			{isLogin?<NavBar/> :null}
+			{isLogin?<LeftNavBar /> :null}
 
 			{/* A <Switch> looks through its children <Route>s and
 				renders the first one that matches the current URL. */}
