@@ -11,10 +11,12 @@ const port = process.env.PORT || 4000;
 app.set('views', './views')
 app.set('view engine', 'pug');
 
+
 app.use(cors({
     origin: 'http://localhost:3000',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 }))
+
 // cookieSession before passport init
 app.use(cookieSession({
     maxAge: 24 * 60 * 60 * 1000, // milisec
