@@ -1,13 +1,18 @@
 import React, { useState, useEffect, } from 'react';
-import { Link } from 'react-router-dom'
+import { 
+    Link,
+    useHistory,
+} from 'react-router-dom'
 import { 
     Menu,
     Input, 
+    Tooltip,
+    Button, 
 } from 'antd';
 import { 
     DeploymentUnitOutlined,
+    ArrowLeftOutlined,
     SearchOutlined,
-    CloseOutlined,
     AppstoreOutlined, 
     TeamOutlined,
     PlusCircleOutlined,
@@ -23,7 +28,8 @@ const { SubMenu } = Menu;
 const { Search } = Input;
 
 export default function NavBar(){
-    
+
+    const history = useHistory();
     const [ state, setState ] = useState({
         menu: "home",
     })
@@ -41,7 +47,9 @@ export default function NavBar(){
 
     const onSearch = (value, event) => {
         console.log(`onSearch`)
-        console.log(value, event)
+        console.log(value)
+        const search = value.replace(" ", "%20")
+        history.push(`/search/top?q=${search}`)
     }
 
     useEffect(() => {
@@ -57,31 +65,29 @@ export default function NavBar(){
                     selectedKeys = {[state.menu]}
                     mode="horizontal"
                 >
-                    <Menu.Item 
-                        key="home" 
-                        icon={<DeploymentUnitOutlined />}
-                    >
-                    <Link to="/">
-                            Home
-                    </Link>
-                    </Menu.Item>
-                    
-                    
+                    {state.menu ==="search"?
+                        <Menu.Item key="" icon={<ArrowLeftOutlined />}/> 
+                        : 
+                        <Menu.Item 
+                            key="home" 
+                            icon={<DeploymentUnitOutlined />}
+                        >
+                            <Link to="/">
+                                Home
+                            </Link>
+                        </Menu.Item>
+                    } 
                     <Menu.Item 
                         key="search" 
-                        icon={<SearchOutlined />}
+                        icon={ state.menu ==="search"?null:<SearchOutlined />}
                     >
                         {state.menu ==="search"?
-                            <input className="nav-bar__menu-flex-start__search" type="text"/>
+                            <Search placeholder="Search" allowClear bordered={false} onSearch={onSearch}  />
                             :
                             "Search"
                         }
                     </Menu.Item>
-                    {state.menu ==="search"?
-                        <Menu.Item key="" icon={<CloseOutlined/>}> 
-                        </Menu.Item>
-                        : null
-                    }
+                    
                 </Menu>
             </div>
             <div className="nav-bar__menu-center">
@@ -154,11 +160,11 @@ export default function NavBar(){
                         icon={<SettingOutlined />} 
                         // title="Setting"
                     >
-                            <Menu.Item key="logout">
+                        <Menu.Item key="logout">
                                 <Link to="/login">
                                     Log out
                                 </Link>
-                            </Menu.Item>
+                        </Menu.Item>
                     </SubMenu>
                 </Menu>
             </div>
