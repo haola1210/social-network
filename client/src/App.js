@@ -46,7 +46,9 @@ export default function App() {
 				<Route path="/posts">
 					<Posts />
 				</Route>
-
+				<Route path="/groups">
+					<Posts />
+				</Route>
 				<Route path="/">
 					<Home />
 				</Route>
