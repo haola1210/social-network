@@ -5,7 +5,8 @@ import {
 } from './authActionType'
 
 const initialState = {
-    token : null
+    accessToken : null,
+    tokenId: null,
 }
 
 export const authReducer = (state = initialState, action) => {
@@ -14,12 +15,15 @@ export const authReducer = (state = initialState, action) => {
         case GET_JWT_LOCAL_STORAGE:
             return {
                 ...state,
-                token : jwt
+                tokenId : jwt.tokenId,
+                accessToken : jwt.accessToken,
             }
         
         case SET_JWT_LOCAL_STORAGE:
             return {
                 ...state,
+                tokenId : jwt.tokenId,
+                accessToken : jwt.accessToken,
             }
         
         case CLEAR_JWT_LOCAL_STORAGE:

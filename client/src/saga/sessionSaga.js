@@ -1,4 +1,5 @@
 import { call, put, takeEvery, select } from 'redux-saga/effects'
+import axios from 'axios'
 
 import {
     FETCH_SESSION,
@@ -11,38 +12,49 @@ export function* workerFetchSession(action){
     
     try{
         //get token in store
-        const token = yield select(state => state.jwt.token)
-        console.log("saga log: ", token)
+        const { accessToken: token, tokenId } = yield select(state => state.jwt)
+
+        yield console.log(`running workerFetchSession`)
+
+        console.log(`getting access token, id from store`)
         // start fetch session (user info)
         yield put({type : FETCH_SESSION_START})
         //ajax
-        // const response = yield axios.get(`http://localhost:4000/users/token/${token}`, {
-        //     headers: {
-        //       'Authorization': `Bearer ${token}` 
-        //     }
-        // })
-        // console.log(response)
-        // //save to store
-        // let { user, error } = response.data
-        // if(user){
-        //     const handshake = {
-        //         auth : {
-        //             userId : user._id,
-        //             // add token later
-        //         }
-        //     }
+        const response = yield axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${tokenId}`)
+        console.log(response)
+        if (response.status === 200) {
+            const { 
+                sub, //googleId
+                hd, // domain name of email address
+                email, // email address
+                name, 
+                family_name, 
+                given_name, 
+                picture, 
+            } = response.data;
+            const user = { 
+                sub, //googleId
+                hd, // domain name of email address
+                email, // email address
+                name, 
+                family_name, 
+                given_name, 
+                picture, 
+            }
+            
+            //save user to store
+            yield put({
+                type : FETCH_SESSION_SUCCESS,
+                payload : user
+            })
+            
+            // yield put({
+            //     type : INIT_SOCKET
+            // })
 
-        //     yield put({
-        //         type : FETCH_SESSION_SUCCESS,
-        //         payload : user
-        //     })
+        }
+        else { throw new Error("Failed to fetch user to store")}
 
-        //     yield put({
-        //         type : INIT_SOCKET
-        //     })
-
-        // }
-        // if(error) throw new Error(error.message)
     } catch (error) {
         console.log(error.message)
         yield put({

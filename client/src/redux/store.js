@@ -5,11 +5,15 @@ import {
 } from "redux";
 import createSagaMiddleware from "redux-saga";
 
+import { authReducer } from "./auth/authReducer"
+import { sessionReducer } from "./session/sessionReducer"
 import { loginReducer } from "./login/loginReducer"
 import rootSaga from "../saga/rootSaga"
 const sagaMiddleware = createSagaMiddleware();
 
 const rootReducer = combineReducers({
+    jwt: authReducer,
+    session : sessionReducer,
     login: loginReducer,
 })
 

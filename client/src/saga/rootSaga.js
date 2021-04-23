@@ -8,8 +8,8 @@ import { watchLogin } from "./loginSaga"
 export default function* rootSaga(){
     yield all([
         watchJwt(),
-        // watchFetchSession(),
-        // watchKeepSession(),
+        watchFetchSession(),
+        watchKeepSession(),
         watchLogin(),
     ])
 }

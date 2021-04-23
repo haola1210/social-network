@@ -15,7 +15,9 @@ export default function LoginGoogle () {
         const user = response?.profileObj
         const token = {
             accessToken: response?.tokenObj.access_token,
+            tokenId: response?.tokenId,
         }
+
         console.log({user, token});
         
         try {
