@@ -1,12 +1,17 @@
-import React, { useState, } from 'react';
+import React, { useState, useEffect, } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
   Link,
   useRouteMatch,
-  useParams
+  useParams,
+  useHistory,
 } from "react-router-dom";
+import { useSelector, useDispatch } from 'react-redux'
+
+import {KEEP_SESSION} from "./saga/authSessionSaga"
 
 import NavBar from "./components/NavBar/NavBar"
 import Home from "./components/Home/Home"
@@ -14,46 +19,74 @@ import Search from "./components/Search/Search"
 import Login from "./components/Login/Login"
 import Register from "./components/Register/Register"
 import LeftNavBar from "./components/LeftNavBar/LeftNavBar"
+
 import './App.scss';
 
 export default function App() {
-	const [state, setState] = useState({
-		isLogin: true,
-	});
+	// const [state, setState] = useState({
+	// 	isLogin: true,
+	// });
+
+	// const {
+	// 	isLogin,
+	// } = state;
 	
-	const {
-		isLogin,
-	} = state;
-  
+	const { accessToken } = useSelector(state => state.jwt)
+	const user = useSelector(state => state.session)
+	const dispatch = useDispatch();
+	const history = useHistory();
+
+	const isLogin = () => {
+		return (accessToken !== null && user !== null)
+	}
+
+	useEffect(() => {
+
+		dispatch({type : KEEP_SESSION})
+
+	}, [])
+
+	useEffect(() => {
+		console.log('re-render')
+		console.log(accessToken)
+		console.log(user)
+	}, [accessToken, user])
+
 	return (
 		<Router>
-		<div>
-			{isLogin?<NavBar/> :null}
-			{isLogin?<LeftNavBar /> :null}
+			<div>
+				{
+					isLogin()? <Redirect to="/" /> : <Redirect to="/login" />
+				}
+				{
+					isLogin()? <NavBar/> : null
+				}
+				{/* {isLogin?<NavBar/> :null}
+				{isLogin?<LeftNavBar /> :null} */}
 
-			{/* A <Switch> looks through its children <Route>s and
-				renders the first one that matches the current URL. */}
-			<Switch>
-				<Route exact path="/login">
-					<Login />
-				</Route>
-				<Route path="/register">
-					<Register />
-				</Route>
-				<Route path="/search">
-					<Search />
-				</Route>
-				<Route path="/posts">
-					<Posts />
-				</Route>
-				<Route path="/groups">
-					<Posts />
-				</Route>
-				<Route path="/">
-					<Home />
-				</Route>
-			</Switch>
-		</div>
+				{/* A <Switch> looks through its children <Route>s and
+					renders the first one that matches the current URL. */}
+				<Switch>
+					<Route exact path="/login">
+						<Login />
+					</Route>
+					<Route path="/register">
+						<Register />
+					</Route>
+					<Route path="/search">
+						<Search />
+					</Route>
+					<Route path="/posts">
+						<Posts />
+					</Route>
+					<Route path="/groups">
+						<Posts />
+					</Route>
+					<Route path="/">
+						<Home />
+					</Route>
+				</Switch>
+			</div>
 		</Router>
 	);
 }

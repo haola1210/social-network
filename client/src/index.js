@@ -4,6 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import { Provider } from 'react-redux'
+import store from './redux/store'
+
 class MyComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -16,7 +19,9 @@ class MyComponent extends React.Component {
 
 ReactDOM.render(
   <React.StrictMode>
-    <MyComponent/>
+    <Provider store={store}>
+      <MyComponent/>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

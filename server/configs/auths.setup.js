@@ -25,14 +25,6 @@ passport.use(
         callbackURL: process.env.GOOGLE_OAUTH_CALLBACK_URL,
     }, (accessToken, refreshToken, profile, done) => {
         /** 
-        console.log(`strategy callback`)
-        console.log(`creating new user from google account`)
-        console.log(`accessToken`)
-        console.log(accessToken)
-        console.log(`refreshToken`)
-        console.log(refreshToken)
-        console.log(`profile`)
-        console.log(profile)
          * profile.id
          * profile.displayName
          * profile.emails [{
@@ -44,12 +36,14 @@ passport.use(
          *  value: "",
          * }]
          * */ 
+        console.log(`Token`)
+        console.log(accessToken, refreshToken)
         User.findOne({googleId: profile.id})
             .then((currentUser) => {
                 if (currentUser) {
                     // already have the user in database
                     console.log(`Finded User`)
-                    console.log(profile)
+                    console.log(currentUser)
                     done(null, currentUser)
                     return;
                 }

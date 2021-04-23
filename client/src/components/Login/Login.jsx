@@ -18,6 +18,8 @@ import {
 import 'antd/dist/antd.css';
 import './Login.scss'
 
+import LoginGoogle from "../LoginGoogle/LoginGoogle"
+
 const { Header, Footer, Sider, Content } = Layout;
 
 export default function Login() {
@@ -61,6 +63,7 @@ export default function Login() {
     useEffect(() =>{
 
     },[])
+    
     return (
         <div className="login-page">
             <Layout>
@@ -129,6 +132,11 @@ export default function Login() {
                                                     <Checkbox>Remember me</Checkbox>
                                                 </Form.Item>
                                             </div>
+                                            <div className="login-form__body-action-forgotPassword">
+                                                <p>
+                                                    <Link to="/forgot">Forgot password</Link>
+                                                </p>
+                                            </div>
                                             <div className="login-form__body-action-submit">                               
                                                 <Form.Item name="submit">
                                                     <Button type="primary" htmlType="submit">
@@ -136,18 +144,15 @@ export default function Login() {
                                                     </Button>
                                                 </Form.Item>
                                             </div>
-                                            <div className="login-form__body-action-forgotPassword">
-                                                <p>
-                                                    <Link to="/forgot">Forgot password</Link>
-                                                </p>
-                                            </div>
+                                            
                                         </div>
                                 </Form>
                             </div>
                             <div className="login-form__footer">
-                                <p className="login-form__footer-action">
-                                    <Link to="/register">Register now</Link>
-                                </p>
+                                <div className="login-form__footer-action">
+                                    {/* <Link to="/register">Register now</Link> */}
+                                    <LoginGoogle/>
+                                </div>
                             </div>
                         </div>
                     </div>
