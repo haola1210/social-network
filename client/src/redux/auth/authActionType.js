@@ -1,0 +1,7 @@
+export const GET_JWT_LOCAL_STORAGE = "GET_JWT_LOCAL_STORAGE"
+export const SET_JWT_LOCAL_STORAGE = "SET_JWT_LOCAL_STORAGE"
+export const CLEAR_JWT_LOCAL_STORAGE = "CLEAR_JWT_LOCAL_STORAGE"
+
+export const GET_JWT = "GET_JWT"
+export const SET_JWT = "SET_JWT"
+export const CLEAR_JWT = "CLEAR_JWT"
