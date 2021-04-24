@@ -9,10 +9,10 @@ import {
 } from '../redux/login/loginActionType'
 import {
     SET_JWT,
-} from '../redux/auth/authActionType'
+} from '../redux/session/sessionActionType'
 import {
     KEEP_SESSION
-} from "./authSessionSaga"
+} from "../redux/session/sessionActionType"
 import axios from 'axios'
 
 export function* workerLogin(action){

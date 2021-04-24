@@ -11,7 +11,7 @@ import {
 } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux'
 
-import {KEEP_SESSION} from "./saga/authSessionSaga"
+import {KEEP_SESSION} from "./redux/session/sessionActionType"
 
 import NavBar from "./components/NavBar/NavBar"
 import Home from "./components/Home/Home"
@@ -23,13 +23,6 @@ import LeftNavBar from "./components/LeftNavBar/LeftNavBar"
 import './App.scss';
 
 export default function App() {
-	// const [state, setState] = useState({
-	// 	isLogin: true,
-	// });
-
-	// const {
-	// 	isLogin,
-	// } = state;
 	
 	const { accessToken } = useSelector(state => state.jwt)
 	const user = useSelector(state => state.session)
@@ -61,17 +54,9 @@ export default function App() {
 				{
 					isLogin()? <NavBar/> : null
 				}
-				{/* {isLogin?<NavBar/> :null}
-				{isLogin?<LeftNavBar /> :null} */}
-
-				{/* A <Switch> looks through its children <Route>s and
-					renders the first one that matches the current URL. */}
 				<Switch>
 					<Route exact path="/login">
 						<Login />
-					</Route>
-					<Route path="/register">
-						<Register />
 					</Route>
 					<Route path="/search">
 						<Search />

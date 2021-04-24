@@ -3,6 +3,7 @@ import {
     Link,
     useHistory,
 } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 import { 
     Menu,
     Input, 
@@ -18,7 +19,7 @@ import {
     NotificationOutlined,
     SettingOutlined,
 } from '@ant-design/icons';
-
+import { CLEAR_JWT } from '../../redux/auth/authActionType'
 import "./NavBar.scss";
 
 import Avatar from "../Avatar/Avatar"
@@ -28,7 +29,10 @@ const { Search } = Input;
 
 export default function NavBar(){
 
+    const { accessToken } = useSelector(state => state.jwt)
+
     const history = useHistory();
+    const dispatch = useDispatch();
     const [ state, setState ] = useState({
         menu: "home",
     })
@@ -55,13 +59,17 @@ export default function NavBar(){
         console.log("State")
         console.log(state)
         if (state.menu === "logout") {
-            localStorage.removeItem("ACCESS_TOKEN")
-            localStorage.removeItem("TOKEN_ID")
-            history.push("/login")
-        }
-    },[state])
+            console.log(`clicked Log out`)
+            dispatch({
+                type: CLEAR_JWT
+            })
 
-    
+            if (!accessToken) {
+                history.push("/login")
+                
+            }
+        }
+    },[state, accessToken])
 
     return (
         
