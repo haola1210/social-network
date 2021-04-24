@@ -22,7 +22,7 @@ import LoginGoogle from "../LoginGoogle/LoginGoogle"
 
 const { Header, Footer, Sider, Content } = Layout;
 
-export default function Login() {
+export default function Login({ deviceType: isMobile}) {
     
     const history = useHistory();
 
@@ -65,8 +65,7 @@ export default function Login() {
     },[])
     
     return (
-        <div className="login-page">
-            <Layout>
+        <Layout className="login-page">
                 <Header>
                     <div className="login-page__header">
                         <div className="login-page__header-icon">
@@ -82,7 +81,7 @@ export default function Login() {
                     
                         <div className="login-form">
                             
-                            <div className="login-form__body">
+                            <div className={!isMobile?"login-form__body":"login-form__body-mobile"}>
                                 <Form
                                     initialValues={{...initialValues}}
                                     onFieldsChange={onFieldsChange}
@@ -163,6 +162,5 @@ export default function Login() {
                     </div>
                 </Footer>
             </Layout>
-        </div>
     )
 }

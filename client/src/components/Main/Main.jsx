@@ -23,18 +23,10 @@ export default function Main({ children, isLogin }) {
             }
              
             <Mobile>
-                <h1>
-                    Mobile
-                </h1>
-                <br/>
                 {children}
             </Mobile>
              
             <Default>
-                <h1>
-                    Not mobile (desktop or laptop or tablet)
-                </h1>
-                <br/>
                 {children}
             </Default>
              

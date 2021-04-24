@@ -7,7 +7,7 @@ import {
     Link,
 } from "react-router-dom"
 
-export default function LeftNavBar() {
+export default function LeftNavBar({ deviceType: isMobile}) {
     const { SubMenu } = Menu
     
     const groups = [
@@ -147,6 +147,7 @@ export default function LeftNavBar() {
     
     return (
         <Menu 
+            style={!isMobile?{ width: "15%"} : null}
             mode="inline"
         >
             {groups.map(group => (
