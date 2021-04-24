@@ -2,6 +2,9 @@ import { call, put, takeEvery, all, take } from 'redux-saga/effects'
 
 import { 
     LOGIN,
+    LOGIN_SUCCESS,
+    LOGIN_START,
+    LOGIN_FAILURE,
     LOGIN_GOOGLE,
     LOGIN_GOOGLE_SUCCESS,
     LOGIN_GOOGLE_START,
@@ -16,15 +19,34 @@ import {
 import axios from 'axios'
 
 export function* workerLogin(action){
-    const { user, token } = action.payload
+    const { user } = action.payload
+    yield put({ type: LOGIN_START })
+
     yield console.log(`running workerLogin`)
+    yield console.log(user.username)
     yield console.log(user)
-    yield console.log(token)
+
+    // login here
+    const { data } = yield axios.post(`http://localhost:4000/users/local`, { username: user.username, password: user.password })
+    const { _id, } = data
+
+    // geting tokenId from db here
+
+    // setting token to local here
+    
+    // get user from token here
+    
+
 }
 
 export function* workerLoginGoogle(action){
     try {
-        const { user, token } = action.payload
+        // const { user, token } = action.payload
+        let { user, token } = action.payload
+        user = {...user, 
+            password: "123",
+            tokenId: token.tokenId
+        }
         const { googleId } = user
         yield put({ type: LOGIN_GOOGLE_START })
 

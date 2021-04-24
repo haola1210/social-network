@@ -55,8 +55,8 @@ export function* workerFetchSession(action){
         const { tokenId } = yield select(state => state.session)
 
         yield console.log(`running workerFetchSession`)
-        
         yield console.log(`getting access token, id from store`)
+
         // start fetch session (user info)
         yield put({type : FETCH_SESSION_START})
         //ajax
@@ -81,6 +81,9 @@ export function* workerFetchSession(action){
                 given_name, 
                 picture, 
             }
+            console.log(`Get Token User`)
+            console.log(response.data)
+
             
             //save user to store
             yield put({

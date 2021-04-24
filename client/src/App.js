@@ -8,6 +8,7 @@ import {
   useRouteMatch,
   useParams,
   useHistory,
+  useLocation,
 } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
@@ -29,6 +30,7 @@ export default function App() {
 	const store = useSelector(state => state)
 	const dispatch = useDispatch();
 	const history = useHistory();
+	// const location = useLocation();
 	const isMobile = useMediaQuery({ maxWidth: 767 })
 
 	const isLogin = () => {
@@ -46,7 +48,11 @@ export default function App() {
 		console.log('re-render')
 		// console.log(accessToken)
 		console.log(user)
-	}, [accessToken, user])
+	}, [accessToken, user,])
+
+	// useEffect(() => {
+	// 	console.log(`Welcome Home`)
+	// }, [location])
 
 	return (
 		<Router>

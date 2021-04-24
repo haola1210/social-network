@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const User = require("../models/user.model");
 
 module.exports.profile = (req, res) => {
@@ -110,4 +112,49 @@ module.exports.registerGoogleUser = (req, res) => {
             error: error.message
         })  
     }
+}
+
+module.exports.login = (req, res) => {
+    try {
+        const {username, password} = req.body;
+
+        User.findOne({username})
+            .then( (currentUser) => {
+                if (!currentUser) {
+                    return res.json({
+                        code: 404,
+                        message: "User doesn't exists"
+                    })
+                }
+                bcrypt.compare(password, currentUser.password)
+                    .then((isValid, error, ) => {
+                        if(error) { throw new Error(error)}
+                        if (isValid) {
+                            return res.json({
+                                code: 200,
+                                message: "User Login Successfully",
+                                data: currentUser,
+                            })
+                        }
+                        throw new Error("Password is incorrect")
+                    })
+            })
+            
+            .catch(error => {
+                console.log("Catch Error")
+                throw new Error(error.message)
+            })
+
+    } catch (error) {
+        console.log("Login Error Occurs")
+        res.json({
+            code:400,
+            message: "Error Occurs",
+            error: error.message,
+        })
+    }
+}
+
+module.exports.tokenUser = (req, res) => {
+   
 }
