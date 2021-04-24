@@ -63,10 +63,10 @@ export default function App() {
 						<LeftNavBar />
 					</Route>
 					<Route path="/profile">
-						<LeftNavBar />
+						Profile
 					</Route>
 					<Route path="/notifications">
-						<LeftNavBar />
+						Notifications
 					</Route>
 					<Route path="/">
 						<Home />
