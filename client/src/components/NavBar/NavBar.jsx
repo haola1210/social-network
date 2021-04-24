@@ -12,10 +12,9 @@ import {
     DeploymentUnitOutlined,
     ArrowLeftOutlined,
     SearchOutlined,
-    AppstoreOutlined, 
+    HomeOutlined, 
     TeamOutlined,
     PlusCircleOutlined,
-    MailOutlined, 
     NotificationOutlined,
     SettingOutlined,
 } from '@ant-design/icons';
@@ -29,7 +28,7 @@ const { Search } = Input;
 
 export default function NavBar(){
 
-    const { accessToken } = useSelector(state => state.jwt)
+    const { accessToken } = useSelector(state => state.session)
 
     const history = useHistory();
     const dispatch = useDispatch();
@@ -75,29 +74,26 @@ export default function NavBar(){
         
         <div className="nav-bar">
                 <div className="nav-bar__menu-flex-start">
+                    {state.menu ==="search"?
+                        <ArrowLeftOutlined onClick={ () => setState(prev=>{return { ...prev, menu: "" }}) } className="nav-bar__menu-flex-start__logo-arrow"/>
+                        : 
+                        <Link to="/">
+                            <DeploymentUnitOutlined className="nav-bar__menu-flex-start__logo" />
+                        </Link>
+                    } 
                     <Menu 
                         onClick={onMenuClick} 
                         selectedKeys = {[state.menu]}
                         mode="horizontal"
                     >
-                        {state.menu ==="search"?
-                            <Menu.Item key="" icon={<ArrowLeftOutlined />}/> 
-                            : 
-                            <Menu.Item 
-                                key="home" 
-                                icon={<DeploymentUnitOutlined />}
-                            >
-                                <Link to="/">
-                                    Home
-                                </Link>
-                            </Menu.Item>
-                        } 
                         <Menu.Item 
                             key="search" 
                             icon={ state.menu ==="search"?null:<SearchOutlined />}
                         >
                             {state.menu ==="search"?
-                                <Search placeholder="Search" allowClear bordered={false} onSearch={onSearch}  />
+                                <Search 
+                                    className="nav-bar__menu-flex-start__search"
+                                    placeholder="Search" allowClear bordered={false} onSearch={onSearch}  />
                                 :
                                 "Search"
                             }
@@ -120,11 +116,11 @@ export default function NavBar(){
                             </Link>
                         </Menu.Item>
                         <Menu.Item 
-                            key="posts" 
-                            icon={<AppstoreOutlined />}
+                            key="home" 
+                            icon={<HomeOutlined />}
                         >
-                            <Link to="/posts">
-                                Posts
+                            <Link to="/">
+                                Home
                             </Link>
                         </Menu.Item>
                         <Menu.Item 
@@ -149,14 +145,6 @@ export default function NavBar(){
                         >
                             <Link to="/profile" rel="noopener noreferrer">
                             {/* Profile */}
-                            </Link>
-                        </Menu.Item>
-                        <Menu.Item 
-                            key="messages" 
-                            icon={<MailOutlined />}
-                        >
-                            <Link to="messages">
-                                {/* Messages */}
                             </Link>
                         </Menu.Item>
                         <SubMenu

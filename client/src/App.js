@@ -24,8 +24,8 @@ import './App.scss';
 
 export default function App() {
 	
-	const { accessToken } = useSelector(state => state.jwt)
-	const user = useSelector(state => state.session)
+	const { accessToken, user } = useSelector(state => state.session)
+	const store = useSelector(state => state)
 	const dispatch = useDispatch();
 	const history = useHistory();
 
@@ -43,6 +43,7 @@ export default function App() {
 		console.log('re-render')
 		console.log(accessToken)
 		console.log(user)
+		console.log(store)
 	}, [accessToken, user])
 
 	return (
@@ -61,11 +62,8 @@ export default function App() {
 					<Route path="/search">
 						<Search />
 					</Route>
-					<Route path="/posts">
-						<Posts />
-					</Route>
 					<Route path="/groups">
-						<Posts />
+						<LeftNavBar />
 					</Route>
 					<Route path="/">
 						<Home />
@@ -74,44 +72,4 @@ export default function App() {
 			</div>
 		</Router>
 	);
-}
-
-function Posts() {
-
-	let match = useRouteMatch();
-
-	return (
-		<div>
-		<h2>Posts</h2>
-
-		<ul>
-			<li>
-			<Link to={`${match.url}/components`}>Components</Link>
-			</li>
-			<li>
-			<Link to={`${match.url}/props-v-state`}>
-				Props v. State
-			</Link>
-			</li>
-		</ul>
-
-		{/* The Posts page has its own <Switch> with more routes
-			that build on the /Posts URL path. You can think of the
-			2nd <Route> here as an "index" page for all Posts, or
-			the page that is shown when no Post is selected */}
-		<Switch>
-			<Route path={`${match.path}/:PostId`}>
-			<Post />
-			</Route>
-			<Route path={match.path}>
-			<h3>Please select a Post.</h3>
-			</Route>
-		</Switch>
-		</div>
-	);
-}
-
-function Post() {
-	let { PostId } = useParams();
-	return <h3>Requested Post ID: {PostId}</h3>;
 }

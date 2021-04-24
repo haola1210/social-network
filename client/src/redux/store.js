@@ -12,7 +12,6 @@ import rootSaga from "../saga/rootSaga"
 const sagaMiddleware = createSagaMiddleware();
 
 const rootReducer = combineReducers({
-    jwt: authReducer,
     session : sessionReducer,
     login: loginReducer,
 })

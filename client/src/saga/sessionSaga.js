@@ -52,11 +52,11 @@ export function* workerFetchSession(action){
     
     try{
         //get token in store
-        const { accessToken: tokenId } = yield select(state => state.jwt)
+        const { tokenId } = yield select(state => state.session)
 
         yield console.log(`running workerFetchSession`)
-
-        console.log(`getting access token, id from store`)
+        
+        yield console.log(`getting access token, id from store`)
         // start fetch session (user info)
         yield put({type : FETCH_SESSION_START})
         //ajax
