@@ -13,12 +13,12 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import {KEEP_SESSION} from "./redux/session/sessionActionType"
 
-import NavBar from "./components/NavBar/NavBar"
 import Home from "./components/Home/Home"
 import Search from "./components/Search/Search"
 import Login from "./components/Login/Login"
 import Register from "./components/Register/Register"
 import LeftNavBar from "./components/LeftNavBar/LeftNavBar"
+import Main from "./components/Main/Main"
 
 import './App.scss';
 
@@ -41,9 +41,8 @@ export default function App() {
 
 	useEffect(() => {
 		console.log('re-render')
-		console.log(accessToken)
+		// console.log(accessToken)
 		console.log(user)
-		console.log(store)
 	}, [accessToken, user])
 
 	return (
@@ -52,9 +51,7 @@ export default function App() {
 				{
 					isLogin()? <Redirect to="/" /> : <Redirect to="/login" />
 				}
-				{
-					isLogin()? <NavBar/> : null
-				}
+				<Main isLogin={isLogin} />
 				<Switch>
 					<Route exact path="/login">
 						<Login />
@@ -63,6 +60,12 @@ export default function App() {
 						<Search />
 					</Route>
 					<Route path="/groups">
+						<LeftNavBar />
+					</Route>
+					<Route path="/profile">
+						<LeftNavBar />
+					</Route>
+					<Route path="/notifications">
 						<LeftNavBar />
 					</Route>
 					<Route path="/">
