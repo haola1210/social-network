@@ -2,21 +2,61 @@ import { call, put, takeEvery, select } from 'redux-saga/effects'
 import axios from 'axios'
 
 import {
+    GET_JWT, 
+    SET_JWT, 
+    CLEAR_JWT,
+    GET_JWT_LOCAL_STORAGE,
+    SET_JWT_LOCAL_STORAGE,
+    CLEAR_JWT_LOCAL_STORAGE, 
+    KEEP_SESSION,
     FETCH_SESSION,
     FETCH_SESSION_START,
     FETCH_SESSION_SUCCESS,
-    FETCH_SESSION_FAILURE
+    FETCH_SESSION_FAILURE,
+
 } from '../redux/session/sessionActionType'
+
+const ACCESS_TOKEN = "ACCESS_TOKEN"
+const TOKEN_ID = "TOKEN_ID"
+
+export function* workerJwt(action){
+    const accessToken = yield call({context: localStorage, fn: localStorage.getItem}, ACCESS_TOKEN)
+    const tokenId = yield call({context: localStorage, fn: localStorage.getItem}, TOKEN_ID)
+    
+    console.log(`running workerJwt`)
+
+    yield put({
+        type : GET_JWT_LOCAL_STORAGE,
+        payload : { accessToken, tokenId, }
+    })
+}
+
+export function* workerSetJwt(action){
+    const { token } = action.payload
+    const { accessToken, tokenId } = token
+    console.log(`running workerSetJwt`)
+
+    yield call({context: localStorage, fn: localStorage.setItem}, ACCESS_TOKEN, accessToken)
+    yield call({context: localStorage, fn: localStorage.setItem}, TOKEN_ID, tokenId)
+    yield put({ type : SET_JWT_LOCAL_STORAGE, payload: {token} })
+}
+
+export function* workerClearJWt(action){
+    yield call({ context : localStorage, fn : localStorage.removeItem }, ACCESS_TOKEN)
+    yield call({ context : localStorage, fn : localStorage.removeItem }, TOKEN_ID)
+
+    yield put({type : CLEAR_JWT_LOCAL_STORAGE})
+}
 
 export function* workerFetchSession(action){
     
     try{
         //get token in store
-        const { accessToken: token, tokenId } = yield select(state => state.jwt)
+        const { tokenId } = yield select(state => state.session)
 
         yield console.log(`running workerFetchSession`)
+        yield console.log(`getting access token, id from store`)
 
-        console.log(`getting access token, id from store`)
         // start fetch session (user info)
         yield put({type : FETCH_SESSION_START})
         //ajax
@@ -41,11 +81,14 @@ export function* workerFetchSession(action){
                 given_name, 
                 picture, 
             }
+            console.log(`Get Token User`)
+            console.log(response.data)
+
             
             //save user to store
             yield put({
                 type : FETCH_SESSION_SUCCESS,
-                payload : user
+                payload : {user}
             })
             
             // yield put({
@@ -59,12 +102,29 @@ export function* workerFetchSession(action){
         console.log(error.message)
         yield put({
             type : FETCH_SESSION_FAILURE,
-            payload : error
+            payload : {error}
         })
     }
 
 }
 
-export function* watchFetchSession(){
+
+export function* workerKeepSession(action){
+    try{
+        // store jwt to state from localStorage
+        yield put({type : GET_JWT})
+        //store user info to state
+        yield put({ type : FETCH_SESSION })
+
+    } catch(err) {
+        console.log(err)
+    }
+}
+
+export function* watchSession(){
+    yield takeEvery(GET_JWT, workerJwt)
+    yield takeEvery(SET_JWT, workerSetJwt)
+    yield takeEvery(CLEAR_JWT, workerClearJWt)
     yield takeEvery(FETCH_SESSION, workerFetchSession)
+    yield takeEvery(KEEP_SESSION, workerKeepSession)
 }
