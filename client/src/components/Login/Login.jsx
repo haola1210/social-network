@@ -63,7 +63,7 @@ export default function Login({ deviceType: isMobile}) {
         }
         // api here 
         // ...
-        dispatch({ type: LOGIN, payload: { user: me }})
+        dispatch({ type: LOGIN, payload: { account: me }})
         // history.push("/")
     };
     
