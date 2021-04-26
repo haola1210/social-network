@@ -1,0 +1,34 @@
+.logo {
+    font-weight: bold;
+    font-size: 1.5em;
+
+
+    span:nth-child(odd){
+        color: blue;
+
+    }
+    span:nth-child(2){
+        color: red;
+    }
+}
+
+.mobile_group_icon, .mobile_search  {
+    display: none;
+}
+
+
+
+@media screen and (max-width : 576px) {
+    .mobile_group_icon{
+        display: flex;
+        height: 100%;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mobile_search{
+        display: block;
+        padding: 1em 1em 0 1em;
+    }
+}

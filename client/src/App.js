@@ -62,9 +62,7 @@ export default function App() {
 	return (
 		<Router>
 			<div>
-				{
-					isLogin()? <Redirect to="/" /> : <Redirect to="/login" />
-				}
+				
 				<Main isLogin={isLogin}>
 					<Switch>
 						<Route exact path="/login">
