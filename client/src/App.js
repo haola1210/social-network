@@ -55,12 +55,12 @@ export default function App() {
 	return (
 		<Router>
 			<div>
-				{
+				{/* {
 					isLogin()? <Redirect to="/" /> : <Redirect to="/login" />
 				}
 				{
 					isLogin()? <NavBar/> : null
-				}
+				} */}
 				{/* {isLogin?<NavBar/> :null}
 				{isLogin?<LeftNavBar /> :null} */}
 
