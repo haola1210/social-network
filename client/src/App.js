@@ -13,7 +13,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux'
 import { useMediaQuery } from 'react-responsive'
 
-import {KEEP_SESSION} from "./redux/session/sessionActionType"
+import {KEEP_ALL_SESSION} from "./redux/session/sessionActionType"
 
 import Home from "./components/Home/Home"
 import Search from "./components/Search/Search"
@@ -40,9 +40,14 @@ export default function App() {
 
 	useEffect(() => {
 
-		dispatch({type : KEEP_SESSION})
+		dispatch({type : KEEP_ALL_SESSION})
 
 	}, [])
+
+	useEffect(() => {
+		console.log(store)
+
+	}, [store])
 
 	useEffect(() => {
 		console.log('re-render')

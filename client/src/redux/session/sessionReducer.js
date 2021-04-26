@@ -5,10 +5,14 @@ import {
     FETCH_SESSION_START,
     FETCH_SESSION_SUCCESS,
     FETCH_SESSION_FAILURE,
+    FETCH_GOOGLE_SESSION_START,
+    FETCH_GOOGLE_SESSION_SUCCESS,
+    FETCH_GOOGLE_SESSION_FAILURE,
 
 } from './sessionActionType'
 
 const initialState = {
+    userId: null,
     accessToken : null,
     tokenId: null,
     user : null,
@@ -23,6 +27,7 @@ export const sessionReducer = (state = initialState, action) => {
         case GET_JWT_LOCAL_STORAGE:
             return {
                 ...state,
+                userId: session.userId,
                 tokenId : session.tokenId,
                 accessToken : session.accessToken,
             }
@@ -30,6 +35,7 @@ export const sessionReducer = (state = initialState, action) => {
         case SET_JWT_LOCAL_STORAGE:
             return {
                 ...state,
+                userId: session.userId,
                 tokenId : session.tokenId,
                 accessToken : session.accessToken,
             }
@@ -59,7 +65,29 @@ export const sessionReducer = (state = initialState, action) => {
             return {
                 ...state,
                 error : session.error,
-                user : null
+                // user : null
+            }
+        
+        // GOOGLE SESSION
+        case FETCH_GOOGLE_SESSION_START:
+            return {
+                ...state,
+                user : null,
+                error : null
+            }
+        
+        case FETCH_GOOGLE_SESSION_SUCCESS:
+            return {
+                ...state,
+                user : session.user,
+                error : null
+            }
+        
+        case FETCH_GOOGLE_SESSION_FAILURE:
+            return {
+                ...state,
+                error : session.error,
+                // user : null
             }
         
         default:
