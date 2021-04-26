@@ -16,19 +16,23 @@ import {
     LockOutlined,
 } from '@ant-design/icons'
 import 'antd/dist/antd.css';
+import { useSelector, useDispatch, } from "react-redux"
+
 import './Login.scss'
 
+import { LOGIN } from "../../redux/login/loginActionType"
 import LoginGoogle from "../LoginGoogle/LoginGoogle"
 
 const { Header, Footer, Sider, Content } = Layout;
 
-export default function Login() {
+export default function Login({ deviceType: isMobile}) {
     
     const history = useHistory();
+    const dispatch = useDispatch();
 
     const [state, setState] = useState({
         remember: true,
-        username: "qwe@gmail.com",
+        username: "51800793@student.tdtu.edu.vn",
         password: "123",
 
     })
@@ -49,10 +53,18 @@ export default function Login() {
     }
 
     const onFinish = (values) => {
-        console.log('Success:', values);
+        console.log('onFinish');
+        console.log(values);
+        const { remember } = values;
+        const { submit, ...me } = values;
+        if (remember) {
+            console.log("Remember me")
+            setState(me)
+        }
         // api here 
         // ...
-        history.push("/")
+        dispatch({ type: LOGIN, payload: { account: me }})
+        // history.push("/")
     };
     
     const onFinishFailed = ({ values, errorFields, outOfDate }) => {
@@ -65,8 +77,7 @@ export default function Login() {
     },[])
     
     return (
-        <div className="login-page">
-            <Layout>
+        <Layout className="login-page">
                 <Header>
                     <div className="login-page__header">
                         <div className="login-page__header-icon">
@@ -82,7 +93,7 @@ export default function Login() {
                     
                         <div className="login-form">
                             
-                            <div className="login-form__body">
+                            <div className={!isMobile?"login-form__body":"login-form__body-mobile"}>
                                 <Form
                                     initialValues={{...initialValues}}
                                     onFieldsChange={onFieldsChange}
@@ -163,6 +174,5 @@ export default function Login() {
                     </div>
                 </Footer>
             </Layout>
-        </div>
     )
 }

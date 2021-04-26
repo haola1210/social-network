@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 const User = require("../models/user.model");
 
 module.exports.profile = (req, res) => {
@@ -7,107 +9,27 @@ module.exports.profile = (req, res) => {
     })
 }
 
-module.exports.findGoogleUser = (req, res) => {
+module.exports.tokenUser = (req, res) => {
     try {
-        const { googleId } = req.params;
+        const { token } = req.params;
 
-        console.log(`Starting Find Current User`)
-        
-        User.findOne({googleId})
-            .then(user => {
-                if (user) {
-                    console.log(`Finded User Successfully`)
-                    return res.json({
-                        code: 200,
-                        data: user,
-                        message: "Finded User Successfully",
-                    })
-                }
-                
-                console.log(`User not found`)
+        User.findOne({googleId: token})
+            .then((user) => {
+                if (user === null) { throw new Error("Invalid User")}
                 return res.json({
-                    code: 404,
-                    data: null,
-                    message: "User not found",
+                    code: 200,
+                    message: "Getting User From Token",
+                    data: { user }
                 })
             })
-            .catch(error => {
-                throw new Error(error.message)
-            })
-    } catch (error) {
-        console.log(`Catch Error`)
-        console.log(error)         
-        res.json({
-            code: 400,
-            message: 'Error occurs',
-            error: error.message
-        })       
-    }
-}
-
-
-module.exports.registerGoogleUser = (req, res) => {
-    try {
-        let { googleUser } = req.body,
-            {
-                email,
-                familyName,
-                givenName,
-                imageUrl,
-            } = googleUser
-            googleUser = {...googleUser,
-                username: email,
-                lastName: familyName,
-                firstName: givenName,
-                image: imageUrl,
-                class: null
-            }
-        const { googleId } = googleUser;
-        
-        console.log(`Starting Find Current User`)
-
-        User.findOne({googleId})
-            .then(currentUser => {
-                if (currentUser) {
-                    console.log(`Finded User Successfully`)
-                    return res.json({
-                        code: 200,
-                        data: currentUser,
-                        message: "Finded User Successfully",
-                    })
-                }
-
-                console.log(`Creating New User`)
-                return User.create(googleUser)
-            })
-            .then(newUser => {
-                if (newUser) {
-                    console.log(`Creating User Successfully`)
-                    return res.json({
-                        code: 201,
-                        data: newUser,
-                        message: "Creating User Successfully",
-                    })
-                }
-                
-                console.log(`Creating User failed`)
-                return res.json({
-                    data: null,
-                    message: "Creating User failed",
-                    error: "Creating User failed",
-                })
-            })
-            .catch(error => {
-                throw new Error(error.message)
-            })
+            .catch(error => { throw new Error(error.message)})
         
     } catch (error) {
-        console.log(`Catch Error`)
-        console.log(error)      
+        console.log(error.message)        
         res.json({
             code: 400,
-            message: 'Error occurs',
-            error: error.message
-        })  
+            messgae: "Error Occurs",
+            error: error.message,
+        })
     }
 }

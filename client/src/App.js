@@ -8,125 +8,86 @@ import {
   useRouteMatch,
   useParams,
   useHistory,
+  useLocation,
 } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux'
+import { useMediaQuery } from 'react-responsive'
 
-import {KEEP_SESSION} from "./saga/authSessionSaga"
+import {KEEP_ALL_SESSION} from "./redux/session/sessionActionType"
 
-import NavBar from "./components/NavBar/NavBar"
 import Home from "./components/Home/Home"
 import Search from "./components/Search/Search"
 import Login from "./components/Login/Login"
 import Register from "./components/Register/Register"
-import LeftNavBar from "./components/LeftNavBar/LeftNavBar"
+import LeftNavBar from "./components/Groups/Groups"
+import Main from "./components/Main/Main"
 
 import './App.scss';
 
 export default function App() {
-	// const [state, setState] = useState({
-	// 	isLogin: true,
-	// });
-
-	// const {
-	// 	isLogin,
-	// } = state;
 	
-	const { accessToken } = useSelector(state => state.jwt)
-	const user = useSelector(state => state.session)
+	const { accessToken, user } = useSelector(state => state.session)
+	const store = useSelector(state => state)
 	const dispatch = useDispatch();
 	const history = useHistory();
+	// const location = useLocation();
+	const isMobile = useMediaQuery({ maxWidth: 767 })
 
 	const isLogin = () => {
 		return (accessToken !== null && user !== null)
 	}
 
+
 	useEffect(() => {
 
-		dispatch({type : KEEP_SESSION})
+		dispatch({type : KEEP_ALL_SESSION})
 
 	}, [])
 
 	useEffect(() => {
+		console.log(store)
+
+	}, [store])
+
+	useEffect(() => {
 		console.log('re-render')
-		console.log(accessToken)
+		// console.log(accessToken)
 		console.log(user)
-	}, [accessToken, user])
+	}, [accessToken, user,])
+
+	// useEffect(() => {
+	// 	console.log(`Welcome Home`)
+	// }, [location])
 
 	return (
 		<Router>
 			<div>
-				{/* {
-					isLogin()? <Redirect to="/" /> : <Redirect to="/login" />
-				}
-				{
-					isLogin()? <NavBar/> : null
-				} */}
-				{/* {isLogin?<NavBar/> :null}
-				{isLogin?<LeftNavBar /> :null} */}
-
-				{/* A <Switch> looks through its children <Route>s and
-					renders the first one that matches the current URL. */}
-				<Switch>
-					<Route exact path="/login">
-						<Login />
-					</Route>
-					<Route path="/register">
-						<Register />
-					</Route>
-					<Route path="/search">
-						<Search />
-					</Route>
-					<Route path="/posts">
-						<Posts />
-					</Route>
-					<Route path="/groups">
-						<Posts />
-					</Route>
-					<Route path="/">
-						<Home />
-					</Route>
-				</Switch>
+				
+				<Main isLogin={isLogin}>
+					<Switch>
+						<Route exact path="/login">
+							<Login deviceType={isMobile}/>
+						</Route>
+						<Route path="/search">
+							<Search deviceType={isMobile}/>
+						</Route>
+						<Route path="/groups">
+							<LeftNavBar deviceType={isMobile}/>
+						</Route>
+						<Route path="/profile">
+							Profile 
+							{/* <Profile deviceType={isMobile}/> */}
+						</Route>
+						<Route path="/notifications">
+							Notifications
+							{/* <Notifications deviceType={isMobile}/> */}
+						</Route>
+						<Route path="/">
+							<Home />
+						</Route>
+					</Switch>
+				</Main>
 			</div>
 		</Router>
 	);
-}
-
-function Posts() {
-
-	let match = useRouteMatch();
-
-	return (
-		<div>
-		<h2>Posts</h2>
-
-		<ul>
-			<li>
-			<Link to={`${match.url}/components`}>Components</Link>
-			</li>
-			<li>
-			<Link to={`${match.url}/props-v-state`}>
-				Props v. State
-			</Link>
-			</li>
-		</ul>
-
-		{/* The Posts page has its own <Switch> with more routes
-			that build on the /Posts URL path. You can think of the
-			2nd <Route> here as an "index" page for all Posts, or
-			the page that is shown when no Post is selected */}
-		<Switch>
-			<Route path={`${match.path}/:PostId`}>
-			<Post />
-			</Route>
-			<Route path={match.path}>
-			<h3>Please select a Post.</h3>
-			</Route>
-		</Switch>
-		</div>
-	);
-}
-
-function Post() {
-	let { PostId } = useParams();
-	return <h3>Requested Post ID: {PostId}</h3>;
 }
