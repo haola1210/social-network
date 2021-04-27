@@ -1,10 +1,13 @@
 .main{
     width: 100%;
-    height: calc(100vh - 142px);
+    height: calc(100vh - 118px);
     display: flex;
+    
+
 
     &__left{
         display: none;
+        
     }
 
     &__right{
@@ -12,19 +15,31 @@
         height: 100%;
         overflow-y: scroll;
         padding: 0 1em 1em 1em;
-
+        background-color: #e7f3ff;
+        
     }
+}
+
+
+.post{
+    display: block;
+    width: 100%;
+    
 }
 
 @media screen and (min-width: 576px) {
     .main{
-        height: calc(100vh - 96px);
+        height: calc(100vh - 72px);
     }
     
     .main__left{
         display: block;
         height: 100%;
-        padding: 0 2em;
+        padding: 1em 2em;
         border-right: 1px solid #d8d8d8;
+    }
+
+    .post{
+        max-width: 700px;
     }
 }

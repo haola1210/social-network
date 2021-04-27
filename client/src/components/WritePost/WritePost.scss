@@ -1,0 +1,29 @@
+.write-post{
+    display: flex;
+    padding: 2em 1em;
+    margin: 2em 0 0 0;
+    background-color: white;
+    border-radius: 1em;
+    width: 100%;
+    align-items: center;
+
+    &__title{
+        flex-grow: 1;
+        padding: 1em;
+        font-weight: bold;
+        background-color: #dbdbdb;
+        border-radius: 2em;
+        color: #737373;
+
+        &:hover{
+            background-color: #d5d5d5;
+            color: black;
+        }
+    }
+}
+
+@media screen and (min-width: 576px) {
+    .write-post{
+        max-width: 700px;
+    }
+}

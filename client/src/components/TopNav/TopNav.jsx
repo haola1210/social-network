@@ -111,7 +111,7 @@ function TopNav(props) {
             <div className="mobile_search">
                 <SearchComponent />
             </div>
-            <Divider />
+            <Divider style={{marginBottom : 0}} />
         </>
     );
 }
