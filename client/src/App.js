@@ -63,7 +63,7 @@ export default function App() {
 		<Router>
 			<div>
 				
-				<Main isLogin={isLogin}>
+				
 					<Switch>
 						<Route exact path="/login">
 							<Login deviceType={isMobile}/>
@@ -86,7 +86,7 @@ export default function App() {
 							<Home />
 						</Route>
 					</Switch>
-				</Main>
+				
 			</div>
 		</Router>
 	);

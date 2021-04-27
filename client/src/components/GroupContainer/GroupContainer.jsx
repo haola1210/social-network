@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, Badge } from "antd"
+import { List, Badge, Divider } from "antd"
 import Item from 'antd/lib/list/Item';
 
 function GroupContainer(props) {
@@ -16,19 +16,28 @@ function GroupContainer(props) {
 
 
     const RoomNavBadge = props => (
-        <div style={{margin: "0.5em"}}>
+        <div style={{margin: "0.5em", maxWidth: "150px", minWidth: "130px"}}>
             
             <Badge count={props.count}>
-                <div style={{padding: "0.5em", borderRadius:"1em", backgroundColor: "gray"}}>{props.name}</div>
+                <div style={{padding: "1em", borderRadius:"1em", backgroundColor: "#95cbff", fontWeight: "bold"}}>{props.name}</div>
             </Badge>    
         </div>
     )
-
+    const title = props.title || false
     return (
-        <List
-            dataSource={data}
-            renderItem={item => < RoomNavBadge name={item.name} count={item.count} />}
-        />
+        <div style={ title ? { 
+            backgroundColor : "white", 
+            padding:"1em", 
+            border: "2px solid #eeeeee",
+            borderTop: "none",
+            borderRadius: "0 0 10px 10px"
+        } : null}>
+            {title && <div> <h3>{title}</h3> <Divider /> </div> }
+            <List
+                dataSource={data}
+                renderItem={item => < RoomNavBadge name={item.name} count={item.count} />}
+            />
+        </div>
     );
 }
 

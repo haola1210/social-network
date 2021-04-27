@@ -56,7 +56,7 @@ function TopNav(props) {
                         {/* group icon for mobile */}
                         <Col xs={4} sm={0} >
                             <div className="mobile_group_icon"> 
-                                <Dropdown overlay={GroupContainer} placement="bottomCenter">
+                                <Dropdown overlay={() => <GroupContainer title="Tổng Hợp"/>} placement="bottomCenter">   
                                     <DeploymentUnitOutlined /> 
                                 </Dropdown>
                             </div>
