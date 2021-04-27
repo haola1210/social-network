@@ -16,13 +16,10 @@ import {
     FETCH_SESSION_SUCCESS,
     FETCH_SESSION_FAILURE,
     
-    KEEP_GOOGLE_SESSION,
     FETCH_GOOGLE_SESSION,
     FETCH_GOOGLE_SESSION_START,
     FETCH_GOOGLE_SESSION_SUCCESS,
     FETCH_GOOGLE_SESSION_FAILURE,
-
-    KEEP_ALL_SESSION,
 
 } from '../redux/session/sessionActionType'
 
@@ -31,12 +28,12 @@ const TOKEN_ID = "TOKEN_ID"
 const USER_ID = "USER_ID"
 
 export function* workerJwt(action){
+    
+    console.log(`running workerJwt`)
     const accessToken = yield call({context: localStorage, fn: localStorage.getItem}, ACCESS_TOKEN)
     const tokenId = yield call({context: localStorage, fn: localStorage.getItem}, TOKEN_ID)
     const userId = yield call({context: localStorage, fn: localStorage.getItem}, USER_ID)
     
-    console.log(`running workerJwt`)
-
     yield put({
         type : GET_JWT_LOCAL_STORAGE,
         payload : { accessToken, tokenId, userId}
@@ -58,6 +55,8 @@ export function* workerSetJwt(action){
 }
 
 export function* workerClearJWt(action){
+
+    yield console.log(`running workerClearJWt`)
     yield call({ context : localStorage, fn : localStorage.removeItem }, ACCESS_TOKEN)
     yield call({ context : localStorage, fn : localStorage.removeItem }, TOKEN_ID)
 
@@ -81,7 +80,8 @@ export function* workerFetchSession(action){
             const response = yield axios.post(`http://localhost:4000/users/token/${userId}`)
                 
             let { user, } = response.data.data
-            console.log(response)
+            console.log(user)
+            
             if (user) {
                 const {
                     googleId, 
@@ -129,47 +129,49 @@ export function* workerFetchGoogleSession(action){
         //get token in store
         const { tokenId } = yield select(state => state.session)
 
-        yield console.log(`running workerFetchGoogleSession`)
-        yield console.log(`getting access token, id from store`)
+        if (tokenId) {
 
-        // start fetch session (user info)
-        yield put({type : FETCH_GOOGLE_SESSION_START})
-        //ajax
-        const response = yield axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${tokenId}`)
-        console.log(response)
-        if (response.status === 200) {
-            const { 
-                sub, //googleId
-                hd, // domain name of email address
-                email, // email address
-                name, 
-                family_name, 
-                given_name, 
-                picture, 
-            } = response.data;
-            const user = { 
-                domain: hd, // domain name of email address
-                googleId: sub, //googleId
-                email, // email address
-                name, 
-                lastName: family_name, 
-                firstName: given_name, 
-                image: picture, 
+            yield console.log(`running workerFetchGoogleSession`)
+            yield console.log(`getting access token, id from store`)
+
+            // start fetch session (user info)
+            yield put({type : FETCH_GOOGLE_SESSION_START})
+            //ajax
+            const response = yield axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${tokenId}`)
+            console.log(response)
+            if (response.status === 200) {
+                const { 
+                    sub, //googleId
+                    hd, // domain name of email address
+                    email, // email address
+                    name, 
+                    family_name, 
+                    given_name, 
+                    picture, 
+                } = response.data;
+                const user = { 
+                    domain: hd, // domain name of email address
+                    googleId: sub, //googleId
+                    email, // email address
+                    name, 
+                    lastName: family_name, 
+                    firstName: given_name, 
+                    image: picture, 
+                }
+                console.log(`Get Token User`)
+                console.log(user)
+
+                
+                //save user to store
+                yield put({
+                    type : FETCH_GOOGLE_SESSION_SUCCESS,
+                    payload : {user}
+                })
+                
+                // yield put({
+                //     type : INIT_SOCKET
+                // })
             }
-            console.log(`Get Token User`)
-            console.log(user)
-
-            
-            //save user to store
-            yield put({
-                type : FETCH_GOOGLE_SESSION_SUCCESS,
-                payload : {user}
-            })
-            
-            // yield put({
-            //     type : INIT_SOCKET
-            // })
-
         }
         else { throw new Error("workerFetchGoogleSession Failed to Fetch User to Store")}
 
@@ -185,46 +187,27 @@ export function* workerFetchGoogleSession(action){
 
 export function* workerKeepSession(action){
     try{
+
         // store jwt to state from localStorage
         yield put({type : GET_JWT})
+        
         //store user info to state
-        yield put({ type : FETCH_SESSION })
-
+        yield Promise.all([
+            yield put({ type : FETCH_SESSION }),
+            
+            yield put({ type : FETCH_GOOGLE_SESSION }),
+        ])
     } catch(error) {
         console.log(error)
     }
 }
 
-export function* workerKeepGoogleSession(action){
-    try{
-        // store jwt to state from localStorage
-        yield put({type : GET_JWT})
-        //store user info to state
-        yield put({ type : FETCH_GOOGLE_SESSION })
-
-    } catch(err) {
-        console.log(err)
-    }
-}
-
-export function* workerKeepAllSession(action) {
-    try {
-        // store jwt to state from localStorage
-        yield put({type : KEEP_SESSION})
-        //store user info to state
-        yield put({ type : KEEP_GOOGLE_SESSION })
-    } catch (error) {
-        console.log(error)
-    }
-}
-
 export function* watchSession(){
+    
     yield takeEvery(GET_JWT, workerJwt)
     yield takeEvery(SET_JWT, workerSetJwt)
     yield takeEvery(CLEAR_JWT, workerClearJWt)
     yield takeEvery(FETCH_SESSION, workerFetchSession)
     yield takeEvery(FETCH_GOOGLE_SESSION, workerFetchGoogleSession)
     yield takeEvery(KEEP_SESSION, workerKeepSession)
-    yield takeEvery(KEEP_ALL_SESSION, workerKeepAllSession)
-    yield takeEvery(KEEP_GOOGLE_SESSION, workerKeepGoogleSession)
 }

@@ -15,7 +15,6 @@ import {
 } from '../redux/session/sessionActionType'
 import {
     KEEP_SESSION,
-    KEEP_GOOGLE_SESSION,
 } from "../redux/session/sessionActionType"
 import axios from 'axios'
 
@@ -46,14 +45,16 @@ export function* workerLogin(action){
             yield console.log(`setting SET_JWT_LOCAL_STORAGE`)
             yield console.log(token)
             yield put({ type: SET_JWT, payload: {token} })
-            yield put({ type : LOGIN_SUCCESS })
             
             // get user from token here
             yield put({ type : KEEP_SESSION })
+            yield put({ type : LOGIN_SUCCESS })
 
         }
     } catch (error) {
-        
+        yield console.log(error)
+        yield put({ type: KEEP_SESSION })
+        yield put({type : LOGIN_FAILURE, payload : error})
     }
 
 }
@@ -85,8 +86,8 @@ export function* workerLoginGoogle(action){
         yield console.log(data)
 
         if (found.data.code === 200) {
+            yield put({ type : KEEP_SESSION })
             yield put({ type : LOGIN_GOOGLE_SUCCESS })
-            yield put({ type : KEEP_GOOGLE_SESSION })
         }
         else if (found.data.code === 404) {
             const response = yield axios.post(`http://localhost:4000/auths/google`, { googleUser: user })
@@ -97,7 +98,7 @@ export function* workerLoginGoogle(action){
             
     } catch (error) {
         yield console.log(error)
-        yield put({ type: KEEP_GOOGLE_SESSION })
+        yield put({ type: KEEP_SESSION })
         yield put({type : LOGIN_GOOGLE_FAILURE, payload : error})
     }
     

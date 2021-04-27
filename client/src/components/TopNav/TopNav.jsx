@@ -3,7 +3,7 @@ import {
     Row, 
     Col,
     Dropdown,
-    Divider 
+    Divider,
 } from 'antd'
 import { 
     HomeOutlined,
@@ -12,19 +12,41 @@ import {
     UserOutlined,
     SettingOutlined
 } from '@ant-design/icons'
+import { useSelector, useDispatch } from "react-redux"
+import { 
+    useHistory, 
+    Link,
+
+} from "react-router-dom"
 
 import SearchComponent from "../SearchComponent/SearchComponent"
 import GroupContainer from "../GroupContainer/GroupContainer"
 
+import { CLEAR_JWT } from "../../redux/session/sessionActionType"
 
 import './TopNav.scss'
 function TopNav(props) {
+
+    const { user } = useSelector(state => state.session)
+    const dispatch = useDispatch();
+    const history = useHistory();
 
     const styles={
         center : {
             display: "flex",
             justifyContent : "center",
             alignItems : "center"
+        }
+    }
+
+    const onLogout = () => {
+        console.log(`clicked Log out`)
+        dispatch({
+            type: CLEAR_JWT
+        })
+
+        if (!user) {
+            history.push("/login")
         }
     }
 
@@ -75,7 +97,9 @@ function TopNav(props) {
                         {/*  */}
                         <Col xs={4} sm={6} style={styles.center} > 
                             <Dropdown overlay="logout here" placement="bottomRight">
-                                <SettingOutlined /> 
+                                <Link to="/login" onclick={onLogout}>
+                                    <SettingOutlined /> 
+                                </Link>
                             </Dropdown>
                         </Col>
                     </Row>
