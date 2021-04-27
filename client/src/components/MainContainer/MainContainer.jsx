@@ -3,7 +3,7 @@ import { Divider, Row, Col } from "antd"
 
 import GroupContainer from "../GroupContainer/GroupContainer"
 import NewFeedPost from "../NewFeedPost/NewFeedPost"
-
+import WritePost from "../WritePost/WritePost"
 
 import "./MainContainer.scss"
 
@@ -22,7 +22,15 @@ function MainContainer(props) {
 
             <div className="main__right">
                 {/* write post */}
-                <Row></Row>
+                <Row style={{
+                    display: "flex", 
+                    flexDirection: "column", 
+                    justifyContent: "center", 
+                    alignItems: "center",
+                
+                }}>
+                    <WritePost />
+                </Row>
 
                 {/* posts here */}
                 <Row style={{
