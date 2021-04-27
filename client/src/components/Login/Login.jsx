@@ -61,20 +61,14 @@ export default function Login({ deviceType: isMobile}) {
             console.log("Remember me")
             setState(me)
         }
-        // api here 
-        // ...
+
         dispatch({ type: LOGIN, payload: { account: me }})
-        // history.push("/")
     };
     
     const onFinishFailed = ({ values, errorFields, outOfDate }) => {
         console.log('Failed: errorInfo');
         console.log({ values, errorFields, outOfDate });
     };
-    
-    useEffect(() =>{
-
-    },[])
     
     return (
         <Layout className="login-page">

@@ -29,7 +29,7 @@ const { Search } = Input;
 
 export default function NavBar({ deviceType: isMobile }){
 
-    const { accessToken } = useSelector(state => state.session)
+    const { user } = useSelector(state => state.session)
 
     const history = useHistory();
     const dispatch = useDispatch();
@@ -67,7 +67,6 @@ export default function NavBar({ deviceType: isMobile }){
     }
     
     const denySearch = () => {
-
         setState(prev=>{return {
             ...prev,
             menu: "",
@@ -77,8 +76,6 @@ export default function NavBar({ deviceType: isMobile }){
     useEffect(() => {
         console.log("State")
         console.log(state)
-        console.log("isMobile")
-        console.log(isMobile)
         
         if (state.menu === "logout") {
             console.log(`clicked Log out`)
@@ -86,12 +83,11 @@ export default function NavBar({ deviceType: isMobile }){
                 type: CLEAR_JWT
             })
 
-            if (!accessToken) {
+            if (!user) {
                 history.push("/login")
-                
             }
         }
-    },[state, accessToken, isMobile])
+    },[state, user, ])
 
     return (
         <div>
@@ -125,7 +121,12 @@ export default function NavBar({ deviceType: isMobile }){
                                 {state.menu ==="search"?
                                     <Search 
                                         className="nav-bar__menu-flex-start__search"
-                                        placeholder="Search" allowClear bordered={false} onSearch={onSearch}  />
+                                        placeholder="Search" 
+                                        allowClear 
+                                        bordered={false} 
+                                        onSearch={onSearch}
+                                        outFocused={denySearch}
+                                        onBlur={ denySearch } />
                                     :
                                     "Search"
                                 }
