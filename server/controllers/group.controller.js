@@ -29,11 +29,11 @@ module.exports.createPost = (req, res) => {
             if (newPost) {
                 return res.json({
                     code: 200, 
-                    message: "Creating new post Successfully",
+                    message: "Creating new group Successfully",
                     data: newPost,
                 })
             }
-            throw new Error("Creating new post failed")
+            throw new Error("Creating new group failed")
         })
     } catch (error) {
         res.json({
