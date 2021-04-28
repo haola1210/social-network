@@ -1,8 +1,6 @@
 const { Schema, model } = require('mongoose');
 
 const { CommentSchema } = require('./comment.model')
-const { LikeSchema } = require('./like.model')
-const { DislikeSchema } = require('./dislike.model')
 
 const PostSchema = new Schema({
     owner: {
