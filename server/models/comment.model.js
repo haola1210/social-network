@@ -1,23 +1,30 @@
 const { Schema, model } = require('mongoose');
 
 const CommentSchema = new Schema({
-    userId: {
-        type: String,
-        default: null,
+    owner: {                            //who is the owner of this comment?
+        type: Schema.Types.ObjectId,
+        ref: "User"
     },
-    postId: {
-        type: String,
-        default: null,
+    belongToPost: {                     // which post is this comment belong to?
+        type: Schema.Types.ObjectId,
+        ref: "Post"
     },
-    commentId: {
-        type: String,
-        default: null,
-    },
-    comments: Array,
-    timeStamp: {
+    content : String,                   //content
+    timeStamp: {                        //time
         type: Date,
         default: Date.now()
     },
+
+    like: [{                            //who like this comment
+        type : Schema.Types.ObjectId,
+        ref: "User"
+    }],
+
+    dislike: [{                         //who dislike
+        type : Schema.Types.ObjectId,
+        ref: "User"
+    }]
+
 });
 
 const Comment = model("Comment", CommentSchema, "dislikes");

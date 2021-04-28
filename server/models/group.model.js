@@ -5,19 +5,13 @@ const { UserSchema } = require('./user.model')
 const { PostSchema } = require('./post.model')
 
 const GroupSchema = new Schema({
-    groupId: String,
-    name: String,
-    username: String,
-    password: String,
-    members: [{
+    name: String,                           //ten: vd: Khoa CNTT
+    
+    members: [{                             //danh sach member
         type : Schema.Types.ObjectId,
 		ref : "User"
     }],
-    posts: [{
-        type : Schema.Types.ObjectId,
-		ref : "Post"
-    }],
-    typeGroup: String,
+
 });
 
 

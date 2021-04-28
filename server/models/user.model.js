@@ -10,8 +10,19 @@ const UserSchema = new Schema({
     firstName: String,
     googleId: String,
     image: String,
+    
     name: String,
     class: String,
+    faculty : String,
+
+    role : String,          //user type "Student, Admin, Faculty/Room"
+    manageGroup : [{        // what group that user allowed to write post? - Student-empty, Admin-all, Faculty/Room-option
+        type: Schema.Types.ObjectId,
+        ref : "Group"
+    }],
+
+    socketId : String,
+
 });
 
 UserSchema.pre('save', async function(next) {
