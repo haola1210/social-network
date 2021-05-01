@@ -20,7 +20,7 @@ import { useSelector, useDispatch, } from "react-redux"
 
 import './Login.scss'
 
-import { LOGIN } from "../../redux/login/loginActionType"
+import { SIGN_IN } from "../../redux/signin/signinActionType"
 import LoginGoogle from "../LoginGoogle/LoginGoogle"
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -40,7 +40,7 @@ export default function Login({ deviceType: isMobile}) {
     const initialValues = {
         remember: state.remember,
         username: state.remember? state.username : "",
-        password: state.password? state.password : "",
+        password: state.remember? state.password : "",
     }
 
     const onFieldsChange = (changedFields, allFields) => {
@@ -62,7 +62,7 @@ export default function Login({ deviceType: isMobile}) {
             setState(me)
         }
 
-        dispatch({ type: LOGIN, payload: { account: me }})
+        dispatch({ type: SIGN_IN, payload: { username: state.username, password: state.password }})
     };
     
     const onFinishFailed = ({ values, errorFields, outOfDate }) => {

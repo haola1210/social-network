@@ -4,7 +4,7 @@ import {
 } from 'react-google-login';
 import { useSelector, useDispatch, } from "react-redux"
 
-import { LOGIN_GOOGLE } from "../../redux/login/loginActionType"
+import { SIGN_IN_GOOGLE } from "../../redux/signin/signinActionType"
 
 export default function LoginGoogle () {
 
@@ -13,15 +13,11 @@ export default function LoginGoogle () {
     const onSuccess = async (response) => {
         console.log(`onSuccess login with Google`);
         const user = response?.profileObj
-        const token = {
-            accessToken: response?.tokenObj.access_token,
-            tokenId: response?.tokenId,
-        }
+        
 
-        console.log({user, token});
         
         try {
-            dispatch({ type: LOGIN_GOOGLE, payload: { user, token }})
+            dispatch({ type: SIGN_IN_GOOGLE, payload: { user }})
         } catch (error) {
             console.log(error)
         }

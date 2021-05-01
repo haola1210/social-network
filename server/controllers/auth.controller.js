@@ -1,13 +1,105 @@
-const jwt = require("jsonwebtoken");
+const jsonwebtoken = require("jsonwebtoken");
 const bcrypt = require("bcrypt")
 
 const User = require("../models/user.model")
 const maxAge = 60 * 60
-// const generateAccessToken = (user) => jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, optionAccessToken)
-const generateAccessToken = (user) => jwt.sign({user}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: maxAge })
-const generateRefreshToken = (user) => jwt.sign({user}, process.env.REFRESH_TOKEN_SECRET)
+// const generateAccessToken = (user) => jsonwebtoken.sign({user}, process.env.ACCESS_TOKEN_SECRET, optionAccessToken)
+const generateAccessToken = (user) => jsonwebtoken.sign({_id : user._id}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: maxAge })
+const generateRefreshToken = (user) => jsonwebtoken.sign({user}, process.env.REFRESH_TOKEN_SECRET)
 
 let refreshTokens = []
+
+// hao add
+module.exports.handleLogin = async (req, res) => {
+    //client se gui len username + password or email gg
+    //login thanh cong se tra laji client user va jwt (user._id)
+    try {
+        
+        if(req.body.username && req.body.password){
+            //login bang local account (admin, faculty/room)
+            console.log(req.body)
+            const user = await User.findOne({ username: req.body.username }).exec()
+            if(!user){  //ko ton tai
+                throw new Error("Username is invalid")
+            }
+
+            const authedUser = await bcrypt.compare(req.body.password, user.password)
+            if(!authedUser){
+                throw new Error("Password is incorect")
+            }  
+
+            const jwt = generateAccessToken(user)
+            res.json({
+                user,
+                jwt
+            })
+
+        } else {
+            if(req.body.email && req.body.name && req.body.imageUrl){
+                
+                let user = await User.findOne({ email : req.body.email }).exec()
+                //neu co thi tra ve neu khong thi tao moi user roi tra ve
+                if(!user){
+                    
+                    /**
+                     * email,
+                        familyName,
+                        givenName,
+                        imageUrl,
+                     */
+                    user = User({
+                        email : req.body.email,
+                        name : req.body.name,
+                        image : req.body.imageUrl,
+                        role : "Student"
+                    })
+                    await user.save()
+                } 
+
+                const jwt = generateAccessToken(user)
+                res.json({
+                    user,
+                    jwt
+                })
+
+            } else {
+                throw new Error("Bad request")
+            }
+        }
+
+
+    } catch (error) {
+        res.json({error})
+    }
+
+}
+
+// hao add
+module.exports.keepSession = async (req, res) => {
+    //req.body.jwt should exist
+    try {
+        if(!req.body.jwt) throw new Error("Bad request")
+
+        const decoded = jsonwebtoken.verify(req.body.jwt, process.env.ACCESS_TOKEN_SECRET)
+        const user = await User.findById(decoded._id).exec()
+        if(!user) throw new Error("No one match your id")
+
+        const jwt = generateAccessToken(user)
+        res.json({
+            user,
+            jwt
+        })
+
+    } catch (error) {
+        
+        res.json({error})
+
+    }
+    
+}
+
+
+
 
 module.exports.index = (req, res) => {
     return res.json({ 

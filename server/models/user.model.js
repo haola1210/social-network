@@ -10,10 +10,10 @@ const UserSchema = new Schema({
     firstName: String,
     googleId: String,
     image: String,
-    
     name: String,
-    class: String,
-    faculty : String,
+    
+    className: { type: String, default: null },
+    faculty : { type: String, default: null },
 
     role : String,          //user type "Student, Admin, Faculty/Room"
     manageGroup : [{        // what group that user allowed to write post? - Student-empty, Admin-all, Faculty/Room-option
@@ -21,14 +21,20 @@ const UserSchema = new Schema({
         ref : "Group"
     }],
 
-    socketId : String,
+    socketId : {
+        type: String,
+        default: null
+    },
 
 });
 
 UserSchema.pre('save', async function(next) {
 	let user = this;
-	const salt = await bcrypt.genSalt(10)
-	user.password = await bcrypt.hash(user.password, salt)
+    if(user.password){
+        const salt = await bcrypt.genSalt(10)
+        user.password = await bcrypt.hash(user.password, salt)
+    }
+    console.log(this)
 	next();
 })
 
