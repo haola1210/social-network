@@ -33,3 +33,48 @@ module.exports.tokenUser = (req, res) => {
         })
     }
 }
+
+module.exports.index = (req, res) => {
+    try {
+        
+        User.find({}).then(users => {
+            if (users) {
+                return res.json({
+                    code: 200,
+                    message: "Getting all users",
+                    data: users
+                })
+            }
+        })
+    } catch (error) {
+        res.json({
+            code: 400,
+            message: "Error Occurs",
+            error: error.message,
+        })
+    }
+}
+
+module.exports.register = (req, res) => {
+    try {
+        const account = req.body;
+
+        User.create(account).then(newUser => {
+            if (newUser) {
+                res.json({
+                    code: 200,
+                    message: "Registering new user Successfully",
+                    data: newUser,
+                })
+            }
+            throw new Error("Registering new user failed");
+        })
+
+    } catch (error) {
+        res.json({
+            cdoe: 400,
+            messgae: "Error Occurs",
+            error: error.message,
+        })        
+    }
+}

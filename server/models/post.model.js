@@ -2,7 +2,6 @@ const { Schema, model } = require('mongoose');
 
 const { CommentSchema } = require('./comment.model')
 
-
 const PostSchema = new Schema({
     owner: {
         type: Schema.Types.ObjectId,    //ng viet bai
