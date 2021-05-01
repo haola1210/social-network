@@ -7,20 +7,22 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux'
 import store from './redux/store'
 
-class MyComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.wrapper = React.createRef();
-  }
-  render() {
-    return <div ref={this.wrapper}><App /></div>;
-  }
-}
+// class MyComponent extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.wrapper = React.createRef();
+//   }
+//   render() {
+//     return <div ref={this.wrapper}><App /></div>;
+//   }
+// }
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <MyComponent/>
+      {/* <MyComponent/> */}
+
+      <App />
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')

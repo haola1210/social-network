@@ -1,213 +1,59 @@
-import { call, put, takeEvery, select } from 'redux-saga/effects'
+import { call, put, takeEvery, select, takeLatest } from 'redux-saga/effects'
 import axios from 'axios'
 
 import {
-    GET_JWT, 
-    SET_JWT, 
-    CLEAR_JWT,
-    
-    GET_JWT_LOCAL_STORAGE,
-    SET_JWT_LOCAL_STORAGE,
-    CLEAR_JWT_LOCAL_STORAGE, 
-    
+    SET_SESSION,
+    CLEAR_SESSION,
     KEEP_SESSION,
-    FETCH_SESSION,
-    FETCH_SESSION_START,
-    FETCH_SESSION_SUCCESS,
-    FETCH_SESSION_FAILURE,
-    
-    FETCH_GOOGLE_SESSION,
-    FETCH_GOOGLE_SESSION_START,
-    FETCH_GOOGLE_SESSION_SUCCESS,
-    FETCH_GOOGLE_SESSION_FAILURE,
-
+    FETCHING_SESSION
 } from '../redux/session/sessionActionType'
 
-const ACCESS_TOKEN = "ACCESS_TOKEN"
-const TOKEN_ID = "TOKEN_ID"
-const USER_ID = "USER_ID"
 
-export function* workerJwt(action){
-    
-    console.log(`running workerJwt`)
-    const accessToken = yield call({context: localStorage, fn: localStorage.getItem}, ACCESS_TOKEN)
-    const tokenId = yield call({context: localStorage, fn: localStorage.getItem}, TOKEN_ID)
-    const userId = yield call({context: localStorage, fn: localStorage.getItem}, USER_ID)
-    
-    yield put({
-        type : GET_JWT_LOCAL_STORAGE,
-        payload : { accessToken, tokenId, userId}
-    })
-}
+import { SIGN_OUT } from "../redux/signin/signinActionType"
 
-export function* workerSetJwt(action){
-    const { token } = action.payload
-    const { accessToken, tokenId, userId } = token
-    yield console.log(`running workerSetJwt`)
-    yield console.log(token)
-
-    yield call({context: localStorage, fn: localStorage.setItem}, ACCESS_TOKEN, accessToken)
-    yield call({context: localStorage, fn: localStorage.setItem}, TOKEN_ID, tokenId)
-    if (userId) { 
-        yield call({context: localStorage, fn: localStorage.setItem}, USER_ID, userId)
-    }
-    yield put({ type : SET_JWT_LOCAL_STORAGE, payload: {token} })
-}
-
-export function* workerClearJWt(action){
-
-    yield console.log(`running workerClearJWt`)
-    yield call({ context : localStorage, fn : localStorage.removeItem }, ACCESS_TOKEN)
-    yield call({ context : localStorage, fn : localStorage.removeItem }, TOKEN_ID)
-
-    yield put({type : CLEAR_JWT_LOCAL_STORAGE})
-}
-
-export function* workerFetchSession(action){
-    try{
-        //get token in store
-        const { userId } = yield select(state => state.session)
-
-        if (userId) { 
-
-            yield console.log(`running workerFetchSession`)
-            yield console.log(`getting access token, id from store`)
-            yield console.log(`finding isExisting with ${userId}`)
-
-            // start fetch session (user info)
-            yield put({type : FETCH_SESSION_START})
-            //ajax
-            const response = yield axios.post(`http://localhost:4000/users/token/${userId}`)
-                
-            let { user, } = response.data.data
-            console.log(user)
-            
-            if (user) {
-                const {
-                    googleId, 
-                    username, 
-                    email, 
-                    name, firstName, lastName,
-                    image, 
-                } = user
-                user = {
-                    googleId, 
-                    username, 
-                    email, 
-                    name, firstName, lastName,
-                    image, 
-                }
-                console.log(`Get Token User`)
-                yield console.log(user)
-
-                //save user to store
-                yield put({
-                    type : FETCH_SESSION_SUCCESS,
-                    payload : {user}
-                })
-                
-                // yield put({
-                //     type : INIT_SOCKET
-                // })
-            }
-
-        }
-        throw new Error("workerFetchSession Failed to Fetch User to Store")
-    } catch (error) {
-        console.log(error.message)
-        yield put({
-            type : FETCH_SESSION_FAILURE,
-            payload : {error}
-        })
-    }
-
-}
-
-export function* workerFetchGoogleSession(action){
-    
-    try{
-        //get token in store
-        const { tokenId } = yield select(state => state.session)
-
-        if (tokenId) {
-
-            yield console.log(`running workerFetchGoogleSession`)
-            yield console.log(`getting access token, id from store`)
-
-            // start fetch session (user info)
-            yield put({type : FETCH_GOOGLE_SESSION_START})
-            //ajax
-            const response = yield axios.get(`https://oauth2.googleapis.com/tokeninfo?id_token=${tokenId}`)
-            console.log(response)
-            if (response.status === 200) {
-                const { 
-                    sub, //googleId
-                    hd, // domain name of email address
-                    email, // email address
-                    name, 
-                    family_name, 
-                    given_name, 
-                    picture, 
-                } = response.data;
-                const user = { 
-                    domain: hd, // domain name of email address
-                    googleId: sub, //googleId
-                    email, // email address
-                    name, 
-                    lastName: family_name, 
-                    firstName: given_name, 
-                    image: picture, 
-                }
-                console.log(`Get Token User`)
-                console.log(user)
-
-                
-                //save user to store
-                yield put({
-                    type : FETCH_GOOGLE_SESSION_SUCCESS,
-                    payload : {user}
-                })
-                
-                // yield put({
-                //     type : INIT_SOCKET
-                // })
-            }
-        }
-        else { throw new Error("workerFetchGoogleSession Failed to Fetch User to Store")}
-
-    } catch (error) {
-        console.log(error.message)
-        yield put({
-            type : FETCH_GOOGLE_SESSION_FAILURE,
-            payload : {error}
-        })
-    }
-
-}
-
-export function* workerKeepSession(action){
-    try{
-
-        // store jwt to state from localStorage
-        yield put({type : GET_JWT})
+function* workerClearSession(action){
+    try {
         
-        //store user info to state
-        yield Promise.all([
-            yield put({ type : FETCH_SESSION }),
-            
-            yield put({ type : FETCH_GOOGLE_SESSION }),
-        ])
-    } catch(error) {
-        console.log(error)
+        yield call({
+            context: localStorage,
+            fn: localStorage.removeItem
+        }, "ACCESS_TOKEN")
+
+        yield put({ type : CLEAR_SESSION })
+
+    } catch (error) {
+        console.log(error)        
     }
 }
 
-export function* watchSession(){
-    
-    yield takeEvery(GET_JWT, workerJwt)
-    yield takeEvery(SET_JWT, workerSetJwt)
-    yield takeEvery(CLEAR_JWT, workerClearJWt)
-    yield takeEvery(FETCH_SESSION, workerFetchSession)
-    yield takeEvery(FETCH_GOOGLE_SESSION, workerFetchGoogleSession)
-    yield takeEvery(KEEP_SESSION, workerKeepSession)
+function* workerFetchSession(action){
+    try {
+        
+        yield put({ type : FETCHING_SESSION })
+
+        const jwt = yield call({
+            context : localStorage,
+            fn: localStorage.getItem
+        }, "ACCESS_TOKEN")
+
+        if(!jwt) throw new Error("No jwt for your old session")
+
+        const response  = yield axios.post("http://localhost:4000/auths/keep-session", { jwt })
+        if(response.data.error) throw response.data.error
+
+        yield put({
+            type : SET_SESSION,
+            payload : { ...response.data }
+        })
+
+
+    } catch (error) {
+        console.log(error)
+        yield put({ type : SIGN_OUT })
+    }
+}
+
+export function* watchSession(){ 
+    yield takeLatest(SIGN_OUT, workerClearSession)
+    yield takeLatest(KEEP_SESSION, workerFetchSession)
 }

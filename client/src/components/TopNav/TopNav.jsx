@@ -22,7 +22,7 @@ import {
 import SearchComponent from "../SearchComponent/SearchComponent"
 import GroupContainer from "../GroupContainer/GroupContainer"
 
-import { CLEAR_JWT } from "../../redux/session/sessionActionType"
+// import { CLEAR_JWT } from "../../redux/session/sessionActionType"
 
 import './TopNav.scss'
 function TopNav(props) {
@@ -41,9 +41,9 @@ function TopNav(props) {
 
     const onLogout = () => {
         console.log(`clicked Log out`)
-        dispatch({
-            type: CLEAR_JWT
-        })
+        // dispatch({
+        //     type: CLEAR_JWT
+        // })
 
         if (!user) {
             history.push("/login")

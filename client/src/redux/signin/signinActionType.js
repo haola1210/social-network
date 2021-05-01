@@ -1,0 +1,14 @@
+export const SIGN_IN = "SIGN_IN"
+export const SIGN_IN_GOOGLE = "SIGN_IN_GOOGLE"
+export const SIGN_OUT = "SIGN_OUT"
+
+
+export const SIGN_IN_START = "SIGN_IN_START"
+export const SIGN_IN_SUCCESS = "SIGN_IN_SUCCESS"
+export const SIGN_IN_FAILURE = "SIGN_IN_FAILURE"
+
+
+
+// export const SIGN_IN_GOOGLE_START = "SIGN_IN_GOOGLE_START"
+// export const SIGN_IN_GOOGLE_SUCCESS = "SIGN_IN_GOOGLE_SUCCESS"
+// export const SIGN_IN_GOOGLE_FAILURE = "SIGN_IN_GOOGLE_FAILURE"

@@ -4,8 +4,12 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
+const socketio = require('socket.io')
+const http = require('http')
+
 
 const app = express();
+const server = http.createServer(app);
 const port = process.env.PORT || 4000;
 
 app.set('views', './views')
@@ -36,6 +40,18 @@ const homeRoute = require('./routes/home.route');
 
 app.use("/", homeRoute);
 
-app.listen(port, () => {
-    console.log(`Server is on http://localhost:${port}`)
+const io = socketio(server, {
+    cors: {
+      origin: 'http://localhost:3000',
+    }
 });
+
+
+io.on("connection", socket => {
+    console.log("new connection")
+})
+
+
+server.listen( port, () => {
+    console.log(`server listening on port ${port}: http://localhost:${port}`);
+})

@@ -32,11 +32,17 @@ const PostSchema = new Schema({
         type: String,
         default: null
     },
-    belongToGroup : {                        // thuoc ve group nao, neu null thi thuoc ve user profile
+    belongToGroup : {                   // thuoc ve group nao, neu null thi thuoc ve user profile
         type: Schema.Types.ObjectId,
         ref: "Group",
         default: null
-    }
+    },
+
+    read : [{                           //danh sach user da xem
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    }]
+
 });
 
 const Post = model("Post", PostSchema, "posts");
