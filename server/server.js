@@ -7,6 +7,7 @@ const cookieSession = require('cookie-session');
 const socketio = require('socket.io')
 const http = require('http')
 
+const User = require("./models/user.model")
 
 const app = express();
 const server = http.createServer(app);
@@ -45,6 +46,25 @@ const io = socketio(server, {
       origin: 'http://localhost:3000',
     }
 });
+
+// auth for socket 
+io.use(async (socket, next) => {
+    // client should add userId into socket.auth 
+    try {
+        
+        const userId = socket.handshake.auth.userId;
+        if (!userId) throw new Error("Unauthorization connection")
+    
+        const user = await User.findById(userId).exec()
+        if(!user) throw new Error("No one match your id")
+
+        socket.user = user;
+        next();
+        
+    } catch (error) {
+        next(error)
+    }
+})
 
 
 io.on("connection", socket => {
