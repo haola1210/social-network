@@ -23,6 +23,7 @@ import SearchComponent from "../SearchComponent/SearchComponent"
 import GroupContainer from "../GroupContainer/GroupContainer"
 
 // import { CLEAR_JWT } from "../../redux/session/sessionActionType"
+import { SIGN_OUT } from '../../redux/signin/signinActionType';
 
 import './TopNav.scss'
 function TopNav(props) {
@@ -41,9 +42,9 @@ function TopNav(props) {
 
     const onLogout = () => {
         console.log(`clicked Log out`)
-        // dispatch({
-        //     type: CLEAR_JWT
-        // })
+        dispatch({
+            type: SIGN_OUT
+        })
 
         if (!user) {
             history.push("/login")
@@ -96,10 +97,14 @@ function TopNav(props) {
 
                         {/*  */}
                         <Col xs={4} sm={6} style={styles.center} > 
-                            <Dropdown overlay="logout here" placement="bottomRight">
-                                <Link to="/login" onclick={onLogout}>
-                                    <SettingOutlined /> 
-                                </Link>
+                            <Dropdown overlay={() => 
+                                (
+                                    <div onClick={onLogout}>
+                                        Logout here
+                                    </div>
+                                )
+                            } placement="bottomRight">
+                                <SettingOutlined /> 
                             </Dropdown>
                         </Col>
                     </Row>

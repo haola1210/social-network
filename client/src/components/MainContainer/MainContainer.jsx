@@ -41,9 +41,11 @@ function MainContainer(props) {
                 
                 }}>
                     {
-                        posts.map(post => <div className="post" >
-                            <NewFeedPost />
-                        </div>)
+                        posts.map((post, index) => 
+                            <div className="post" key={index} >
+                                <NewFeedPost  />
+                            </div>
+                        )
                     }
                </Row>
             </div>
