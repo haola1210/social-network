@@ -1,0 +1,1 @@
+export const MAKING_POST = "MAKING_POST"
