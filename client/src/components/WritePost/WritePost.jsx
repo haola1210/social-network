@@ -18,7 +18,7 @@ function getBase64(file) {
 	});
 }
 
-const WritePost = () => {
+const WritePost = ({ belongToGroup }) => {
 
 	const [visible, setVisible] = useState(false);
 	const [confirmLoading, setConfirmLoading] = useState(false);
@@ -44,7 +44,7 @@ const WritePost = () => {
 			dispatch({ type: MAKING_POST, payload: {
 				content,
 				fileList: listFiles,
-				belongToGroup: null
+				belongToGroup,
 			}})
 
 		}, 2000);

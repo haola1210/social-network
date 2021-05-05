@@ -1,0 +1,17 @@
+.title-group {
+    display: flex;
+    padding: 2em 1em;
+    margin: 2em 0 0 0;
+    background-color: white;
+    border-radius: 1em;
+    width: 100%;
+    align-items: left;
+    font-weight: bold;
+
+}
+
+@media screen and (min-width: 576px) {
+    .title-group {
+        // max-width: 700px;
+    }
+}
