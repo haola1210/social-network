@@ -17,6 +17,7 @@ app.set('views', './views')
 app.set('view engine', 'pug');
 
 
+app.use(express.json());
 app.use(cors({
     origin: 'http://localhost:3000',
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
@@ -29,7 +30,6 @@ app.use(cookieSession({
 }))
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.json());
 
 mongoose.connect(process.env.DATABASE_URL, {
     useNewUrlParser: true, 

@@ -40,17 +40,21 @@ function TopNav(props) {
         }
     }
 
+    const onHome = () => {
+        history.push("/");
+    }
+
     const onLogout = () => {
         console.log(`clicked Log out`)
         dispatch({
             type: SIGN_OUT
         })
-
+        
         if (!user) {
             history.push("/login")
         }
     }
-
+    
     return (
         <>
             <Row style={{padding: "1em 1em 0 1em"}} >
@@ -74,13 +78,16 @@ function TopNav(props) {
                         
                         <Col xs={4} sm={0}></Col>
                         {/*  */}
-                        <Col xs={4} sm={6} style={styles.center} > <HomeOutlined /> </Col>
+                        <Col xs={4} sm={6} style={styles.center} > 
+                            <HomeOutlined onClick={onHome}/>
+                        </Col>
                         
                         {/* group icon for mobile */}
                         <Col xs={4} sm={0} >
                             <div className="mobile_group_icon"> 
                                 <Dropdown overlay={() => <GroupContainer title="Tổng Hợp"/>} placement="bottomCenter">   
-                                    <DeploymentUnitOutlined /> 
+                                        <DeploymentUnitOutlined /> 
+                                    
                                 </Dropdown>
                             </div>
                         </Col>
@@ -99,8 +106,18 @@ function TopNav(props) {
                         <Col xs={4} sm={6} style={styles.center} > 
                             <Dropdown overlay={() => 
                                 (
-                                    <div onClick={onLogout}>
-                                        Logout here
+                                    <div>
+                                        {
+                                            user.role === "admin"?
+                                                <Link to="/admin">
+                                                    Admin
+                                                </Link>
+                                                :
+                                                null
+                                        }
+                                        <div onClick={onLogout}>
+                                            Logout here
+                                        </div>
                                     </div>
                                 )
                             } placement="bottomRight">

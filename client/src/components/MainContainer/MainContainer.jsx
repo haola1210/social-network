@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useState, } from 'react';
 import { Divider, Row, Col } from "antd"
 
 import GroupContainer from "../GroupContainer/GroupContainer"
 import NewFeedPost from "../NewFeedPost/NewFeedPost"
 import WritePost from "../WritePost/WritePost"
+import TitleGroup from "../TitleGroup/TitleGroup"
 
 import "./MainContainer.scss"
 
 const posts = [1,1,1,1,1,1,1]
 function MainContainer(props) {
+
+    const [group, setGroup] = useState({
+        name: "",
+        _id: ""
+    });
+
     return (
         <div className="main">
             {/* left nav link for desktop */}
@@ -19,8 +26,20 @@ function MainContainer(props) {
                 </div>
                 <GroupContainer />
             </div>
-
+            
             <div className="main__right">
+                {
+                    group._id !== ""? 
+                        <Row style={{
+                            display: "flex", 
+                            flexDirection: "row", 
+                            justifyContent: "center", 
+                            alignItems: "center",
+                        }}>
+                            <TitleGroup />
+                        </Row>
+                        : null
+                }
                 {/* write post */}
                 <Row style={{
                     display: "flex", 
@@ -29,7 +48,7 @@ function MainContainer(props) {
                     alignItems: "center",
                 
                 }}>
-                    <WritePost />
+                    <WritePost belongToGroup={group._id !== ""? group._id : null} />
                 </Row>
 
                 {/* posts here */}

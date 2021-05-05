@@ -51,7 +51,7 @@ module.exports.handleLogin = async (req, res) => {
                         email : req.body.email,
                         name : req.body.name,
                         image : req.body.imageUrl,
-                        role : "Student"
+                        role : "student"
                     })
                     await user.save()
                 } 

@@ -1,0 +1,13 @@
+.group-badge {
+    
+    &:active {
+    }
+    
+    &__text {
+
+        &:active {
+            background-color: blue;
+            color: white;
+        }
+    }
+}

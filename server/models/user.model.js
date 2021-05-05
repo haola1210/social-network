@@ -2,27 +2,27 @@ const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const UserSchema = new Schema({
-    tokenId: String,
-    username: String,
-    password: String,
-    email: String,
-    lastName: String,
-    firstName: String,
-    googleId: String,
-    image: String,
-    name: String,
+    name: { type: String, default: null },
+    firstName: { type: String, default: null },
+    lastName: { type: String, default: null },
+    email: { type: String, default: null },
+    username: { type: String, default: null },
+    password: { type: String, default: null },
+    image: { type: String, default: null },
     
     className: { type: String, default: null },
     faculty : { type: String, default: null },
-
-    role : String,          //user type "Student, Admin, Faculty/Room"
+    
+    role : { type: String, default: "student" },          //user type "student, admin, faculty/room"
     manageGroup : [{        // what group that user allowed to write post? - Student-empty, Admin-all, Faculty/Room-option
         type: Schema.Types.ObjectId,
         ref : "Group"
     }],
-
+    
+    tokenId: { type: String, default: null },
+    googleId: { type: String, default: null },
     socketId : {
-        type: String,
+    type: String,
         default: null
     },
 

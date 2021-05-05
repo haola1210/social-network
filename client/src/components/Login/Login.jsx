@@ -32,7 +32,7 @@ export default function Login({ deviceType: isMobile}) {
 
     const [state, setState] = useState({
         remember: true,
-        username: "51800793@student.tdtu.edu.vn",
+        username: "admin",
         password: "123",
 
     })
@@ -100,7 +100,6 @@ export default function Login({ deviceType: isMobile}) {
                                         rules={[
                                         {
                                             required: true,
-                                            type: "email",
                                             message: 'Please input your Username!',
                                         },
                                         ]}

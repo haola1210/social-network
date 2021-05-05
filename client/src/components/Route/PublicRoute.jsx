@@ -11,9 +11,7 @@ function PublicRoute({component : Component, ...rest}) {
         <Route { ...rest } >
             {
                 isFetching?
-                (<Spin spinning={isFetching} delay={500}>
-                    <div> Loading... </div>
-                </Spin>):
+                (<Spin spinning={isFetching}  size="large"/>):
                 (user === null ?
                     <Component />
                     :
