@@ -56,25 +56,30 @@ module.exports.index = (req, res) => {
 }
 
 module.exports.register = (req, res) => {
-    try {
-        const account = req.body;
-
-        User.create(account).then(newUser => {
-            if (newUser) {
-                res.json({
-                    code: 200,
-                    message: "Registering new user Successfully",
-                    data: newUser,
-                })
-            }
-            throw new Error("Registering new user failed");
-        })
-
-    } catch (error) {
+    const { name, username, password, manageGroup } = req.body;
+    
+    // res.json({
+    //     code: 400
+    // })
+    User.find({ username }).then(user => {
+        if (user.length > 0) {
+            throw new Error("There is already a user")
+        }
+        return User.create({ name, username, password, manageGroup })
+    }).then(newUser => {
+        if (newUser) {
+            return res.json({
+                code: 200,
+                message: "Registering new user Successfully",
+                data: newUser,
+            })
+        }
+        throw new Error("Registering new user failed");
+    }).catch (error => {
         res.json({
-            cdoe: 400,
-            messgae: "Error Occurs",
+            code: 400,
+            message: "Error Occurs",
             error: error.message,
         })        
-    }
+    })
 }

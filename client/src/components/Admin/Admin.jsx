@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 
 import { useDispatch } from "react-redux"
 
-import TopNav from "../TopNav/TopNav.jsx"
-import MainContainer from "../MainContainer/MainContainer"
+import TopNav from "../TopNav/TopNav"
+import CreateUser from "../CreateUser/CreateUser"
 
 import { INIT_SOCKET } from "../../socketClient"
 
-export default function Home() {
+export default function Admin() {
     
     const dispatch = useDispatch()
     useEffect(() => {
@@ -16,10 +16,8 @@ export default function Home() {
 
     return (
         <div>
-
             <TopNav />
-            <MainContainer />
-            
+            <CreateUser />
         </div>
     )
 }

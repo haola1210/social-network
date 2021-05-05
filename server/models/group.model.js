@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 const GroupSchema = new Schema({
     name: String,                           //ten: vd: Khoa CNTT
-    
+    code: String,                           // ma khoa hay ma phong ban
     members: [{                             //danh sach member
         type : Schema.Types.ObjectId,
 		ref : "User"
