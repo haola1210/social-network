@@ -46,7 +46,7 @@ function TopNav(props) {
     }
 
     const unsetGroup = ( _id, name ) => {
-        dispatch({type: SET_GROUP, payload: { currentGroup: null }})
+        dispatch({type: SET_GROUP, payload: { currentGroup: {_id: null, name: null} }})
     }
 
     const onHome = () => {
