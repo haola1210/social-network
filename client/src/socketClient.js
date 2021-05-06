@@ -20,6 +20,10 @@ export const socketMiddleware = storeAPI => next => action => {
         }
         socket = io("http://localhost:4000", handshake)
 
+        socket.on("server-send-new-post", function(post) {
+            console.log("new post created", post);
+        })
+
     } else if (action.type === MAKING_POST) {
         
         const { content, fileList, belongToGroup } = action.payload

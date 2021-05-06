@@ -8,6 +8,8 @@ const socketio = require('socket.io')
 const http = require('http')
 
 const User = require("./models/user.model")
+const Post = require("./models/post.model")
+const { cloudinary } = require("./configs/cloudinary.setup")
 
 const app = express();
 const server = http.createServer(app);
@@ -76,8 +78,25 @@ io.on("connection", socket => {
         // .then(user => console.log(`update socketId ${user.socketId}`));
     socket.on("client-make-post", async ({ content, fileList, belongToGroup, owner, }) => {
         
-        console.log(`get client-make-post`);
-        console.log({ content, fileList, belongToGroup, owner, });
+        // console.log(`get client-make-post`);
+        // console.log({ content, fileList, belongToGroup, owner, });
+        
+        let filedLoaded = await Promise.all([...fileList.map(async (base64) => {
+            // upload image to cloudinary with based-64 image
+            return await cloudinary.uploader.upload(base64);
+        })])
+        
+        // console.log("file loaded", filedLoaded.map(file => file.url))
+        filedLoaded = filedLoaded.map(file => file.url)
+        const post = {
+            owner,
+            content,
+            belongToGroup,
+            image: [...filedLoaded]
+        }
+        const newPost = await Post.create(post)
+        console.log("server created new post")
+        io.emit("server-send-new-post", { post: newPost})
     })
 })
 

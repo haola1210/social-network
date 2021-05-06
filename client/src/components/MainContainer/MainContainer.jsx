@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext, } from 'react';
 import { Divider, Row, Col } from "antd"
+import {useSelector, useDispatch } from "react-redux"
 
 import GroupContainer from "../GroupContainer/GroupContainer"
 import NewFeedPost from "../NewFeedPost/NewFeedPost"
@@ -12,14 +13,7 @@ import "./MainContainer.scss"
 const posts = [1,1,1,1,1,1,1]
 function MainContainer(props) {
 
-    const groupContext = useContext(GroupContext)
-    const group = groupContext
-
-    function onGroup ( _id, name ) {
-        groupContext.onGroup( _id, name )
-        // console.log("setGroup ", _id, name)
-        // console.log(groupContext)
-    };
+    const { currentGroup } = useSelector(state => state.groups)
 
     return (
         <div className="main">
@@ -34,24 +28,15 @@ function MainContainer(props) {
             
             <div className="main__right">
                 {
-                    group._id !== null && group._id !== ""? 
-                        <GroupConsumer>
-                            {
-                                group => {
-                                    
-                                    return (
-                                    <Row style={{
-                                        display: "flex", 
-                                        flexDirection: "row", 
-                                        justifyContent: "center", 
-                                        alignItems: "center",
-                                    }}>
-                                        <TitleGroup name={group.name}/>
-                                    </Row>
-                                    )
-                                }
-                            }
-                        </GroupConsumer>
+                    currentGroup !== null && currentGroup._id !== null? 
+                        <Row style={{
+                            display: "flex", 
+                            flexDirection: "row", 
+                            justifyContent: "center", 
+                            alignItems: "center",
+                        }}>
+                            <TitleGroup name={currentGroup.name}/>
+                        </Row>
                         : null
                 }
                 {/* write post */}
