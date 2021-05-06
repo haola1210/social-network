@@ -16,6 +16,11 @@ function MainContainer(props) {
         _id: ""
     });
 
+    function onGroup ( _id, name ) {
+        setGroup({ _id, name, })
+        console.log("setGroup ", _id, name)
+    };
+
     return (
         <div className="main">
             {/* left nav link for desktop */}
@@ -24,7 +29,7 @@ function MainContainer(props) {
                     <h3>Tổng Hợp</h3>
                     <Divider />
                 </div>
-                <GroupContainer />
+                <GroupContainer onGroupHandler={ onGroup }/>
             </div>
             
             <div className="main__right">
@@ -36,7 +41,7 @@ function MainContainer(props) {
                             justifyContent: "center", 
                             alignItems: "center",
                         }}>
-                            <TitleGroup />
+                            <TitleGroup name={group.name}/>
                         </Row>
                         : null
                 }

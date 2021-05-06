@@ -14,6 +14,7 @@ function GroupContainer(props) {
         {name : "Phòng Cháy", count: 19},
 
     ]
+
     const [ state, setState ] = useState({
         groups: [],
         
@@ -21,18 +22,17 @@ function GroupContainer(props) {
 
     const { groups, } = state;
     
-    const onGroup = () => {
-        console.log("onGroup")
+    const chooseGroup = ( _id, name ) => {
+        props.onGroupHandler( _id, name )
     }
-
     const RoomNavBadge = props => (
         <div style={{margin: "0.5em", maxWidth: "150px", minWidth: "130px"}}>
                 <Badge 
                     className="group-badge"
-                    onClick={onGroup}
                     count={props.count}
                     >
                     <div 
+                        onClick={() => chooseGroup( props._id, props.name )}
                         className="group-badge__text"
                         style={{padding: "1em", borderRadius:"1em", backgroundColor: "#95cbff", fontWeight: "bold"}}
                         >
@@ -57,10 +57,10 @@ function GroupContainer(props) {
                         }),
                     }
                 })
-                console.log(groups)
             }
             else {console.log(response.data.error)}
         })
+        console.log(props)
     }, [])
 
     return (
@@ -74,7 +74,7 @@ function GroupContainer(props) {
             {title && <div> <h3>{title}</h3> <Divider /> </div> }
             <List
                 dataSource={state.groups}
-                renderItem={item => < RoomNavBadge name={item.name} count={item.count} onClick={onGroup}/>}
+                renderItem={item => < RoomNavBadge name={item.name} count={item.count} />}
             />
         </div>
     );
