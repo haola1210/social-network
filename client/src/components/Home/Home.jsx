@@ -12,26 +12,14 @@ export default function Home() {
     
     const dispatch = useDispatch()
 
-    // const [group, setGroup] = useState({
-    //     name: "",
-    //     _id: "",
-    // });
-
-    // function onGroup ( _id, name ) {
-    //     setGroup({ _id, name, })
-    //     console.log("setGroup ", _id, name)
-    // };
-
     useEffect(() => {
         dispatch({ type : INIT_SOCKET })
     }, [])
     
     return (
         <div>
-            {/* <GroupProvider value={{...group, onGroup}}> */}
-                <TopNav />
-                <MainContainer />
-            {/* </GroupProvider> */}
+            <TopNav />
+            <MainContainer />
         </div>
     )
 }

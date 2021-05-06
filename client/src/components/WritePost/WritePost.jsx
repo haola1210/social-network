@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, } from "react";
+import React, { useState, } from "react";
 import { Modal, Card, Avatar, Form, Upload, Input } from "antd";
 import { ControlOutlined, PlusOutlined } from "@ant-design/icons";
 import {
@@ -6,10 +6,7 @@ import {
 } from "../../redux/post/postActionType"
 import { useSelector, useDispatch } from "react-redux";
 
-import { GroupContext, GroupConsumer } from "../GroupContext/GroupContext"
-
 import './WritePost.scss'
-
 
 function getBase64(file) {
 	return new Promise((resolve, reject) => {
@@ -27,9 +24,9 @@ const WritePost = ({ belongToGroup }) => {
 	const [modalText, setModalText] = useState("Content of the modal");
 	const { Meta } = Card;
 	const dispatch = useDispatch();
-    const groupContext = useContext(GroupContext)
-    const { _id: groupId} = groupContext
-
+	const { currentGroup } = useSelector(state => state.groups)
+    const { _id: groupId} = currentGroup
+	
 	const showModal = () => {
 		setVisible(true);
 	};
@@ -49,7 +46,8 @@ const WritePost = ({ belongToGroup }) => {
 				fileList: listFiles,
 				belongToGroup: groupId !== "" && groupId !== undefined? groupId : null,
 			}
-			dispatch({ type: MAKING_POST, payload: post})
+			console.log("post", post)
+			// dispatch({ type: MAKING_POST, payload: post})
 		}, 2000);
 	};
 

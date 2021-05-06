@@ -18,6 +18,9 @@ import {
     Link,
 
 } from "react-router-dom"
+import {
+    SET_GROUP,
+} from "../../redux/group/groupActionType"
 
 import SearchComponent from "../SearchComponent/SearchComponent"
 import GroupContainer from "../GroupContainer/GroupContainer"
@@ -42,13 +45,12 @@ function TopNav(props) {
         }
     }
 
-    const chooseGroup = ( _id, name ) => {
-        console.log("groupContext",groupContext)
-        groupContext.onGroup( _id, name )
+    const unsetGroup = ( _id, name ) => {
+        dispatch({type: SET_GROUP, payload: { currentGroup: null }})
     }
 
     const onHome = () => {
-        chooseGroup( null, "" ) 
+        unsetGroup( null, "" ) 
         
         history.push("/");
     }
