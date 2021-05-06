@@ -40,14 +40,14 @@ const WritePost = ({ belongToGroup }) => {
 			setVisible(false);
 			setConfirmLoading(false);
 
-			const listFiles = await Promise.all([...state.fileList.map(async file => await getBase64(file.originFileObj))])
+			const listFiles = await Promise.all([...state.fileList.map(async file => 
+				await getBase64(file.originFileObj))])
 			const post = {
 				content,
 				fileList: listFiles,
 				belongToGroup: groupId !== "" && groupId !== undefined? groupId : null,
 			}
-			console.log("post", post)
-			// dispatch({ type: MAKING_POST, payload: post})
+			dispatch({ type: MAKING_POST, payload: post})
 		}, 2000);
 	};
 
