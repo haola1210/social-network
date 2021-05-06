@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, } from "react";
 import { Modal, Card, Avatar, Form, Upload, Input } from "antd";
 import { ControlOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   MAKING_POST,
 } from "../../redux/post/postActionType"
 import { useSelector, useDispatch } from "react-redux";
+
+import { GroupContext, GroupConsumer } from "../GroupContext/GroupContext"
 
 import './WritePost.scss'
 
@@ -25,6 +27,8 @@ const WritePost = ({ belongToGroup }) => {
 	const [modalText, setModalText] = useState("Content of the modal");
 	const { Meta } = Card;
 	const dispatch = useDispatch();
+    const groupContext = useContext(GroupContext)
+    const { _id: groupId} = groupContext
 
 	const showModal = () => {
 		setVisible(true);
@@ -40,18 +44,17 @@ const WritePost = ({ belongToGroup }) => {
 			setConfirmLoading(false);
 
 			const listFiles = await Promise.all([...state.fileList.map(async file => await getBase64(file.originFileObj))])
-				
-			dispatch({ type: MAKING_POST, payload: {
+			const post = {
 				content,
 				fileList: listFiles,
-				belongToGroup,
-			}})
-
+				belongToGroup: groupId !== "" && groupId !== undefined? groupId : null,
+			}
+			dispatch({ type: MAKING_POST, payload: post})
 		}, 2000);
 	};
 
 	const handleCancel = () => {
-		console.log("Clicked cancel button");
+		// console.log("Clicked cancel button");
 		setVisible(false);
 	};
 

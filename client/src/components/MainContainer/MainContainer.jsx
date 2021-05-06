@@ -1,24 +1,24 @@
-import React, { useState, } from 'react';
+import React, { useState, useEffect, useContext, } from 'react';
 import { Divider, Row, Col } from "antd"
 
 import GroupContainer from "../GroupContainer/GroupContainer"
 import NewFeedPost from "../NewFeedPost/NewFeedPost"
 import WritePost from "../WritePost/WritePost"
 import TitleGroup from "../TitleGroup/TitleGroup"
+import { GroupContext, GroupConsumer } from "../GroupContext/GroupContext"
 
 import "./MainContainer.scss"
 
 const posts = [1,1,1,1,1,1,1]
 function MainContainer(props) {
 
-    const [group, setGroup] = useState({
-        name: "",
-        _id: ""
-    });
+    const groupContext = useContext(GroupContext)
+    const group = groupContext
 
     function onGroup ( _id, name ) {
-        setGroup({ _id, name, })
-        console.log("setGroup ", _id, name)
+        groupContext.onGroup( _id, name )
+        // console.log("setGroup ", _id, name)
+        // console.log(groupContext)
     };
 
     return (
@@ -29,20 +29,29 @@ function MainContainer(props) {
                     <h3>Tổng Hợp</h3>
                     <Divider />
                 </div>
-                <GroupContainer onGroupHandler={ onGroup }/>
+                <GroupContainer />
             </div>
             
             <div className="main__right">
                 {
-                    group._id !== ""? 
-                        <Row style={{
-                            display: "flex", 
-                            flexDirection: "row", 
-                            justifyContent: "center", 
-                            alignItems: "center",
-                        }}>
-                            <TitleGroup name={group.name}/>
-                        </Row>
+                    group._id !== null && group._id !== ""? 
+                        <GroupConsumer>
+                            {
+                                group => {
+                                    
+                                    return (
+                                    <Row style={{
+                                        display: "flex", 
+                                        flexDirection: "row", 
+                                        justifyContent: "center", 
+                                        alignItems: "center",
+                                    }}>
+                                        <TitleGroup name={group.name}/>
+                                    </Row>
+                                    )
+                                }
+                            }
+                        </GroupConsumer>
                         : null
                 }
                 {/* write post */}
@@ -53,7 +62,7 @@ function MainContainer(props) {
                     alignItems: "center",
                 
                 }}>
-                    <WritePost belongToGroup={group._id !== ""? group._id : null} />
+                    <WritePost  />
                 </Row>
 
                 {/* posts here */}

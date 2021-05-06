@@ -76,6 +76,7 @@ export default function CreateUser (){
             }
         })
         console.log('checked = ', event);
+        console.log('manageGroup ', manageGroup);
         console.log('value = ', manageGroup.indexOf(value));
     }
 
@@ -213,13 +214,15 @@ export default function CreateUser (){
             <div>
                 { 
                     groups.map( group => {
+                        // console.log("manage group ", group)
 
                         return (
-                            <Row>
+                            <Row key={group._id} >
                                 <Col span={8}>
                                     <Checkbox 
-                                        value = {group._id}
                                         onChange={onCheckedGroupChange}
+                                        value={group._id}
+                                        checked={manageGroup.indexOf(group._id)>=0}
                                         > 
                                         { group.name } 
                                     </Checkbox>
