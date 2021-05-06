@@ -68,12 +68,12 @@ io.use(async (socket, next) => {
 
 
 io.on("connection", socket => {
-    console.log("new socket connection");
+    // console.log("new socket connection");
 
     // User update socketId
     const { userId } = socket.handshake.auth;
     User.findByIdAndUpdate( userId, { socketId: socket.id }, { new: true })
-        .then(user => console.log(`update socketId ${user.socketId}`));
+        // .then(user => console.log(`update socketId ${user.socketId}`));
     socket.on("client-make-post", async ({ content, fileList, belongToGroup, owner, }) => {
         
         console.log(`get client-make-post`);

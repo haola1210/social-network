@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { List, Badge, Divider } from "antd"
 import axios from "axios"
 import Item from 'antd/lib/list/Item';
+
+import { GroupContext, GroupConsumer } from "../GroupContext/GroupContext"
+
 import "./GroupContainer.scss"
+
 function GroupContainer(props) {
 
-    const data = [
-        {name : "Phòng Khoa", count: 19},
-        {name : "Phòng Đại Học", count: 19},
-        {name : "Phòng Tài Chính", count: 19},
-        {name : "Phòng CTSV", count: 19},
-        {name : "Phòng Bệnh Hơn Chữa Bệnh", count: 19},
-        {name : "Phòng Cháy", count: 19},
+    const groupContext = useContext(GroupContext)
 
-    ]
     const [ state, setState ] = useState({
         groups: [],
         
@@ -21,26 +18,28 @@ function GroupContainer(props) {
 
     const { groups, } = state;
     
-    const onGroup = () => {
-        console.log("onGroup")
+    const chooseGroup = ( _id, name ) => {
+        groupContext.onGroup( _id, name )
     }
 
-    const RoomNavBadge = props => (
-        <div style={{margin: "0.5em", maxWidth: "150px", minWidth: "130px"}}>
-                <Badge 
-                    className="group-badge"
-                    onClick={onGroup}
-                    count={props.count}
-                    >
-                    <div 
-                        className="group-badge__text"
-                        style={{padding: "1em", borderRadius:"1em", backgroundColor: "#95cbff", fontWeight: "bold"}}
-                        >
-                        {props.name}
-                    </div>
-                </Badge>    
-        </div>
-    )
+    const RoomNavBadge = props => {
+        return (
+                <div style={{margin: "0.5em", maxWidth: "150px", minWidth: "130px"}}>
+                        <Badge 
+                            className="group-badge"
+                            count={props.count}
+                            >
+                            <div 
+                                onClick={() => chooseGroup( props._id, props.name )}
+                                className="group-badge__text"
+                                style={{padding: "1em", borderRadius:"1em", backgroundColor: "#95cbff", fontWeight: "bold"}}
+                                >
+                                {props.name}
+                            </div>
+                        </Badge>    
+                </div>
+    )}
+
     const title = props.title || false
 
     useEffect( () => {
@@ -57,7 +56,7 @@ function GroupContainer(props) {
                         }),
                     }
                 })
-                console.log(groups)
+                
             }
             else {console.log(response.data.error)}
         })
@@ -73,8 +72,8 @@ function GroupContainer(props) {
         } : null}>
             {title && <div> <h3>{title}</h3> <Divider /> </div> }
             <List
-                dataSource={state.groups}
-                renderItem={item => < RoomNavBadge name={item.name} count={item.count} onClick={onGroup}/>}
+                dataSource={groups}
+                renderItem={item => < RoomNavBadge _id={item._id} name={item.name} count={item.count} />}
             />
         </div>
     );
