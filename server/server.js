@@ -8,6 +8,7 @@ const socketio = require('socket.io')
 const http = require('http')
 
 const User = require("./models/user.model")
+const Post = require("./models/post.model")
 const { cloudinary } = require("./configs/cloudinary.setup")
 
 const app = express();
@@ -85,7 +86,17 @@ io.on("connection", socket => {
             return await cloudinary.uploader.upload(base64);
         })])
         
-        console.log("file loaded", filedLoaded.map(file => file.url))
+        // console.log("file loaded", filedLoaded.map(file => file.url))
+        filedLoaded = filedLoaded.map(file => file.url)
+        const post = {
+            owner,
+            content,
+            belongToGroup,
+            image: [...filedLoaded]
+        }
+        const newPost = await Post.create(post)
+        console.log("server created new post")
+        io.emit("server-send-new-post", { post: newPost})
     })
 })
 
