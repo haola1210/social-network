@@ -1,9 +1,9 @@
 import React from 'react';
 import "./TitleGroup.scss"
-export default function Title ({ name }) {
+export default function Title ({ name, greeting }) {
     return (
         <div className = "title-group">
-            Title Group:    {name}
+            {name} {greeting}
         </div>
     )
 }

@@ -1,7 +1,5 @@
 .group-badge {
-    
-    &:active {
-    }
+    cursor: pointer;
     
     &__text {
         padding: 1em;
@@ -10,8 +8,8 @@
         font-weight: "bold";
 
         &:active {
-            background-color: blue;
-            color: white;
+            background-color: #187cdc !important;
+            color: white !important;
         }
     }
 }

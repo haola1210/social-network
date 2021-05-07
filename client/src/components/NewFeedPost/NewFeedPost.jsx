@@ -1,80 +1,136 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useSelector } from "react-redux"
+
 import { Card, Avatar, Typography, Carousel, Image } from "antd";
 import {
-  LikeOutlined,
-  DislikeOutlined,
-  CommentOutlined
+  RightOutlined ,
+  LeftOutlined
 } from "@ant-design/icons";
 
 import CommentContainer from "../CommentContainer/CommentContainer";
+import Like from "../Action/Like"
+import Dislike from "../Action/Dislike"
+import CommentBtn from "../Action/CommentBtn"
 
 const { Meta } = Card;
 const { Paragraph } = Typography;
 
-function NewFeedPost(props) {
+function NewFeedPost({ post }) {
 
-    const [showComment, setShowComment] = useState(false);
+    const [state, setState] = useState({
+        comments : [],
+        loading : false,
+        error : null,
+        isShow : false
+    });
+    const slider = useRef(null)
+
+    const { socket } = useSelector(state => state.session)
+
+
+
+/////////////////////////////////////////////////////////////// socket process here
+    useEffect(() => {
+        console.log("re-render")
+        setState({
+            ...state, 
+            loading: true,
+            error : null
+        })
+        socket.emit("client-req-cmt", { postId : post._id })
+        socket.on("server-send-comment-list", response => {
+            if(response.comments && response.postId == post._id){
+                console.log(response.comments)
+                setState({
+                    ...state, 
+                    loading: false,
+                    comments : response.comments,
+                    error : null
+                })
+            } 
+            if(response.error && response.postId == post._id) {
+                console.log(response.error.message)
+                setState({
+                    ...state, 
+                    loading: false,
+                    error : response.error.message
+                })
+            }
+        })
+    }, [post])
+///////////////////////////////////////////////////////////////////////////////////////
 
     return (
         <div style={{ width: "100%", margin: "1em 0" }}>
             <Card
                 style={{ width: "100%" }}
                 actions={[
-                <LikeOutlined />, //dispatch like here
-                <DislikeOutlined />,
-                <CommentOutlined onClick={() => setShowComment((prev) => !prev)} />
+                <Like likeCounter={post.likes.length} />, //dispatch like here
+                <Dislike dislikeCounter={post.dislikes.length} />,
+                <CommentBtn cmtCounter={0} onClick={() => setState(prev => ({...prev, isShow : !prev.isShow}))} />
                 ]}
             >
                 <Meta
-                avatar={
-                    <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-                }
-                title="Hao Le"
-                style={{ padding: "1em" }}
+                    avatar={
+                        post.owner.image 
+                        ? 
+                        <Avatar src={post.owner.image} /> 
+                        : 
+                        (<div style={{
+                            width: "32px",
+                            height: "32px",
+                            paddingBottom: "5px",
+                            borderRadius: "16px",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            color : "red",
+                            backgroundColor: "orange",
+                            fontWeight: "bold",
+                            fontSize: "1.5em",
+                            textTransform : "uppercase"
+                        }}
+                        
+                        >{post.owner.name[0]}</div>)
+                    }
+                title={post.owner.name}
+                style={{ padding: "1em", userSelect:"none" }}
                 />
-                {/* content */}
-                <Card.Grid style={{ width: "100%" }} hoverable={false}>
-                <Paragraph ellipsis={{ rows: 3, expandable: true, symbol: "more" }}>
-                    Hao dep trai vkl, qua pro vip dinh cua dinh. Sau day la mot vai hinh
-                    anh nghe thuat cua Hao chup. Hmm phan nay se bi anh di vi dai hon 4
-                    dong. Co ve vai dong nua moi du 4 dong. au hahahahah jashdasdhi
-                    asoikdhasdjhksakjd askjdasjkdhjkasdhjk dhaskjdkhjasdkj
-                </Paragraph>
 
-                <Carousel>
-                    <Image
-                    style={{ width: "100%" }}
-                    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                    />
-                    <Image
-                    style={{ width: "100%" }}
-                    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                    />
-                    <Image
-                    style={{ width: "100%" }}
-                    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                    />
-                    <Image
-                    style={{ width: "100%" }}
-                    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                    />
-                    <Image
-                    style={{ width: "100%" }}
-                    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                    />
-                    <Image
-                    style={{ width: "100%" }}
-                    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                    />
-                </Carousel>
+
+                {/* content */}
+                <Card.Grid style={{ width: "100%", paddingBottom:0 }} hoverable={false}>
+
+                    <Paragraph ellipsis={{ rows: 3, expandable: true, symbol: "more" }}>
+                        {
+                            post.content
+                        }
+                    </Paragraph>
+                    
+                        
+                        <Carousel ref={slider}>
+                            {
+                                post.image.map((url, index) => (<Image 
+                                    key= {index}
+                                    style={{ width: "100%" }}
+                                    src={url}
+                                />))
+                            }  
+                        </Carousel>
+                        <div style={{width: "100%", display:"flex", justifyContent:"space-between", padding:5}}>
+                            { post.image.length > 1 ?  <LeftOutlined onClick={() => slider.current.next()} onSelect={() => false} /> : null }
+                            { post.image.length > 1 ? (<RightOutlined onClick={() => slider.current.prev()} onSelect={() => false}/>) : null }
+                        </div>
+                
+                
                 </Card.Grid>
             </Card>
 
             {/* comment container*/}
-            {showComment && <CommentContainer />}
+            {state.isShow && <CommentContainer containerState = {state} />}
         </div>
   
     );
 }
 
-export default NewFeedPost;
+export default React.memo(NewFeedPost);

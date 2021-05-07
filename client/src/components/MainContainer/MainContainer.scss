@@ -35,8 +35,11 @@
     .main__left{
         display: block;
         height: 100%;
-        padding: 1em 2em;
+        padding: 1em 0;
         border-right: 1px solid #d8d8d8;
+        &__title{
+            padding: 0 1em;
+        }
     }
 
     .post{
