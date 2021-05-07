@@ -3,11 +3,13 @@ import {
     CLEAR_SESSION,
     FETCHING_SESSION
 } from './sessionActionType'
+import { STORE_SOCKET } from '../../socketClient'
 
 const initialState = {
     user : null,
     jwt : null,
-    isFetching : false
+    isFetching : false,
+    socket: null
 }
 
 export const sessionReducer = (state = initialState, action) => {
@@ -30,12 +32,19 @@ export const sessionReducer = (state = initialState, action) => {
                 isFetching : false
             }
         
+        case STORE_SOCKET:
+            return {
+                ...state,
+                socket : action.payload.socket
+            }
+        
         case CLEAR_SESSION:
             return {
                 ...state,
                 user : null,
                 jwt : null,
-                isFetching : false
+                isFetching : false,
+                socket : null
             }
 
         default:

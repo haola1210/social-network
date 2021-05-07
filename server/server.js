@@ -9,6 +9,8 @@ const http = require('http')
 
 const User = require("./models/user.model")
 const Post = require("./models/post.model")
+const Comment = require("./models/comment.model")
+
 const { cloudinary } = require("./configs/cloudinary.setup")
 
 const app = express();
@@ -76,6 +78,42 @@ io.on("connection", socket => {
     const { userId } = socket.handshake.auth;
     User.findByIdAndUpdate( userId, { socketId: socket.id }, { new: true })
         // .then(user => console.log(`update socketId ${user.socketId}`));
+
+    
+    Post.find({})
+    .populate('owner')
+    .populate('belongToGroup')
+    .exec()
+    .then(async posts => {
+            
+        console.log("send posts to client")
+        socket.emit("server-init-post", { posts })
+    
+    })
+    .catch(error => {
+        console.log(error.message)
+        socket.emit("server-init-post", { error })
+    })
+
+
+
+    // init comment per post 
+    socket.on("client-req-cmt", async data => {
+        console.log("client: "+data.postId)
+        try {
+            const { postId } = data
+            const skip = data.skip || 0
+            const limit = 5
+            const comments = await Comment.find({ belongToPost : postId }).sort({ timeStamp: -1 }).skip(skip).limit(limit)
+            
+            socket.emit("server-send-comment-list", { comments, postId })
+        } catch (error) {
+            socket.emit("server-send-comment-list", { error, postId: data.postId })
+        }
+    })
+
+
+    // new post 
     socket.on("client-make-post", async ({ content, fileList, belongToGroup, owner, }) => {
         
         // console.log(`get client-make-post`);
