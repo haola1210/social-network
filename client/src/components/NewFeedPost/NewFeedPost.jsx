@@ -37,7 +37,7 @@ function NewFeedPost({ post }) {
         console.log(reaction, " post ", post.content)
         socket.emit("client-react-post", { id: post._id, user: user._id, reaction})
         socket.on("server-send-react-post", ({ error, post : reactedPost, postId }) => {
-            if (error && error !== null && postId == post._id) {
+            if (error && error !== null && postId === post._id) {
                 console.log(error)
                 setState({
                     ...state, 
@@ -45,7 +45,7 @@ function NewFeedPost({ post }) {
                     error : error.message
                 })
             }
-            if (reactedPost && postId == post._id) {
+            if (reactedPost && postId === post._id) {
                 console.log("reacted post", reactedPost)
                 dispatch({ type: REACT_POST, payload: { reactedPost }})
             }

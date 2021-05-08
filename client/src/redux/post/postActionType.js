@@ -1,6 +1,7 @@
 export const MAKING_POST = "MAKING_POST"
 export const REACT_POST = "REACT_POST"
 export const PUSH_NEW_POST = "PUSH_NEW_POST"
+export const COMMENT_POST = "COMMENT_POST"
 
 export const FETCH_MORE_POST = "FETCH_MORE_POST"  // USE IN socket saga
 

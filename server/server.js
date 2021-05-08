@@ -203,7 +203,7 @@ io.on("connection", socket => {
         })
         .then(updatedPost => {
             if (updatedPost) {
-                io.emit("server-send-react-post", { error: null, post, postId: id})
+                io.emit("server-send-react-post", { post, postId: id})
             }
             else throw new Error("Reaction updates failed")
         }).catch(error => {
@@ -215,7 +215,7 @@ io.on("connection", socket => {
         console.log("comment feature")
         console.log("get from client ", owner, content, belongToPost)
         try {
-            const comment = await Comment.create({ content, owner, belongToPost, })
+            const comment = await Comment.create({ content, owner, belongToPost, timeStamp: new Date()})
             io.emit("server-send-comment-post", { comment , belongToPost })
         } catch (error) {
             console.log(error)

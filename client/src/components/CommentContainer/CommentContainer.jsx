@@ -4,30 +4,43 @@ import { useSelector, useDispatch } from "react-redux"
 import { List, Form, Input, Button, Skeleton, Row, Col } from "antd";
 
 import CustomComment from "../CustomComment/CustomComment";
+import { COMMENT_POST } from "../../redux/post/postActionType"
 
 function CommentContainer({ containerState }) {
 		
 	const { socket, user, } = useSelector(state => state.session)
+	const { posts, } = useSelector(state => state.posts)
 	const [ state, setState ] = useState({
 		content: "", 
 		belongToPost: containerState.postId,
 	})
-	
+	const dispatch = useDispatch()
+
 	const onComment = () => {
 		console.log("onComment", containerState)
 		console.log("state", state)
-		socket.emit("client-comment-post", { 
-			owner: user._id, 
-			content: state.content, 
-			belongToPost: state.belongToPost, 
-		})
-		setState(prev => {return{
-			...prev, 
-			content: "",
-		}})
-		socket.on("server-send-comment-post", ({ error, comment, belongToPost}) => {
-			console.log({ error, comment, belongToPost})
-		})
+		if (state.content) {
+			socket.emit("client-comment-post", { 
+				owner: user._id, 
+				content: state.content, 
+				belongToPost: state.belongToPost, 
+			})
+			setState(prev => {return{
+				...prev, 
+				content: "",
+			}})
+			socket.on("server-send-comment-post", ({ error, comment, belongToPost}) => {
+				if (error !== null && error !== undefined && error) {
+					console.log("error", error.message)
+				}
+				if (comment) {
+					console.log({ error, comment, belongToPost})
+					// dispatch({ type: COMMENT_POST, payload: { comment }})
+					// socket.emit("client-req-cmt", { postId : belongToPost, skip: (containerState.comments.length/5) })
+				}
+			})
+
+		}
 	}
 
     const onFieldsChange = (changedFields, allFields) => {
@@ -38,6 +51,10 @@ function CommentContainer({ containerState }) {
             }})
         })
     }
+
+	const onLoadMore = () => {
+
+	}
 
 	const footer = (
 		<Form 
@@ -53,6 +70,7 @@ function CommentContainer({ containerState }) {
 				outline: "none",
 				padding: 0
 				}}
+				onClick={onLoadMore}
 			>
 				loading more
 			</Button>
@@ -74,7 +92,7 @@ function CommentContainer({ containerState }) {
 	
 			<Col flex="1">
 			<Form.Item>
-				<Button type="primary" htmlType="submit" onClick={onComment}>
+				<Button type="primary" htmlType="button" onClick={onComment}>
 				Comment
 				</Button>
 			</Form.Item>
@@ -84,10 +102,10 @@ function CommentContainer({ containerState }) {
 	);
 
 	useEffect(() =>{
-		console.log("containerState", containerState)
-		console.log("state", state)
-		console.log("user", user)
-	}, [ state, containerState ])
+		// console.log("containerState", containerState)
+	// 	console.log("state", state)
+		console.log("posts", posts)
+	}, [ posts ])
 
 	return (
 	<>
