@@ -65,7 +65,7 @@ function NewFeedPost({ post }) {
             }
         })
         socket.once("server-send-react-post", ({ error, post : reactedPost, postId }) => {
-            if (error && error !== null && postId === post._id) {
+            if (error && error !== null && postId == post._id) {
                 console.log(error)
                 setState({
                     ...state, 
