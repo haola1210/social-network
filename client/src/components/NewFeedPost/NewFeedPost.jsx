@@ -34,20 +34,7 @@ function NewFeedPost({ post }) {
     const onReact = ( reaction ) => {
         console.log(reaction, " post ", post.content)
         socket.emit("client-react-post", { id: post._id, user: user._id, reaction})
-        socket.on("server-send-react-post", ({ error, post : reactedPost, postId }) => {
-            if (error && error !== null && postId == post._id) {
-                console.log(error)
-                setState({
-                    ...state, 
-                    loading: false,
-                    error : error.message
-                })
-            }
-            if (reactedPost && postId === post._id) {
-                console.log("reacted post", reactedPost)
-                dispatch({ type: REACT_POST, payload: { reactedPost }})
-            }
-        })
+        
     }
 
 /////////////////////////////////////////////////////////////// socket process here
@@ -58,7 +45,7 @@ function NewFeedPost({ post }) {
             error : null
         })
         socket.emit("client-req-cmt", { postId : post._id })
-        socket.on("server-send-comment-list", response => {
+        socket.once("server-send-comment-list", response => {
             if(response.comments && response.postId == post._id){
                 console.log(response.comments)
                 setState({
@@ -78,6 +65,21 @@ function NewFeedPost({ post }) {
             }
         })
         
+        socket.once("server-send-react-post", ({ error, post : reactedPost, postId }) => {
+            if (error && error !== null && postId == post._id) {
+                console.log(error)
+                setState({
+                    ...state, 
+                    loading: false,
+                    error : error.message
+                })
+            }
+            if (reactedPost && postId === post._id) {
+                console.log("reacted post", reactedPost)
+                dispatch({ type: REACT_POST, payload: { reactedPost }})
+            }
+        })
+
     }, [ post ])
 ///////////////////////////////////////////////////////////////////////////////////////
 
