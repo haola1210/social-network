@@ -23,10 +23,6 @@ const PostSchema = new Schema({
         type : Schema.Types.ObjectId,   //danh sach user dislike
 		ref : "User",
     }],
-    timeStamp: {                        //thoi gian
-        type: Date,
-        default: Date.now()
-    },
     image: [String],                    //danh sach anh.
     videoEmbed: {                       //danh sach video youtube
         type: String,
@@ -44,6 +40,9 @@ const PostSchema = new Schema({
     }]
 
 });
+
+PostSchema.set('timestamps', true); // this will add createdAt and updatedAt timestamps
+
 
 const Post = model("Post", PostSchema, "posts");
 
