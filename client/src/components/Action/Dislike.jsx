@@ -1,16 +1,25 @@
 import React from 'react';
-
+import { useSelector } from "react-redux"
 
 
 import {
     DislikeOutlined,
+    DislikeTwoTone
 } from "@ant-design/icons";
 
 
-function Dislike({ dislikeCounter, onClick }) {
+function Dislike({ dislike, onClick }) {
+
+    const { user } = useSelector(state => state.session)
+    const found = dislike.find(userId => userId == user._id)
+
     return (
         <div onClick={onClick}>
-            <DislikeOutlined /> {dislikeCounter}
+            {
+                found === undefined ? 
+                <DislikeOutlined /> : 
+                <DislikeTwoTone />
+            } {dislike.length}
         </div>
     );
 }
