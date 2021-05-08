@@ -9,7 +9,7 @@ import { sessionReducer } from "./session/sessionReducer"
 import { signinReducer } from "./signin/signinReducer"
 import { groupReducer } from "./group/groupReducer"
 import { postReducer } from "./post/postReducer"
-
+import { errorReducer } from "./error/errorReducer"
 
 import rootSaga from "../saga/rootSaga"
 import { socketMiddleware } from "../socketClient"
@@ -21,7 +21,7 @@ const rootReducer = combineReducers({
     signin : signinReducer,
     groups: groupReducer,          
     posts : postReducer,
-
+    error : errorReducer
 })
 
 const store = createStore(

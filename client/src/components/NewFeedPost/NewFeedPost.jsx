@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
+import moment from "moment"
 import { useSelector } from "react-redux"
 
 import { Card, Avatar, Typography, Carousel, Image } from "antd";
 import {
   RightOutlined ,
-  LeftOutlined
+  LeftOutlined,
+  ArrowRightOutlined
 } from "@ant-design/icons";
 
 import CommentContainer from "../CommentContainer/CommentContainer";
@@ -31,7 +33,6 @@ function NewFeedPost({ post }) {
 
 /////////////////////////////////////////////////////////////// socket process here
     useEffect(() => {
-        console.log("re-render")
         setState({
             ...state, 
             loading: true,
@@ -93,7 +94,22 @@ function NewFeedPost({ post }) {
                         
                         >{post.owner.name[0]}</div>)
                     }
-                title={post.owner.name}
+                title={
+                    <p style={{ marginBottom: 0 }}>
+                        <b>
+                            {
+                                post.owner.name} {post.belongToGroup && 
+                                <span>
+                                    <ArrowRightOutlined /> {post.belongToGroup.name}
+                                </span>
+                            }
+                        </b>
+                        <br />
+                        <small>
+                            { moment(post.updatedAt).format('hh:mm, Do MMMM YYYY') }
+                        </small>
+                    </p>
+                }
                 style={{ padding: "1em", userSelect:"none" }}
                 />
 

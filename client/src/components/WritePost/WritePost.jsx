@@ -45,7 +45,7 @@ const WritePost = ({ belongToGroup }) => {
 			const post = {
 				content,
 				fileList: listFiles,
-				belongToGroup: groupId !== "" && groupId !== undefined? groupId : null,
+				belongToGroup: groupId !== "" && groupId !== undefined ? groupId : null,
 			}
 			dispatch({ type: MAKING_POST, payload: post})
 		}, 2000);
