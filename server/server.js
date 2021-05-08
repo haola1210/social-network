@@ -152,7 +152,8 @@ io.on("connection", socket => {
                 owner,
                 content,
                 belongToGroup,
-                image: [...filedLoaded]
+                image: [...filedLoaded],
+                createdAt : Date.now()
             }
 
             const tempPost = new Post(post)
