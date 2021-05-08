@@ -37,6 +37,10 @@
     color: rgba(0, 0, 0, 0.4);
     cursor: pointer;
     user-select: none;
+
+    max-width: 700px;
+    margin-top: 1em;
+
     &:hover{
         color: black;
         background-color: #dbdbdb;
