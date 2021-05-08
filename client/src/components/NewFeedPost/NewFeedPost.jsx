@@ -29,7 +29,6 @@ function NewFeedPost({ post }) {
     const slider = useRef(null)
 
     const { socket, user } = useSelector(state => state.session)
-    const { posts } = useSelector(state => state.posts)
     const dispatch = useDispatch()
 
     const onReact = ( reaction ) => {
@@ -44,7 +43,7 @@ function NewFeedPost({ post }) {
                     error : error.message
                 })
             }
-            if (reactedPost && postId == post._id) {
+            if (reactedPost && postId === post._id) {
                 console.log("reacted post", reactedPost)
                 dispatch({ type: REACT_POST, payload: { reactedPost }})
             }
@@ -87,8 +86,8 @@ function NewFeedPost({ post }) {
             <Card
                 style={{ width: "100%" }}
                 actions={[
-                    <Like onClick={() => onReact("likes")} likeCounter={post.likes.length} />, 
-                    <Dislike onClick={()=> onReact("dislikes")} dislikeCounter={post.dislikes.length} />,
+                    <Like onClick={() => onReact("likes")} like={post.likes} />, 
+                    <Dislike onClick={()=> onReact("dislikes")} dislike={post.dislikes} />,
                     <CommentBtn cmtCounter={0} onClick={() => setState(prev => ({...prev, isShow : !prev.isShow}))} />
                 ]}
             >
@@ -127,7 +126,7 @@ function NewFeedPost({ post }) {
                         </b>
                         <br />
                         <small>
-                            { moment(post.updatedAt).format('hh:mm, Do MMMM YYYY') }
+                            { moment(post.createdAt).format('hh:mm, Do MMMM YYYY') }
                         </small>
                     </p>
                 }
