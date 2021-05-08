@@ -181,6 +181,7 @@ io.on("connection", socket => {
         try {
             
             let foundPost = await Post.findById(id).exec()
+            const reacted = foundPost[reaction].includes(user)
             let liked = foundPost.likes.indexOf(user) != -1
             let disliked = foundPost.dislikes.indexOf(user) != -1
 
@@ -190,6 +191,7 @@ io.on("connection", socket => {
                     likes : user,
                     dislikes : user
                 }
+
             }, { new : true }).exec()
 
            
@@ -273,6 +275,18 @@ io.on("connection", socket => {
 
     })
 
+    socket.on("client-comment-post", async ({ owner, content, belongToPost }) => {
+        console.log("comment feature")
+        console.log("get from client ", owner, content, belongToPost)
+        try {
+            const comment = await Comment.create({ content, owner, belongToPost, timeStamp: new Date()})
+            io.emit("server-send-comment-post", { comment , belongToPost })
+        } catch (error) {
+            console.log(error)
+            io.emit("server-send-comment-post", { error, belongToPost })            
+        }
+
+    })
 })
 
 

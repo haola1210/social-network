@@ -21,6 +21,7 @@ const { Paragraph } = Typography;
 function NewFeedPost({ post }) {
 
     const [state, setState] = useState({
+        postId: post._id,
         comments : [],
         loading : false,
         error : null,
@@ -34,7 +35,6 @@ function NewFeedPost({ post }) {
     const onReact = ( reaction ) => {
         console.log(reaction, " post ", post.content)
         socket.emit("client-react-post", { id: post._id, user: user._id, reaction})
-        
     }
 
 /////////////////////////////////////////////////////////////// socket process here
@@ -64,7 +64,6 @@ function NewFeedPost({ post }) {
                 })
             }
         })
-        
         socket.once("server-send-react-post", ({ error, post : reactedPost, postId }) => {
             if (error && error !== null && postId == post._id) {
                 console.log(error)
@@ -79,7 +78,6 @@ function NewFeedPost({ post }) {
                 dispatch({ type: REACT_POST, payload: { reactedPost }})
             }
         })
-
     }, [ post ])
 ///////////////////////////////////////////////////////////////////////////////////////
 

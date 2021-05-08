@@ -1,5 +1,6 @@
 import { 
     REACT_POST,
+    COMMENT_POST,
 
     FETCH_POST_START,
     FETCH_POST_SUCCESS,
@@ -79,10 +80,19 @@ export const postReducer = (state = initialState, action) => {
         case REACT_POST:
             const { reactedPost } = action.payload
             console.log("REACT_POST",  reactedPost )
+            const updatedPosts = [...state.posts.map(post => reactedPost._id === post._id? reactedPost: post)]
             return {
                 ...state,
-                posts: [...state.posts.map(post => reactedPost._id === post._id? reactedPost : post )]
+                posts: [...updatedPosts]
             }
+
+        // case COMMENT_POST:
+        //     const { comment } = action.payload
+        //     console.log("COMMENT_POST",  comment )
+        //     return {
+        //         ...state,
+        //         posts: [...state.posts.map(post => comment.belongToPost === post._id? post.comments : post )]
+        //     }
 
         case FETCH_MORE_POST_SUCCESS:
             return {
