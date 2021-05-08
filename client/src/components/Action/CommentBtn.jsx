@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 
 
-function CommentBtn({cmtCounter, onClick}) {
+function CommentBtn({ cmtCounter, onClick }) {
     return (
         <div onClick={onClick}>
             <CommentOutlined /> {cmtCounter}

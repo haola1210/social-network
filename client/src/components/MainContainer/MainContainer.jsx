@@ -8,17 +8,14 @@ import GroupContainer from "../GroupContainer/GroupContainer"
 import NewFeedPost from "../NewFeedPost/NewFeedPost"
 import WritePost from "../WritePost/WritePost"
 import TitleGroup from "../TitleGroup/TitleGroup"
-import { GroupContext, GroupConsumer } from "../GroupContext/GroupContext"
 
 import "./MainContainer.scss"
 
-const posts = [1,1,1,1,1,1,1]
-function MainContainer(props) {
+function MainContainer() {
 
     const { currentGroup } = useSelector(state => state.groups)
     const { user } = useSelector(state => state.session)
     const { posts } = useSelector(state => state)
-
 
     return (
         <div className="main">

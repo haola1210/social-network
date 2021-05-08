@@ -1,5 +1,6 @@
 import { 
     MAKING_POST,
+    REACT_POST,
 
     FETCH_POST_START,
     FETCH_POST_SUCCESS,
@@ -53,6 +54,14 @@ export const postReducer = (state = initialState, action) => {
             const { post } = action.payload;
             return {
                 ...state,
+            }
+
+        case REACT_POST:
+            const { reactedPost } = action.payload
+            console.log("REACT_POST",  reactedPost )
+            return {
+                ...state,
+                posts: [...state.posts.map(post => reactedPost._id === post._id? reactedPost : post )]
             }
 
         default:

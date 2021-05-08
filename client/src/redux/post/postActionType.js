@@ -1,5 +1,5 @@
 export const MAKING_POST = "MAKING_POST"
-
+export const REACT_POST = "REACT_POST"
 
 export const FETCH_POST = "FETCH_POST"
 export const FETCH_POST_START = "FETCH_POST_START"
