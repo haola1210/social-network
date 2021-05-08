@@ -3,9 +3,15 @@ import {
     MAKING_POST,
     FETCH_POST_START,
     FETCH_POST_SUCCESS,
-    FETCH_POST_FAILURE
+    FETCH_POST_FAILURE,
+    PUSH_NEW_POST,
+    FETCH_MORE_POST,
+    FETCH_MORE_POST_START,
+    FETCH_MORE_POST_FAILURE,
+    FETCH_MORE_POST_SUCCESS
 } from './redux/post/postActionType'
 
+import { PUSH_ERROR } from "./redux/error/errorActionType"
 
 export const INIT_SOCKET = "INIT_SOCKET"
 export const STORE_SOCKET = "STORE_SOCKET"
@@ -15,7 +21,8 @@ let socket = null
 export const socketMiddleware = storeAPI => next => action => {
     
     const { user } = storeAPI.getState().session
-    
+    const { posts } = storeAPI.getState()
+
     if(action.type === INIT_SOCKET){
 
         const handshake = {
@@ -53,13 +60,36 @@ export const socketMiddleware = storeAPI => next => action => {
                 })
             }
         })
-///////////////////////////////////////////////////////////////////////
 
 
-
+///////////////////////////////////////////////////////////////////         handle new post from server
         socket.on("server-send-new-post", function(post) {
             console.log("new post created", post);
+            next({ type: PUSH_NEW_POST, payload: { post } })
+
         })
+///////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////     handle error message from server
+        socket.on("server-send-error", ({ error }) => {
+            console.log(error)
+            next({ type: PUSH_ERROR, payload: { error } })
+
+        })
+///////////////////////////////////////////////////////////////////////////
+
+
+///////////////////////////////////////////////////////////////////////////  handle more post from server
+        socket.on("server-send-more-post", response => {
+            if(response.error){
+                next({ type : FETCH_MORE_POST_FAILURE, payload: {error : response.error} })
+            }
+
+            if(response.posts){
+                next({ type: FETCH_MORE_POST_SUCCESS, payload: { posts: response.posts } })
+            }
+        })
+////////////////////////////////////////////////////////////////////////////
 
     } else if (action.type === MAKING_POST) {
         
@@ -71,7 +101,15 @@ export const socketMiddleware = storeAPI => next => action => {
             belongToGroup,
             owner: user._id,
         })
+    
+    } else if(action.type === FETCH_MORE_POST){
+        console.log(posts)
+        next({ type : FETCH_MORE_POST_START })
 
-    } else return next(action)
+        socket.emit("client-fetch-more-post", { skip : posts.skip })
+
+    }
+    
+    else return next(action)
 
 }

@@ -1,24 +1,31 @@
 import React, { useState, useEffect, useContext, } from 'react';
 import {useSelector, useDispatch } from "react-redux"
 
-import { Divider, Row, Spin } from "antd"
+import { Divider, Row, Spin, message } from "antd"
 import { LoadingOutlined } from '@ant-design/icons';
 
 import GroupContainer from "../GroupContainer/GroupContainer"
 import NewFeedPost from "../NewFeedPost/NewFeedPost"
 import WritePost from "../WritePost/WritePost"
 import TitleGroup from "../TitleGroup/TitleGroup"
-import { GroupContext, GroupConsumer } from "../GroupContext/GroupContext"
+
+import { CLEAR_ERROR } from "../../redux/error/errorActionType"
 
 import "./MainContainer.scss"
-
-const posts = [1,1,1,1,1,1,1]
+import { FETCH_MORE_POST } from '../../redux/post/postActionType';
 function MainContainer(props) {
 
     const { currentGroup } = useSelector(state => state.groups)
     const { user } = useSelector(state => state.session)
-    const { posts } = useSelector(state => state)
+    const { posts, error } = useSelector(state => state)
 
+    const dispatch = useDispatch()
+    useEffect(() => {
+        if(error.content){
+            message.error(error.content)
+            dispatch({ type: CLEAR_ERROR })
+        }
+    }, [error])
 
     return (
         <div className="main">
@@ -32,6 +39,7 @@ function MainContainer(props) {
             </div>
             
             <div className="main__right">
+
                 {
                     currentGroup !== null && currentGroup._id !== null? 
                         (<Row style={{
@@ -82,7 +90,7 @@ function MainContainer(props) {
                     {
                         posts.isFetching ? 
                         (<Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />) : 
-                        (<p> load more </p>)
+                        (<p className="load-more" onClick={ () => dispatch({ type : FETCH_MORE_POST })}> load more </p>)
                     }
                </Row>
             </div>

@@ -27,6 +27,22 @@
     
 }
 
+.load-more{
+    background-color: white;
+    width: 100%;
+    text-align: center;
+    padding: 1em;
+    border-radius: 1em;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    user-select: none;
+    &:hover{
+        color: black;
+        background-color: #dbdbdb;
+    }
+}
+
 @media screen and (min-width: 576px) {
     .main{
         height: calc(100vh - 72px);

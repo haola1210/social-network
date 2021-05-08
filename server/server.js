@@ -80,7 +80,7 @@ io.on("connection", socket => {
         // .then(user => console.log(`update socketId ${user.socketId}`));
 
     
-    Post.find({})
+    Post.find({}).sort({ updatedAt: -1 }).skip(0).limit(5)
     .populate('owner')
     .populate('belongToGroup')
     .exec()
@@ -93,11 +93,12 @@ io.on("connection", socket => {
     .catch(error => {
         console.log(error.message)
         socket.emit("server-init-post", { error })
+        socket.emit("server-send-error", { error: { message : "Can not fetch posts! Something wrong, plz contact developer" } })
     })
 
 
 
-    // init comment per post 
+    /////////////////////////////////////// init comment per post 
     socket.on("client-req-cmt", async data => {
         console.log("client: "+data.postId)
         try {
@@ -111,7 +112,28 @@ io.on("connection", socket => {
             socket.emit("server-send-comment-list", { error, postId: data.postId })
         }
     })
+    //////////////////////////////////////////////////////////////////////////
 
+
+
+    /////////////////////////////////////// fetch more post
+    socket.on("client-fetch-more-post", async ({skip}) => {
+        try {
+            const posts = await Post.find({})
+            .sort({updatedAt : -1})
+            .skip(skip)
+            .limit(5)
+            .populate("owner")
+            .populate("belongToGroup")
+    
+            socket.emit("server-send-more-post", { posts })
+            
+        } catch (error) {
+            socket.emit("server-send-more-post", {error : { message : "Can not show more post! error " }})
+            socket.emit("server-send-error", {error : { message : "Can not show more post! error " }})
+        }
+    })
+    ////////////////////////////////////////////////////////////////////////////
 
     // new post 
     socket.on("client-make-post", async ({ content, fileList, belongToGroup, owner, }) => {
@@ -119,22 +141,37 @@ io.on("connection", socket => {
         // console.log(`get client-make-post`);
         // console.log({ content, fileList, belongToGroup, owner, });
         
-        let filedLoaded = await Promise.all([...fileList.map(async (base64) => {
-            // upload image to cloudinary with based-64 image
-            return await cloudinary.uploader.upload(base64);
-        })])
-        
-        // console.log("file loaded", filedLoaded.map(file => file.url))
-        filedLoaded = filedLoaded.map(file => file.url)
-        const post = {
-            owner,
-            content,
-            belongToGroup,
-            image: [...filedLoaded]
+        try {
+            let filedLoaded = await Promise.all([...fileList.map(async (base64) => {
+                // upload image to cloudinary with based-64 image
+                return await cloudinary.uploader.upload(base64);
+            })])
+            
+            // console.log("file loaded", filedLoaded.map(file => file.url))
+            filedLoaded = filedLoaded.map(file => file.url)
+            const post = {
+                owner,
+                content,
+                belongToGroup,
+                image: [...filedLoaded]
+            }
+
+            const tempPost = new Post(post)
+            await tempPost.save()
+            await tempPost.populate("owner").populate("belongToGroup").execPopulate()
+            console.log("server created new post")
+            io.emit("server-send-new-post", { post: tempPost})
+            
+            
+            // delete post no image - use for test
+            // await Post.deleteMany({})
+
+
+        } catch (error) {
+            console.log(error.message)
+            socket.emit("server-send-error", { error: { message : "You can not post right now! Plz contact developer" }})
         }
-        const newPost = await Post.create(post)
-        console.log("server created new post")
-        io.emit("server-send-new-post", { post: newPost})
+
     })
 })
 
