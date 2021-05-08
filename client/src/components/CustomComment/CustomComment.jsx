@@ -67,6 +67,8 @@ function CustomComment({ data }) {
 
   const state = {}
 
+    console.log(data)
+
     const like = () => {
         if (!state.status === "liked") {
             //start like
@@ -94,20 +96,35 @@ function CustomComment({ data }) {
 
     return (
         <Comment
+            style={{padding: "0 1em", backgroundColor: '#f1f1f1', width: "100%", borderRadius: "1em"}}
             actions={actions}
-            author={<a>{ data.owner }</a>}
+            author={<p>{ data.owner.name }</p>}
             avatar={
-                <Avatar
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                alt={`${ data.owner }`}
-                />
+                data.owner.image 
+                ? 
+                <Avatar src={data.owner.image} /> 
+                : 
+                (<div style={{
+                    width: "24px",
+                    height: "24px",
+                    paddingBottom: "5px",
+                    borderRadius: "12px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color : "red",
+                    backgroundColor: "orange",
+                    fontWeight: "bold",
+                    fontSize: "1em",
+                    textTransform : "uppercase"
+                }}>{data.owner.name[0]}</div>)
             }
             content={
                 <p> { data.content } </p>
             }
-            datetime={<span>{moment( data.timeStamp ).fromNow("HH:mm DD-MM-YYYY")}</span>}
+            datetime={<span>{moment( data.createdAt ).fromNow("HH:mm DD-MM-YYYY")}</span>}
         />
     );
 }
 
-export default CustomComment;
+export default React.memo(CustomComment);

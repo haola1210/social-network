@@ -13,6 +13,7 @@ import {
 } from './redux/post/postActionType'
 
 import { PUSH_ERROR } from "./redux/error/errorActionType"
+import { PUSH_MESS } from "./redux/notification/notificationActionType"
 
 export const INIT_SOCKET = "INIT_SOCKET"
 export const STORE_SOCKET = "STORE_SOCKET"
@@ -76,6 +77,14 @@ export const socketMiddleware = storeAPI => next => action => {
         socket.on("server-send-error", ({ error }) => {
             console.log(error)
             next({ type: PUSH_ERROR, payload: { error } })
+
+        })
+///////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////     handle notification message from server
+        socket.on("server-send-noti", ({ mess }) => {
+
+            next({ type: PUSH_MESS, payload: { mess } })
 
         })
 ///////////////////////////////////////////////////////////////////////////

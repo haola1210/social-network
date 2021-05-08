@@ -104,10 +104,17 @@ io.on("connection", socket => {
             const { postId } = data
             const skip = data.skip || 0
             const limit = 5
-            const comments = await Comment.find({ belongToPost : postId }).sort({ timeStamp: -1 }).skip(skip).limit(limit)
+            const comments = await Comment.find({ belongToPost : postId })
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .populate("owner")
             
+            // console.log("cmt", comments)
+
             socket.emit("server-send-comment-list", { comments, postId })
         } catch (error) {
+            console.log(error)
             socket.emit("server-send-comment-list", { error, postId: data.postId })
         }
     })
@@ -161,7 +168,7 @@ io.on("connection", socket => {
             await tempPost.populate("owner").populate("belongToGroup").execPopulate()
             console.log("server created new post")
             io.emit("server-send-new-post", { post: tempPost})
-            
+            io.emit("server-send-noti", { mess : `${tempPost.owner.name} đăng 1 bài viết` })
             
             // delete post no image - use for test
             // await Post.deleteMany({})
@@ -229,49 +236,6 @@ io.on("connection", socket => {
             console.log("update fail", error.message)
             io.emit("server-send-react-post", { error, postId: id})
         }
-        
-        // Post.findById(id).then(async ( post ) => {
-        //     if(post) {
-        //         // should set reactions filed in post schema
-        //         let reactions = ["likes", "dislikes",]
-        //         const restReactions = reactions.filter(react => react !== reaction)
-        //         const reacted = post[reaction].includes(user);
-        //         if (reacted) {
-        //             return Post.findOneAndUpdate({ _id: id }, { $pull: { [reaction]: user }}, { new: true })
-                    
-        //         }
-        //         else {
-        //             const updates = await Promise.all([
-        //                 (
-        //                     Post.findOneAndUpdate({ _id: id }, { $push: { [reaction]: user }}, { new: true })
-        //                 ),
-        //                 restReactions.forEach(async ( restReaction ) => 
-        //                     await Post.findOneAndUpdate({ _id: id }, { $pull: { [restReaction]: user }})
-        //                 ),
-        //             ])
-        //             return updates[0];
-        //         }
-        //     }
-        //     else {
-        //         throw new Error("post id invalid")
-        //     }
-        // })
-        // .then( async updatedPost => {
-        //     if (updatedPost) {
-        //         await updatedPost
-        //         .populate("owner")
-        //         .populate("belongToGroup")
-        //         .execPopulate()
-
-                // console.log("update ok")
-                // io.emit("server-send-react-post", { error: null, post: updatedPost, postId: id})
-        //     }
-        //     else throw new Error("Reaction updates failed")
-        // }).catch(error => {
-            // console.log("update fail", error.message)
-            // io.emit("server-send-react-post", { error, postId: id})
-        // })
-
 
     })
 
@@ -279,8 +243,10 @@ io.on("connection", socket => {
         console.log("comment feature")
         console.log("get from client ", owner, content, belongToPost)
         try {
-            const comment = await Comment.create({ content, owner, belongToPost, timeStamp: new Date()})
+            const comment = await Comment.create({ content, owner, belongToPost, createdAt: Date.now()})
+            await comment.populate("owner").execPopulate()
             io.emit("server-send-comment-post", { comment , belongToPost })
+            // await Comment.deleteMany({}).exec()
         } catch (error) {
             console.log(error)
             io.emit("server-send-comment-post", { error, belongToPost })            
