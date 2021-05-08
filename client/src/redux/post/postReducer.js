@@ -80,9 +80,10 @@ export const postReducer = (state = initialState, action) => {
         case REACT_POST:
             const { reactedPost } = action.payload
             console.log("REACT_POST",  reactedPost )
+            const updatedPosts = [...state.posts.map(post => reactedPost._id === post._id? reactedPost: post)]
             return {
                 ...state,
-                posts: [...state.posts.filter(post => reactedPost._id !== post._id).push(reactedPost)]
+                posts: [...updatedPosts]
             }
 
         // case COMMENT_POST:

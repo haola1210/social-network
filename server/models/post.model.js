@@ -37,11 +37,12 @@ const PostSchema = new Schema({
     read : [{                           //danh sach user da xem
         type: Schema.Types.ObjectId,
         ref: "User"
-    }]
+    }],
+    createdAt : Number
 
 });
 
-PostSchema.set('timestamps', true); // this will add createdAt and updatedAt timestamps
+// PostSchema.set('timestamps', true); // this will add createdAt and updatedAt timestamps
 
 
 const Post = model("Post", PostSchema, "posts");

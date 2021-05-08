@@ -39,6 +39,7 @@ mongoose.connect(process.env.DATABASE_URL, {
     useNewUrlParser: true, 
     useUnifiedTopology: true,
     useCreateIndex: true,
+    useFindAndModify: false
 })
     .then(() => console.log(`Server connected to database`))
 const homeRoute = require('./routes/home.route');
@@ -80,7 +81,7 @@ io.on("connection", socket => {
         // .then(user => console.log(`update socketId ${user.socketId}`));
 
     
-    Post.find({}).sort({ updatedAt: -1 }).skip(0).limit(5)
+    Post.find({}).sort({ "createdAt": -1 }).skip(0).limit(5)
     .populate('owner')
     .populate('belongToGroup')
     .exec()
@@ -118,7 +119,7 @@ io.on("connection", socket => {
     socket.on("client-fetch-more-post", async ({skip}) => {
         try {
             const posts = await Post.find({})
-            .sort({updatedAt : -1})
+            .sort({"createdAt" : -1})
             .skip(skip)
             .limit(5)
             .populate("owner")
@@ -151,7 +152,8 @@ io.on("connection", socket => {
                 owner,
                 content,
                 belongToGroup,
-                image: [...filedLoaded]
+                image: [...filedLoaded],
+                createdAt : Date.now()
             }
 
             const tempPost = new Post(post)
@@ -172,43 +174,105 @@ io.on("connection", socket => {
 
     })
 
-    socket.on("client-react-post", ({ id, user, reaction, }) => {
+    socket.on("client-react-post", async ({ id, user, reaction, }) => {
 
         console.log("react-post ", reaction, id, "user ", user)
 
-        Post.findById(id).then(async ( post ) => {
-            if(post) {
-                // should set reactions filed in post schema
-                let reactions = ["likes", "dislikes",]
-                const restReactions = reactions.filter(react => react !== reaction)
-                const reacted = post[reaction].includes(user);
-                if (reacted) {
-                    return Post.findOneAndUpdate({ _id: id }, { $pull: { [reaction]: user }}, { new: true })
+        try {
+            
+            let foundPost = await Post.findById(id).exec()
+            const reacted = foundPost[reaction].includes(user)
+            let liked = foundPost.likes.indexOf(user) != -1
+            let disliked = foundPost.dislikes.indexOf(user) != -1
+
+            // xoa user trong like  va  xoa user trong dislike 
+            let post = await Post.findOneAndUpdate({ _id : id}, { 
+                $pull : {
+                    likes : user,
+                    dislikes : user
                 }
-                else {
-                    const updates = await Promise.all([
-                        Post.findOneAndUpdate({ _id: id }, { $push: { [reaction]: user }}, { new: true }),
-                        restReactions.forEach(async ( restReaction ) => 
-                            await Post.findOneAndUpdate({ _id: id }, { $pull: { [restReaction]: user }})
-                        ),
-                    ])
-                    return updates[0];
-                }
-            }
-            else {
-                return res.json({
-                    message: "no post",
-                })
-            }
-        })
-        .then(updatedPost => {
-            if (updatedPost) {
-                io.emit("server-send-react-post", { post, postId: id})
-            }
-            else throw new Error("Reaction updates failed")
-        }).catch(error => {
+
+            }, { new : true }).exec()
+
+           
+            if( 
+                ( !liked && !disliked ) ||                  // neu user chua like va chua dislike thi them react
+                (liked  && reaction == "dislikes") ||       // neu user da liked va muon dislike  thi them react
+                (disliked  && reaction == "likes")          // neu user da disliked va muon like  thi them react
+            ){
+                
+                post[reaction].push(user)
+                await post.save()
+
+            } else if(liked  && reaction == "likes") {
+                post = await Post.findOneAndUpdate({ _id : id}, { 
+                    $pull : {
+                        likes : user
+                    }
+                }, { new : true }).exec()
+            } else if(disliked  && reaction == "dislikes") {
+                post = await Post.findOneAndUpdate({ _id : id}, { 
+                    $pull : {
+                        dislikes : user
+                    }
+                }, { new : true }).exec()
+            } 
+            
+
+
+            await post.populate("owner").populate("belongToGroup").execPopulate()
+            console.log("update ok")
+            io.emit("server-send-react-post", { error: null, post, postId: id})
+
+
+        } catch (error) {
+            console.log("update fail", error.message)
             io.emit("server-send-react-post", { error, postId: id})
-        })
+        }
+        
+        // Post.findById(id).then(async ( post ) => {
+        //     if(post) {
+        //         // should set reactions filed in post schema
+        //         let reactions = ["likes", "dislikes",]
+        //         const restReactions = reactions.filter(react => react !== reaction)
+        //         const reacted = post[reaction].includes(user);
+        //         if (reacted) {
+        //             return Post.findOneAndUpdate({ _id: id }, { $pull: { [reaction]: user }}, { new: true })
+                    
+        //         }
+        //         else {
+        //             const updates = await Promise.all([
+        //                 (
+        //                     Post.findOneAndUpdate({ _id: id }, { $push: { [reaction]: user }}, { new: true })
+        //                 ),
+        //                 restReactions.forEach(async ( restReaction ) => 
+        //                     await Post.findOneAndUpdate({ _id: id }, { $pull: { [restReaction]: user }})
+        //                 ),
+        //             ])
+        //             return updates[0];
+        //         }
+        //     }
+        //     else {
+        //         throw new Error("post id invalid")
+        //     }
+        // })
+        // .then( async updatedPost => {
+        //     if (updatedPost) {
+        //         await updatedPost
+        //         .populate("owner")
+        //         .populate("belongToGroup")
+        //         .execPopulate()
+
+                // console.log("update ok")
+                // io.emit("server-send-react-post", { error: null, post: updatedPost, postId: id})
+        //     }
+        //     else throw new Error("Reaction updates failed")
+        // }).catch(error => {
+            // console.log("update fail", error.message)
+            // io.emit("server-send-react-post", { error, postId: id})
+        // })
+
+
     })
 
     socket.on("client-comment-post", async ({ owner, content, belongToPost }) => {
