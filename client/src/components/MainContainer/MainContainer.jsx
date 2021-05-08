@@ -10,10 +10,11 @@ import WritePost from "../WritePost/WritePost"
 import TitleGroup from "../TitleGroup/TitleGroup"
 
 import { CLEAR_ERROR } from "../../redux/error/errorActionType"
+import { FETCH_MORE_POST } from '../../redux/post/postActionType';
 
 import "./MainContainer.scss"
-import { FETCH_MORE_POST } from '../../redux/post/postActionType';
-function MainContainer(props) {
+
+function MainContainer() {
 
     const { currentGroup } = useSelector(state => state.groups)
     const { user } = useSelector(state => state.session)

@@ -3,6 +3,7 @@ const router = require('express').Router();
 const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const groupRoute = require('./group.route');
+const postRoute = require('./post.route')
 
 // const postRoute = require('./post.route');
 // const dislikeRoute = require('./dislike.route');
@@ -12,6 +13,7 @@ const groupRoute = require('./group.route');
 router.use("/auths", authRoute);
 router.use("/users", userRoute);
 router.use("/groups", groupRoute);
+router.use("/posts", postRoute);
 // router.use("/posts", postRoute);
 // router.use("/comments", commentRoute);
 // router.use("/likes", likeRoute);

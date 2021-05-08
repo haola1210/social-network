@@ -7,9 +7,9 @@ import {
 } from "@ant-design/icons";
 
 
-function Like({likeCounter}) {
+function Like({ likeCounter, onClick }) {
     return (
-        <div>
+        <div  onClick={onClick}>
             <LikeOutlined /> {likeCounter}
         </div>
     );

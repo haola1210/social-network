@@ -96,8 +96,6 @@ io.on("connection", socket => {
         socket.emit("server-send-error", { error: { message : "Can not fetch posts! Something wrong, plz contact developer" } })
     })
 
-
-
     /////////////////////////////////////// init comment per post 
     socket.on("client-req-cmt", async data => {
         console.log("client: "+data.postId)
@@ -173,6 +171,46 @@ io.on("connection", socket => {
         }
 
     })
+
+    socket.on("client-react-post", ({ id, user, reaction, }) => {
+
+        console.log("react-post ", reaction, id, "user ", user)
+
+        Post.findById(id).then(async ( post ) => {
+            if(post) {
+                // should set reactions filed in post schema
+                let reactions = ["likes", "dislikes",]
+                const restReactions = reactions.filter(react => react !== reaction)
+                const reacted = post[reaction].includes(user);
+                if (reacted) {
+                    return Post.findOneAndUpdate({ _id: id }, { $pull: { [reaction]: user }}, { new: true })
+                }
+                else {
+                    const updates = await Promise.all([
+                        Post.findOneAndUpdate({ _id: id }, { $push: { [reaction]: user }}, { new: true }),
+                        restReactions.forEach(async ( restReaction ) => 
+                            await Post.findOneAndUpdate({ _id: id }, { $pull: { [restReaction]: user }})
+                        ),
+                    ])
+                    return updates[0];
+                }
+            }
+            else {
+                return res.json({
+                    message: "no post",
+                })
+            }
+        })
+        .then(updatedPost => {
+            if (updatedPost) {
+                io.emit("server-send-react-post", { error: null, post, postId: id})
+            }
+            else throw new Error("Reaction updates failed")
+        }).catch(error => {
+            io.emit("server-send-react-post", { error, postId: id})
+        })
+    })
+
 })
 
 

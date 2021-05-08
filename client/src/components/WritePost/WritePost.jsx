@@ -17,7 +17,7 @@ function getBase64(file) {
 	});
 }
 
-const WritePost = ({ belongToGroup }) => {
+const WritePost = ( props ) => {
 
 	const [visible, setVisible] = useState(false);
 	const [confirmLoading, setConfirmLoading] = useState(false);

@@ -1,6 +1,7 @@
 import { io } from 'socket.io-client';
 import { 
     MAKING_POST,
+    REACT_POST,
     FETCH_POST_START,
     FETCH_POST_SUCCESS,
     FETCH_POST_FAILURE,
@@ -15,6 +16,7 @@ import { PUSH_ERROR } from "./redux/error/errorActionType"
 
 export const INIT_SOCKET = "INIT_SOCKET"
 export const STORE_SOCKET = "STORE_SOCKET"
+export const REACT_COMMENT = "REACT_COMMENT"
 
 let socket = null
 
@@ -100,6 +102,16 @@ export const socketMiddleware = storeAPI => next => action => {
             fileList,
             belongToGroup,
             owner: user._id,
+        })
+    } else if (action.type === REACT_POST) {
+        
+        const { reactedPost } = action.payload
+        console.log("socketClient", REACT_POST, reactedPost)
+        next({
+            type : REACT_POST,
+            payload: {
+                reactedPost
+            }
         })
     
     } else if(action.type === FETCH_MORE_POST){

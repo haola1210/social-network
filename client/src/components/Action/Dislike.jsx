@@ -7,9 +7,9 @@ import {
 } from "@ant-design/icons";
 
 
-function Dislike({dislikeCounter}) {
+function Dislike({ dislikeCounter, onClick }) {
     return (
-        <div>
+        <div onClick={onClick}>
             <DislikeOutlined /> {dislikeCounter}
         </div>
     );

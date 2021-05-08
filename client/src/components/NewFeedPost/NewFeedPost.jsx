@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux"
 import moment from "moment"
-import { useSelector } from "react-redux"
 
 import { Card, Avatar, Typography, Carousel, Image } from "antd";
 import {
@@ -14,6 +14,7 @@ import Like from "../Action/Like"
 import Dislike from "../Action/Dislike"
 import CommentBtn from "../Action/CommentBtn"
 
+import { REACT_POST } from "../../redux/post/postActionType"
 const { Meta } = Card;
 const { Paragraph } = Typography;
 
@@ -27,9 +28,28 @@ function NewFeedPost({ post }) {
     });
     const slider = useRef(null)
 
-    const { socket } = useSelector(state => state.session)
+    const { socket, user } = useSelector(state => state.session)
+    const { posts } = useSelector(state => state.posts)
+    const dispatch = useDispatch()
 
-
+    const onReact = ( reaction ) => {
+        console.log(reaction, " post ", post.content)
+        socket.emit("client-react-post", { id: post._id, user: user._id, reaction})
+        socket.on("server-send-react-post", ({ error, post : reactedPost, postId }) => {
+            if (error && error !== null && postId == post._id) {
+                console.log(error)
+                setState({
+                    ...state, 
+                    loading: false,
+                    error : error.message
+                })
+            }
+            if (reactedPost && postId == post._id) {
+                console.log("reacted post", reactedPost)
+                dispatch({ type: REACT_POST, payload: { reactedPost }})
+            }
+        })
+    }
 
 /////////////////////////////////////////////////////////////// socket process here
     useEffect(() => {
@@ -58,7 +78,8 @@ function NewFeedPost({ post }) {
                 })
             }
         })
-    }, [post])
+        
+    }, [ post ])
 ///////////////////////////////////////////////////////////////////////////////////////
 
     return (
@@ -66,9 +87,9 @@ function NewFeedPost({ post }) {
             <Card
                 style={{ width: "100%" }}
                 actions={[
-                <Like likeCounter={post.likes.length} />, //dispatch like here
-                <Dislike dislikeCounter={post.dislikes.length} />,
-                <CommentBtn cmtCounter={0} onClick={() => setState(prev => ({...prev, isShow : !prev.isShow}))} />
+                    <Like onClick={() => onReact("likes")} likeCounter={post.likes.length} />, 
+                    <Dislike onClick={()=> onReact("dislikes")} dislikeCounter={post.dislikes.length} />,
+                    <CommentBtn cmtCounter={0} onClick={() => setState(prev => ({...prev, isShow : !prev.isShow}))} />
                 ]}
             >
                 <Meta

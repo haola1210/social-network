@@ -1,4 +1,6 @@
 import { 
+    REACT_POST,
+
     FETCH_POST_START,
     FETCH_POST_SUCCESS,
     FETCH_POST_FAILURE,
@@ -72,6 +74,14 @@ export const postReducer = (state = initialState, action) => {
                 ...state,
                 isFetching : true,
                 fetchError : null,
+            }
+
+        case REACT_POST:
+            const { reactedPost } = action.payload
+            console.log("REACT_POST",  reactedPost )
+            return {
+                ...state,
+                posts: [...state.posts.map(post => reactedPost._id === post._id? reactedPost : post )]
             }
 
         case FETCH_MORE_POST_SUCCESS:
