@@ -63,7 +63,7 @@ const reducer = (state, action) => {
     }
   };
 
-function CustomComment(props) {
+function CustomComment({ data }) {
 
   const state = {}
 
@@ -95,21 +95,17 @@ function CustomComment(props) {
     return (
         <Comment
             actions={actions}
-            author={<a>Han Solo</a>}
+            author={<a>{ data.owner }</a>}
             avatar={
                 <Avatar
                 src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                alt="Han Solo"
+                alt={`${ data.owner }`}
                 />
             }
             content={
-                <p>
-                We supply a series of design principles, practical patterns and high
-                quality design resources (Sketch and Axure), to help people create
-                their product prototypes beautifully and efficiently.
-                </p>
+                <p> { data.content } </p>
             }
-            datetime={<span>{moment().fromNow("HH:mm DD-MM-YYYY")}</span>}
+            datetime={<span>{moment( data.timeStamp ).fromNow("HH:mm DD-MM-YYYY")}</span>}
         />
     );
 }

@@ -21,6 +21,7 @@ const { Paragraph } = Typography;
 function NewFeedPost({ post }) {
 
     const [state, setState] = useState({
+        postId: post._id,
         comments : [],
         loading : false,
         error : null,
@@ -89,7 +90,7 @@ function NewFeedPost({ post }) {
                 actions={[
                     <Like onClick={() => onReact("likes")} likeCounter={post.likes.length} />, 
                     <Dislike onClick={()=> onReact("dislikes")} dislikeCounter={post.dislikes.length} />,
-                    <CommentBtn cmtCounter={0} onClick={() => setState(prev => ({...prev, isShow : !prev.isShow}))} />
+                    <CommentBtn cmtCounter={state.comments.length} onClick={() => setState(prev => ({...prev, isShow : !prev.isShow}))} />
                 ]}
             >
                 <Meta

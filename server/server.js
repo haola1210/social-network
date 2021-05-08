@@ -211,6 +211,18 @@ io.on("connection", socket => {
         })
     })
 
+    socket.on("client-comment-post", async ({ owner, content, belongToPost }) => {
+        console.log("comment feature")
+        console.log("get from client ", owner, content, belongToPost)
+        try {
+            const comment = await Comment.create({ content, owner, belongToPost, })
+            io.emit("server-send-comment-post", { comment , belongToPost })
+        } catch (error) {
+            console.log(error)
+            io.emit("server-send-comment-post", { error, belongToPost })            
+        }
+
+    })
 })
 
 
