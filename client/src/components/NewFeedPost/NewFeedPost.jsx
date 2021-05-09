@@ -48,8 +48,7 @@ function NewFeedPost({ post }) {
                         loading: false,
                         error : error.message
                     })
-                }
-                if (reactedPost && postId === post._id) {
+                } else if (reactedPost && postId === post._id) {
                     console.log("reacted post", reactedPost)
                     dispatch({ type: REACT_POST, payload: { reactedPost }})
                 }
@@ -67,7 +66,14 @@ function NewFeedPost({ post }) {
         if (socket) {
             socket.emit("client-req-cmt", { postId : post._id })
             socket.on("server-send-comment-list", response => {
-                if(response.comments && response.postId == post._id){
+                if(response.error && response.postId == post._id) {
+                    console.log(response.error.message)
+                    setState({
+                        ...state, 
+                        loading: false,
+                        error : response.error.message
+                    })
+                } else if(response.comments && response.postId == post._id){
                     console.log(post._id, response.comments)
                     setState({
                         ...state, 
@@ -76,14 +82,7 @@ function NewFeedPost({ post }) {
                         error : null
                     })
                 } 
-                if(response.error && response.postId == post._id) {
-                    console.log(response.error.message)
-                    setState({
-                        ...state, 
-                        loading: false,
-                        error : response.error.message
-                    })
-                }
+                
             })
         }
     }, [post._id])

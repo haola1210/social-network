@@ -179,15 +179,15 @@ export default function Profile () {
         }
         if (socket) {
             socket.once("server-send-upload-image", ( data ) => {
-                if ( data.user._id === user._id) {
+                if ( data.error ) {
+                    console.log("server-send-upload-image ERROR ", data.error.message)
+                    onMessage("Cập nhật ảnh đại diện thất bại")
+                } else if ( data.user._id === user._id) {
                     // console.log("server-send-upload-image", data.user)
                     dispatch({ type: UPLOAD_IMAGE, payload: { user: data.user }})
                     onMessage("Cập nhật ảnh đại diện thành công")
                 }
-                if ( data.error ) {
-                    console.log("server-send-upload-image ERROR ", data.error.message)
-                    onMessage("Cập nhật ảnh đại diện thất bại")
-                }
+                
             })
             socket.once("server-send-change-profile-password", ( data ) => {
                 console.log(data)
