@@ -14,7 +14,7 @@ export default function LoginGoogle () {
         console.log(`onSuccess login with Google`);
         const user = response?.profileObj
         
-
+        console.log("login gg", user)
         
         try {
             dispatch({ type: SIGN_IN_GOOGLE, payload: { user }})

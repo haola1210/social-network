@@ -1,21 +1,49 @@
 .profile {
     display: flex;
+    flex-direction: column;
     flex-grow: 1;
-    height: 100%;
-    padding: 0 1em 1em 1em;
-    width: 100%;
-    justify-content: center;
-    background-color: #544997,
+    height: calc(100vh - 72px);
+    // padding: 4em;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: #e7f3ff;
 
-    &__left {
-        display: block;
-        margin-right: 80px;
+    &__announce, &__header {
+        width: 400px;
+        font-weight: bold;
+        width: auto;
+        padding: 1em;
+        border-radius: 25px;
+        margin-bottom: 1em;
+        background-color: white;
+    }
+    
+    &__header {
+        margin-top: 4em;
+        width: 400px;
     }
 
-    &__right {
+    &__title {
+        margin-bottom: 1em;
+        width: 400px;
+        img {
+            display: block;
+        }
+    }
 
-        display: "flex";
-        margin: 10px;
+    &__body {
+        width: 400px;
+        display: flex;
+        flex-direction: column;
+        
+        *{
+            margin-bottom: 0.25em;
+        }
+    }
 
+    &__action {
+        width: 400px;
+        display: flex;
+        justify-content: space-between;
     }
 }
