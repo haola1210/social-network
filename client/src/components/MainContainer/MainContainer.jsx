@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useContext, } from 'react';
 import {useSelector, useDispatch } from "react-redux"
+import {
+    useParams,
+} from "react-router-dom";
 
 import { Divider, Row, Spin, message } from "antd"
 import { LoadingOutlined } from '@ant-design/icons';
@@ -14,13 +17,14 @@ import { FETCH_MORE_POST } from '../../redux/post/postActionType';
 
 import "./MainContainer.scss"
 
-function MainContainer() {
+function MainContainer( props ) {
 
     const { currentGroup } = useSelector(state => state.groups)
     const { user } = useSelector(state => state.session)
     const { posts, error, mess } = useSelector(state => state)
 
     const dispatch = useDispatch()
+
     useEffect(() => {
         if(error.content){
             message.error(error.content)
@@ -89,7 +93,7 @@ function MainContainer() {
                     {
                         posts.posts.map((post) => 
                             <div className="post" key={post._id} >
-                                <NewFeedPost post = {post}  />
+                                <NewFeedPost post={post}  />
                             </div>
                         )
                     }
@@ -101,7 +105,7 @@ function MainContainer() {
                     }
                </Row>
             </div>
-
+            
         </div>
     );
 }

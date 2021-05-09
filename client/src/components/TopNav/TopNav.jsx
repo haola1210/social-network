@@ -15,6 +15,7 @@ import {
 import { useSelector, useDispatch } from "react-redux"
 import { 
     useHistory, 
+    NavLink,
     Link,
 
 } from "react-router-dom"
@@ -45,14 +46,26 @@ function TopNav(props) {
         }
     }
 
-    // const unsetGroup = ( _id, name ) => {
-    //     dispatch({type: SET_GROUP, payload: { currentGroup: {_id: null, name: null} }})
-    // }
+    const unsetGroup = ( _id, name ) => {
+        dispatch({type: SET_GROUP, payload: { currentGroup: {_id: null, name: null} }})
+    }
+
+    const onAdmin = () => {
+        unsetGroup( null, "" ) 
+        
+        history.push("/admin");
+    }
 
     const onHome = () => {
-        // unsetGroup( null, "" ) 
+        unsetGroup( null, "" ) 
         
         history.push("/");
+    }
+
+    const onProfile = () => {
+        unsetGroup( null, "" ) 
+
+        history.push("/profile")
     }
 
     const onLogout = () => {
@@ -90,7 +103,9 @@ function TopNav(props) {
                         <Col xs={4} sm={0}></Col>
                         {/*  */}
                         <Col xs={4} sm={6} style={styles.center} > 
-                            <HomeOutlined onClick={onHome}/>
+                            {/* <Link to="/"> */}
+                                <HomeOutlined onClick={onHome}/>
+                            {/* </Link> */}
                         </Col>
                         
                         {/* group icon for mobile */}
@@ -98,7 +113,6 @@ function TopNav(props) {
                             <div className="mobile_group_icon"> 
                                 <Dropdown overlay={() => <GroupContainer title="Tổng Hợp"/>} placement="bottomCenter">   
                                         <DeploymentUnitOutlined /> 
-                                    
                                 </Dropdown>
                             </div>
                         </Col>
@@ -111,18 +125,21 @@ function TopNav(props) {
                         </Col>
 
                         {/*  */}
-                        <Col xs={4} sm={6} style={styles.center} > <UserOutlined /> </Col>
+                        <Col xs={4} sm={6} style={styles.center} >
+                            {/* <Link to="/profile">  */}
+                                <UserOutlined onClick={onProfile} /> 
+                            {/* </Link> */}
+                        </Col>
 
-                        {/*  */}
                         <Col xs={4} sm={6} style={styles.center} > 
                             <Dropdown overlay={() => 
                                 (
                                     <div>
                                         {
                                             user.role === "admin"?
-                                                <Link to="/admin">
-                                                    Admin
-                                                </Link>
+                                                // <Link to="/admin">
+                                                // </Link> 
+                                                <div onClick={onAdmin}> Admin </div>
                                                 :
                                                 null
                                         }

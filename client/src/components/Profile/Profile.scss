@@ -1,0 +1,21 @@
+.profile {
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+    padding: 0 1em 1em 1em;
+    width: 100%;
+    justify-content: center;
+    background-color: #544997,
+
+    &__left {
+        display: block;
+        margin-right: 80px;
+    }
+
+    &__right {
+
+        display: "flex";
+        margin: 10px;
+
+    }
+}

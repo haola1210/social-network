@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useEffect,} from 'react';
 import { Badge } from "antd"
 import { useDispatch } from "react-redux"
+import {
+    useHistory,
+    useParams,
+} from "react-router-dom"
 
 import {
     SET_GROUP,
@@ -11,14 +15,15 @@ import "./GroupLinkBadge.scss"
 function GroupLinkBadge(props) {
 
     const dispatch = useDispatch()
+    const history = useHistory()
+    const { idGroup, } = useParams()
 
     function chooseGroup ( _id, name ) {
         // get routing here
         // ...
         dispatch({type: SET_GROUP, payload: { currentGroup: {_id, name} }})
+        history.push(`/groups/${props._id}`)
     };
-
-
 
     return (
         <div style={{margin: "0.5em", maxWidth: "200px", minWidth: "150px"}}>
@@ -27,7 +32,8 @@ function GroupLinkBadge(props) {
                 count={props.count}
                 >
                 <div 
-                    onClick={() => chooseGroup( props._id, props.name )}
+                    // onClick={() => chooseGroup( props._id, props.name )}
+                    onClick={() => chooseGroup( idGroup, props.name )}
                     className="group-badge__text"
                     style={{
                         padding: "1em",
