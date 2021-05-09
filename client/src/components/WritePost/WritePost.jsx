@@ -1,10 +1,13 @@
-import React, { useState, } from "react";
+import React, { useState, useEffect, } from "react";
 import { Modal, Card, Avatar, Form, Upload, Input } from "antd";
 import { ControlOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   MAKING_POST,
 } from "../../redux/post/postActionType"
 import { useSelector, useDispatch } from "react-redux";
+import {
+    useParams,
+} from "react-router-dom";
 
 import './WritePost.scss'
 
@@ -26,6 +29,7 @@ const WritePost = ( props ) => {
 	const dispatch = useDispatch();
 	const { currentGroup } = useSelector(state => state.groups)
     const { _id: groupId} = currentGroup
+	const { idGroup } = useParams(); 
 	
 	const showModal = () => {
 		setVisible(true);

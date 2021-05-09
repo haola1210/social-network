@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { List, Badge, Divider } from "antd"
-import axios from "axios"
-
+import React, { useEffect, } from 'react';
+import { List, Divider } from "antd"
 import { useSelector, useDispatch } from "react-redux"
 import {
     LIST_GROUP,
-    SET_GROUP,
 } from "../../redux/group/groupActionType"
 
 import GroupLinkBadge from "../GroupLinkBadge/GroupLinkBadge"
