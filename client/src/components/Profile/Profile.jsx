@@ -183,6 +183,16 @@ export default function Profile () {
                     onMessage("Cập nhật ảnh đại diện thất bại")
                 }
             })
+            socket.once("server-send-change-profile-password", ( data ) => {
+                console.log(data)
+                if ( data.user._id === user._id ) {
+                    onMessage("Cập nhật mật khẩu thành công")
+                }
+                if (data.error) {
+                    console.log("erver-send-change-profile-password", data.error.message)
+                    onMessage("Cập nhật mật khẩu thất bại")
+                }
+            })
         }
     }, [user])
 
@@ -198,22 +208,23 @@ export default function Profile () {
                         alignItems: "center",
                 }}> CHI TIẾT THÔNG TIN CÁ NHÂN </div>
 
-                <Card
-                    className="profile__title"
-                    hoverable
-                    style={{ width: 240 }}
-                    cover={<img alt="example" src={user.image || "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"} className="profile__image"/>}
-                    actions={[
-                        <Tooltip title="Đổi Ảnh Đại Diện" placement="bottom">
-                            <UploadOutlined key="ellipsis" onClick={onUploadImage} />
-                        </Tooltip>,
-                        <Tooltip title="Đổi Mật Khẩu" placement="bottom">
-                            <LockOutlined onClick={onChangePassword} />
-                        </Tooltip>,
-                    ]}
-                >
-                    <Meta title={user.name} description={`Role: ${user.role}`} style={{textAlign: "center"}} />
-                </Card>
+                <div className="profile__title">
+                    <Card
+                        hoverable
+                        // style={{ width: 240 }}
+                        cover={<img alt="example" src={user.image || "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"} className="profile__image"/>}
+                        actions={[
+                            <Tooltip title="Đổi Ảnh Đại Diện" placement="bottom">
+                                <UploadOutlined key="ellipsis" onClick={onUploadImage} />
+                            </Tooltip>,
+                            <Tooltip title="Đổi Mật Khẩu" placement="bottom">
+                                <LockOutlined onClick={onChangePassword} />
+                            </Tooltip>,
+                        ]}
+                    >
+                        <Meta title={user.name} description={`Role: ${user.role}`} style={{ textAlign: "center"}} />
+                    </Card>
+                </div>
 
                 <div className="profile__body">
                     <Row>
@@ -227,10 +238,10 @@ export default function Profile () {
                                 readOnly={user.role === "student"} onChange={(e)=>setState(prev=>{return{...prev, name: e.target.value}})}/>
                         </Col>
                     </Row>
-                    <Row className="profile__action" >
+                    {/* <Row className="profile__action" >
                         <Col><Button type="success" icon={<HighlightOutlined />} > Thay đổi</Button></Col>
                         <Col><Button type="primary" icon={<PhoneOutlined />} > Thay đổi</Button></Col>
-                    </Row>
+                    </Row> */}
                 </div>
             </div>
 

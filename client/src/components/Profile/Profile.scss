@@ -3,13 +3,13 @@
     flex-direction: column;
     flex-grow: 1;
     height: calc(100vh - 72px);
-    width: 100%;
     // padding: 4em;
     justify-content: flex-start;
     align-items: center;
     background-color: #e7f3ff;
 
     &__announce, &__header {
+        width: 400px;
         font-weight: bold;
         width: auto;
         padding: 1em;
@@ -20,13 +20,19 @@
     
     &__header {
         margin-top: 4em;
+        width: 400px;
     }
 
     &__title {
         margin-bottom: 1em;
+        width: 400px;
+        img {
+            display: block;
+        }
     }
 
     &__body {
+        width: 400px;
         display: flex;
         flex-direction: column;
         
@@ -36,6 +42,7 @@
     }
 
     &__action {
+        width: 400px;
         display: flex;
         justify-content: space-between;
     }

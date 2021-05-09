@@ -6,6 +6,7 @@ const passport = require('passport');
 const cookieSession = require('cookie-session');
 const socketio = require('socket.io')
 const http = require('http')
+const bcrypt = require('bcrypt')
 
 const User = require("./models/user.model")
 const Post = require("./models/post.model")
@@ -276,7 +277,27 @@ io.on("connection", socket => {
     })
 
     socket.on("client-change-profile-password", async ({ _id, password, newPassword }) => {
-        console.log("client-change-profile-password ",_id)
+        // console.log("client-change-profile-password ",_id, password, newPassword)
+        User.findById(_id).then(user => {
+            if (!user) throw new Error("Người dùng không tồn tại");
+            return bcrypt.compare(password, user.password)
+        }).then(async (isValid, error) => {
+            console.log(error, isValid)
+            if (error) throw new Error(error.message);
+            if (!isValid) throw new Error("Sai mật khẩu xác nhận");
+            // if (newPassword === password) console.log("same ", newPassword === password)
+            const salt = await bcrypt.genSalt(10)
+            newPassword = await bcrypt.hash(newPassword, salt)
+            return User.findOneAndUpdate({ _id }, { password: newPassword }, { new: true });
+        }).then(updatedPasswordUser => {
+            if (!updatedPasswordUser) throw new Error("Cập nhật mật khẩu thất bại")
+            else {
+                socket.emit("server-send-change-profile-password", { user: updatedPasswordUser })
+            }
+        }).catch(error => {
+            console.log(error)
+            socket.emit("server-send-change-profile-password", { error })
+        })
     })
 })
 
