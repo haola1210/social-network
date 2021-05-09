@@ -18,6 +18,7 @@ import { PUSH_MESS } from "./redux/notification/notificationActionType"
 export const INIT_SOCKET = "INIT_SOCKET"
 export const STORE_SOCKET = "STORE_SOCKET"
 export const REACT_COMMENT = "REACT_COMMENT"
+export const UPLOAD_IMAGE = "UPLOAD_IMAGE"
 
 let socket = null
 
@@ -126,6 +127,13 @@ export const socketMiddleware = storeAPI => next => action => {
     } else if(action.type === FETCH_MORE_POST){
         console.log(posts)
         next({ type : FETCH_MORE_POST_START })
+
+        socket.emit("client-fetch-more-post", { skip : posts.skip })
+
+    } else if(action.type === UPLOAD_IMAGE){
+        const { user } = action.payload
+        console.log("uploadimage ", user)
+        next({ type : UPLOAD_IMAGE, payload: { user } })
 
         socket.emit("client-fetch-more-post", { skip : posts.skip })
 

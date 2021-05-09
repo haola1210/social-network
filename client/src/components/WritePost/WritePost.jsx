@@ -28,6 +28,7 @@ const WritePost = ( props ) => {
 	const { Meta } = Card;
 	const dispatch = useDispatch();
 	const { currentGroup } = useSelector(state => state.groups)
+	const { user } = useSelector(state => state.session)
     const { _id: groupId} = currentGroup
 	const { idGroup } = useParams(); 
 	
@@ -41,9 +42,6 @@ const WritePost = ( props ) => {
 		setConfirmLoading(true);
 		setTimeout(async () => {
 			
-			setVisible(false);
-			setConfirmLoading(false);
-
 			const listFiles = await Promise.all([...state.fileList.map(async file => 
 				await getBase64(file.originFileObj))])
 			const post = {
@@ -51,7 +49,10 @@ const WritePost = ( props ) => {
 				fileList: listFiles,
 				belongToGroup: groupId !== "" && groupId !== undefined ? groupId : null,
 			}
+				
 			dispatch({ type: MAKING_POST, payload: post})
+			setVisible(false);
+			setConfirmLoading(false);
 		}, 2000);
 	};
 
@@ -101,7 +102,7 @@ const WritePost = ( props ) => {
 			Open Modal with async logic
 		</Button> */}
 			<div className="write-post">
-				<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+				<Avatar src={ user.image } />
 				<div className="write-post__title" onClick={showModal} >
 					Có điều gì mới không? :)
 				</div>
@@ -121,9 +122,9 @@ const WritePost = ( props ) => {
 				<Card style={{ width: "100%" }} bordered={false}>
 				<Meta
 					avatar={
-					<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+					<Avatar src={ user.image } />
 					}
-					title="Hao Le"
+					title={user.name}
 				/>
 				<Card.Grid hoverable={false} style={{ width: "100%" }}>
 					<Form>
@@ -138,25 +139,24 @@ const WritePost = ( props ) => {
 
 					<Form.Item>
 						<Upload
-						//action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-						listType="picture-card"
-						fileList={state.fileList}
-						onPreview={handlePreview}
-						onChange={handleChange}
+							listType="picture-card"
+							fileList={state.fileList}
+							onPreview={handlePreview}
+							onChange={handleChange}
 						>
-						{uploadButton}
+							{uploadButton}
 						</Upload>
 						<Modal
-						visible={state.previewVisible}
-						title={state.previewTitle}
-						footer={null}
-						onCancel={() => setState({ ...state, previewVisible: false })}
+							visible={state.previewVisible}
+							title={state.previewTitle}
+							footer={null}
+							onCancel={() => setState({ ...state, previewVisible: false })}
 						>
-						<img
-							alt="example"
-							style={{ width: "100%" }}
-							src={state.previewImage}
-						/>
+							<img
+								alt="example"
+								style={{ width: "100%" }}
+								src={state.previewImage}
+							/>
 						</Modal>
 					</Form.Item>
 					</Form>

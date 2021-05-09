@@ -3,7 +3,10 @@ import {
     CLEAR_SESSION,
     FETCHING_SESSION
 } from './sessionActionType'
-import { STORE_SOCKET } from '../../socketClient'
+import { 
+    STORE_SOCKET,  
+    UPLOAD_IMAGE,
+} from '../../socketClient'
 
 const initialState = {
     user : null,
@@ -30,6 +33,12 @@ export const sessionReducer = (state = initialState, action) => {
                 user : action.payload.user,
                 jwt : action.payload.jwt,
                 isFetching : false
+            }
+
+        case UPLOAD_IMAGE:
+            return {
+                ...state,
+                user : action.payload.user,
             }
         
         case STORE_SOCKET:

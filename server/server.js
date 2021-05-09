@@ -253,6 +253,31 @@ io.on("connection", socket => {
         }
 
     })
+
+    socket.on("client-upload-image", async ({ _id, image, }) => {
+        console.log("client-upload-image")
+        try {
+            let uploadedImage = await cloudinary.uploader.upload(image);
+            
+            // console.log("file loaded", filedLoaded.map(file => file.url))
+            uploadedImage = uploadedImage.url
+
+            const updatedImageUser = await User.findOneAndUpdate({ _id }, { image: uploadedImage, }, { new : true })
+            if (updatedImageUser) {
+                console.log("updatedImageUser", updatedImageUser)
+                io.emit("server-send-upload-image", { user: updatedImageUser })
+            }
+            else throw new Error("Upload image failed")
+        } catch (error) {
+            console.log(error)
+            io.emit("server-send-upload-image", { error })
+        }
+
+    })
+
+    socket.on("client-change-profile-password", async ({ _id, password, newPassword }) => {
+        console.log("client-change-profile-password ",_id)
+    })
 })
 
 
