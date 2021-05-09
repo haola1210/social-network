@@ -255,15 +255,19 @@ io.on("connection", socket => {
 
     })
 
-    socket.on("client-upload-image", async ({ _id, image, }) => {
+    socket.on("client-upload-image", async ({ _id, name, image, }) => {
         console.log("client-upload-image")
         try {
-            let uploadedImage = await cloudinary.uploader.upload(image);
             
-            // console.log("file loaded", filedLoaded.map(file => file.url))
-            uploadedImage = uploadedImage.url
+            let uploadedImageUrl = null;
+            if (image) {
+                const cloudinaryImage = await cloudinary.uploader.upload(image);
+                uploadedImageUrl = cloudinaryImage.url
 
-            const updatedImageUser = await User.findOneAndUpdate({ _id }, { image: uploadedImage, }, { new : true })
+            }
+            else { uploadedImageUrl = `https://ui-avatars.com/api/?background=random&name=${name.split(" ").join("+")}` }
+
+            const updatedImageUser = await User.findOneAndUpdate({ _id }, { image: uploadedImageUrl, }, { new : true })
             if (updatedImageUser) {
                 console.log("updatedImageUser", updatedImageUser)
                 io.emit("server-send-upload-image", { user: updatedImageUser })

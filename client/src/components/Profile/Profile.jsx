@@ -60,6 +60,19 @@ export default function Profile () {
     const { user, socket, } = useSelector(state => state.session)
     const dispatch = useDispatch()
 
+    const uploadImageToSocket = ( _id, name, image ) => {
+                    
+        const updateProfile = {
+            _id,
+            name,
+            image: image,
+
+        }
+        if(socket) {
+            socket.emit("client-upload-image", updateProfile)
+        }else onMessage("Tải ảnh lên server lỗi vì mất kết nối")
+    }
+
 	const handleUploadModalOk = () => {
 		
 		setConfirmUploadImageLoading(true);
@@ -69,19 +82,12 @@ export default function Profile () {
             const image = state.fileList[state.fileList.length - 1]
             if (image !== null && image !== undefined) {
                 const uploadImage = await getBase64(image.originFileObj)
+                uploadImageToSocket( user._id, user.name, uploadImage );
 
-                if (uploadImage) {
-                    
-                    const updateProfile = {
-                        _id: user._id,
-                        image: uploadImage,
-    
-                    }
-                    if(socket) {
-                        socket.emit("client-upload-image", updateProfile)
-                    }else onMessage("Tải ảnh lên server lỗi vì mất kết nối")
-                } else onMessage("Xử lý ảnh bị lỗi")
-            }else onMessage("Tải ảnh không tồn tại")
+            } else if (!state.fileList.length) {
+                uploadImageToSocket( user._id, user.name, null );
+
+            } else onMessage("Tải ảnh không tồn tại")
 			setUploadModalVisible(false);
 			setConfirmUploadImageLoading(false);
 
@@ -211,8 +217,10 @@ export default function Profile () {
                 <div className="profile__title">
                     <Card
                         hoverable
-                        // style={{ width: 240 }}
-                        cover={<img alt="example" src={user.image || "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"} className="profile__image"/>}
+                        // https://ui-avatars.com/
+                        // cover={<img alt="example" src={user.image || "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"} className="profile__image"/>}
+                        // image size = 400 in url
+                        cover={<img alt="example" src={user.image || `https://ui-avatars.com/api/?background=random&size=400&name=${user.name.split(" ").join("+")}`} className="profile__image"/>}
                         actions={[
                             <Tooltip title="Đổi Ảnh Đại Diện" placement="bottom">
                                 <UploadOutlined key="ellipsis" onClick={onUploadImage} />
