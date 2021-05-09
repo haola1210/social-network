@@ -21,7 +21,8 @@ function MainContainer( props ) {
 
     const { currentGroup } = useSelector(state => state.groups)
     const { user } = useSelector(state => state.session)
-    const { posts, error } = useSelector(state => state)
+    const { posts, error, mess } = useSelector(state => state)
+
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -30,6 +31,12 @@ function MainContainer( props ) {
             dispatch({ type: CLEAR_ERROR })
         }
     }, [error])
+
+    useEffect(() => {
+        if(mess.content){
+            message.success(mess.content)
+        }
+    }, [mess.content])
 
     return (
         <div className="main">

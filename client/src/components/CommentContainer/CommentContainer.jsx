@@ -6,7 +6,7 @@ import { List, Form, Input, Button, Skeleton, Row, Col } from "antd";
 import CustomComment from "../CustomComment/CustomComment";
 import { COMMENT_POST } from "../../redux/post/postActionType"
 
-function CommentContainer({ containerState }) {
+function CommentContainer({ containerState, setContainerState }) {
 		
 	const { socket, user, } = useSelector(state => state.session)
 	const { posts, } = useSelector(state => state.posts)
@@ -29,17 +29,6 @@ function CommentContainer({ containerState }) {
 				...prev, 
 				content: "",
 			}})
-			socket.on("server-send-comment-post", ({ error, comment, belongToPost}) => {
-				if (error !== null && error !== undefined && error) {
-					console.log("error", error.message)
-				}
-				if (comment) {
-					console.log({ error, comment, belongToPost})
-					// dispatch({ type: COMMENT_POST, payload: { comment }})
-					// socket.emit("client-req-cmt", { postId : belongToPost, skip: (containerState.comments.length/5) })
-				}
-			})
-
 		}
 	}
 
@@ -101,11 +90,7 @@ function CommentContainer({ containerState }) {
 		</Form>
 	);
 
-	useEffect(() =>{
-		// console.log("containerState", containerState)
-	// 	console.log("state", state)
-		console.log("posts", posts)
-	}, [ posts ])
+	
 
 	return (
 	<>

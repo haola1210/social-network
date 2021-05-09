@@ -39,15 +39,34 @@ function NewFeedPost({ post }) {
 
 /////////////////////////////////////////////////////////////// socket process here
     useEffect(() => {
+        
+        socket.once("server-send-react-post", ({ error, post : reactedPost, postId }) => {
+            if (error && error !== null && postId == post._id) {
+                console.log(error)
+                setState({
+                    ...state, 
+                    loading: false,
+                    error : error.message
+                })
+            }
+            if (reactedPost && postId === post._id) {
+                console.log("reacted post", reactedPost)
+                dispatch({ type: REACT_POST, payload: { reactedPost }})
+            }
+        })
+    }, [ post ])
+
+
+    useEffect(() => {
         setState({
             ...state, 
             loading: true,
             error : null
         })
         socket.emit("client-req-cmt", { postId : post._id })
-        socket.once("server-send-comment-list", response => {
+        socket.on("server-send-comment-list", response => {
             if(response.comments && response.postId == post._id){
-                console.log(response.comments)
+                console.log(post._id, response.comments)
                 setState({
                     ...state, 
                     loading: false,
@@ -64,21 +83,25 @@ function NewFeedPost({ post }) {
                 })
             }
         })
-        socket.once("server-send-react-post", ({ error, post : reactedPost, postId }) => {
-            if (error && error !== null && postId == post._id) {
-                console.log(error)
-                setState({
-                    ...state, 
-                    loading: false,
-                    error : error.message
-                })
-            }
-            if (reactedPost && postId === post._id) {
-                console.log("reacted post", reactedPost)
-                dispatch({ type: REACT_POST, payload: { reactedPost }})
-            }
-        })
-    }, [ post ])
+
+    }, [post._id])
+
+
+    useEffect(() => {
+        socket.on("server-send-comment-post", ({ error, comment, belongToPost}) => {
+			if (error !== null && error !== undefined && error) {
+				console.log("error", error.message)
+			}
+			if (comment && belongToPost === post._id ) {
+				
+				setState({
+					...state,
+					comments : [comment, ...state.comments]
+				})
+			}
+		})
+    }, [state])
+
 ///////////////////////////////////////////////////////////////////////////////////////
 
     return (
@@ -163,7 +186,7 @@ function NewFeedPost({ post }) {
             </Card>
 
             {/* comment container*/}
-            {state.isShow && <CommentContainer containerState = {state} />}
+            {state.isShow && <CommentContainer containerState = {state} setContainerState = {(obj) => setState(obj)} />}
         </div>
   
     );

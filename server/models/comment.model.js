@@ -10,10 +10,6 @@ const CommentSchema = new Schema({
         ref: "Post"
     },
     content : String,                   //content
-    timeStamp: {                        //time
-        type: Date,
-        default: Date.now()
-    },
 
     like: [{                            //who like this comment
         type : Schema.Types.ObjectId,
@@ -23,7 +19,8 @@ const CommentSchema = new Schema({
     dislike: [{                         //who dislike
         type : Schema.Types.ObjectId,
         ref: "User"
-    }]
+    }],
+    createdAt : Number
 
 });
 
