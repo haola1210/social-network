@@ -65,7 +65,7 @@ export const postReducer = (state = initialState, action) => {
             return {
                 ...state,
                 skip : state.posts.length + 1,
-                posts : [post, ...state.posts]
+                posts : [post, ...state.posts],
             }
         
 

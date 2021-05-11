@@ -37,23 +37,26 @@ const WritePost = ( props ) => {
 	};
 
 	const handleOk = () => {
-		
-		setModalText("The modal will be closed after two seconds");
-		setConfirmLoading(true);
-		setTimeout(async () => {
-			
-			const listFiles = await Promise.all([...state.fileList.map(async file => 
-				await getBase64(file.originFileObj))])
-			const post = {
-				content,
-				fileList: listFiles,
-				belongToGroup: idGroup !== "" && idGroup !== undefined ? idGroup : null,
-			}
+		// if (content === "") handleCancel();
+		// else {
+			setModalText("The modal will be closed after two seconds");
+			setConfirmLoading(true);
+			setTimeout(async () => {
 				
-			dispatch({ type: MAKING_POST, payload: post})
-			setVisible(false);
-			setConfirmLoading(false);
-		}, 2000);
+				const listFiles = await Promise.all([...state.fileList.map(async file => 
+					await getBase64(file.originFileObj))])
+				const post = {
+					content,
+					fileList: listFiles,
+					belongToGroup: idGroup !== "" && idGroup !== undefined ? idGroup : null,
+				}
+					
+				dispatch({ type: MAKING_POST, payload: post})
+				setContent("")
+				setVisible(false);
+				setConfirmLoading(false);
+			}, 2000);
+		// }
 	};
 
 	const handleCancel = () => {
@@ -114,14 +117,14 @@ const WritePost = ( props ) => {
 
 		{/* modal .... */}
 			<Modal
-			title="Tạo bài viết"
-			visible={visible}
-			onOk={handleOk}
-			confirmLoading={confirmLoading}
-			onCancel={handleCancel}
-			bodyStyle={{ padding: "1em" }}
-			closable={true}
-			style={{ top: 30 }}
+				title="Tạo bài viết"
+				visible={visible}
+				onOk={handleOk}
+				confirmLoading={confirmLoading}
+				onCancel={handleCancel}
+				bodyStyle={{ padding: "1em" }}
+				closable={true}
+				style={{ top: 30 }}
 			>
 				<Card style={{ width: "100%" }} bordered={false}>
 				<Meta
@@ -132,37 +135,41 @@ const WritePost = ( props ) => {
 				/>
 				<Card.Grid hoverable={false} style={{ width: "100%" }}>
 					<Form>
-					<Form.Item>
-						<Input.TextArea
-						placeholder="Viết gì đó..."
-						autoSize={{ minRows: 3 }}
-						bordered={false}
-						onChange={e => setContent(e.target.value)}
-						/>
-					</Form.Item>
-
-					<Form.Item>
-						<Upload
-							listType="picture-card"
-							fileList={state.fileList}
-							onPreview={handlePreview}
-							onChange={handleChange}
+						<Form.Item 
+							name="content" 
+							rules={[{ required: true, message: 'Vui lòng viết gì đó' }]}
 						>
-							{uploadButton}
-						</Upload>
-						<Modal
-							visible={state.previewVisible}
-							title={state.previewTitle}
-							footer={null}
-							onCancel={() => setState({ ...state, previewVisible: false })}
-						>
-							<img
-								alt="example"
-								style={{ width: "100%" }}
-								src={state.previewImage}
+							<Input.TextArea
+								placeholder="Viết gì đó..."
+								autoSize={{ minRows: 3 }}
+								bordered={false}
+								value={content}
+								onChange={e => setContent(e.target.value)}
 							/>
-						</Modal>
-					</Form.Item>
+						</Form.Item>
+
+						<Form.Item>
+							<Upload
+								listType="picture-card"
+								fileList={state.fileList}
+								onPreview={handlePreview}
+								onChange={handleChange}
+							>
+								{uploadButton}
+							</Upload>
+							<Modal
+								visible={state.previewVisible}
+								title={state.previewTitle}
+								footer={null}
+								onCancel={() => setState({ ...state, previewVisible: false })}
+							>
+								<img
+									alt="example"
+									style={{ width: "100%" }}
+									src={state.previewImage}
+								/>
+							</Modal>
+						</Form.Item>
 					</Form>
 				</Card.Grid>
 				</Card>
