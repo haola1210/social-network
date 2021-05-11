@@ -124,9 +124,10 @@ io.on("connection", socket => {
             const skip = data.skip || 0
             const limit = 5
             const comments = await Comment.find({ belongToPost : postId })
-                .sort({ createdAt: -1 })
-                .skip(skip)
-                .limit(limit)
+                .sort({ createdAt: 1 })
+                // .sort({ createdAt: -1 })
+                // .skip(skip)
+                // .limit(limit)
                 .populate("owner")
             
             // console.log("cmt", comments)

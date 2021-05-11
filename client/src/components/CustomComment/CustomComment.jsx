@@ -1,67 +1,67 @@
 import React from 'react';
 import moment from "moment";
 import { Comment, Avatar } from "antd";
-import {
-  DislikeOutlined,
-  LikeOutlined,
-  DislikeFilled,
-  LikeFilled
-} from "@ant-design/icons";
+// import {
+//   DislikeOutlined,
+//   LikeOutlined,
+//   DislikeFilled,
+//   LikeFilled
+// } from "@ant-design/icons";
 
-const initialState = {
-  likeNumber: 10,
-  dislikeNumber: 10,
-  status: null
-};
+// const initialState = {
+//   likeNumber: 10,
+//   dislikeNumber: 10,
+//   status: null
+// };
 
 
-const reducer = (state, action) => {
-    switch (action.type) {
-      case "like_start":
-        return {
-          ...state,
-          status: null
-        };
+// const reducer = (state, action) => {
+//     switch (action.type) {
+//       case "like_start":
+//         return {
+//           ...state,
+//           status: null
+//         };
   
-      case "like_success":
-        return {
-          ...state,
-          likeNumber: action.payload.likeNumber,
-          dislike: action.payload.dislikeNumber,
-          status: "liked"
-        };
-      case "like_failure":
-        return {
-          ...state,
-          likeNumber: action.payload.likeNumber,
-          dislike: action.payload.dislikeNumber,
-          status: null
-        };
-      case "dislike_start":
-        return {
-          ...state,
-          status: null
-        };
+//       case "like_success":
+//         return {
+//           ...state,
+//           likeNumber: action.payload.likeNumber,
+//           dislike: action.payload.dislikeNumber,
+//           status: "liked"
+//         };
+//       case "like_failure":
+//         return {
+//           ...state,
+//           likeNumber: action.payload.likeNumber,
+//           dislike: action.payload.dislikeNumber,
+//           status: null
+//         };
+//       case "dislike_start":
+//         return {
+//           ...state,
+//           status: null
+//         };
   
-      case "dislike_success":
-        return {
-          ...state,
-          likeNumber: action.payload.likeNumber,
-          dislike: action.payload.dislikeNumber,
-          status: "disliked"
-        };
-      case "dislike_failure":
-        return {
-          ...state,
-          likeNumber: action.payload.likeNumber,
-          dislike: action.payload.dislikeNumber,
-          status: null
-        };
+//       case "dislike_success":
+//         return {
+//           ...state,
+//           likeNumber: action.payload.likeNumber,
+//           dislike: action.payload.dislikeNumber,
+//           status: "disliked"
+//         };
+//       case "dislike_failure":
+//         return {
+//           ...state,
+//           likeNumber: action.payload.likeNumber,
+//           dislike: action.payload.dislikeNumber,
+//           status: null
+//         };
   
-      default:
-        return state;
-    }
-  };
+//       default:
+//         return state;
+//     }
+//   };
 
 function CustomComment({ data }) {
 
@@ -83,16 +83,16 @@ function CustomComment({ data }) {
         }
     };
 
-    const actions = [
-        <span onClick={like}>
-          {state.status === "liked" ? <LikeFilled /> : <LikeOutlined />}
-          <span className="comment-action">{state.likeNumber}</span>
-        </span>,
-        <span onClick={dislike}>
-          {state.status === "disliked" ? <DislikeFilled /> : <DislikeOutlined />}
-          <span className="comment-action">{state.dislikeNumber}</span>
-        </span>
-      ];
+    // const actions = [
+    //     <span onClick={like}>
+    //       {state.status === "liked" ? <LikeFilled /> : <LikeOutlined />}
+    //       <span className="comment-action">{state.likeNumber}</span>
+    //     </span>,
+    //     <span onClick={dislike}>
+    //       {state.status === "disliked" ? <DislikeFilled /> : <DislikeOutlined />}
+    //       <span className="comment-action">{state.dislikeNumber}</span>
+    //     </span>
+    //   ];
 
     return (
         <Comment

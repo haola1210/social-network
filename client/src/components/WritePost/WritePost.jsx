@@ -127,13 +127,14 @@ const WritePost = ( props ) => {
 				visible={visible}
 				bodyStyle={{ padding: "1em" }}
 				closable={true}
+				onCancel={handleCancel}
 				style={{ top: 30 }}
 				footer={[
 					<Button key="submit" type="primary" loading={confirmLoading} onClick={handleOk}>
 						Đăng bài
 					</Button>,
 					<Button key="back" onClick={handleCancel}>
-						Hủy bỏ
+						Đóng
 					</Button>,
 				]}
 			>

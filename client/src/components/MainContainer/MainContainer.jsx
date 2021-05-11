@@ -22,7 +22,6 @@ function MainContainer( props ) {
     const { currentGroup } = useSelector(state => state.groups)
     const { user } = useSelector(state => state.session)
     const { posts, error, mess } = useSelector(state => state)
-    const { idGroup } = useParams()
 
     const dispatch = useDispatch()
 
