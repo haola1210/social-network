@@ -8,6 +8,7 @@ import {
   LeftOutlined,
   ArrowRightOutlined
 } from "@ant-design/icons";
+import { NavLink, } from "react-router-dom"
 
 import CommentContainer from "../CommentContainer/CommentContainer";
 import Like from "../Action/Like"
@@ -15,6 +16,10 @@ import Dislike from "../Action/Dislike"
 import CommentBtn from "../Action/CommentBtn"
 
 import { REACT_POST } from "../../redux/post/postActionType"
+import {
+    SET_GROUP,
+} from "../../redux/group/groupActionType"
+
 const { Meta } = Card;
 const { Paragraph } = Typography;
 
@@ -37,6 +42,10 @@ function NewFeedPost({ post }) {
         socket.emit("client-react-post", { id: post._id, user: user._id, reaction})
     }
 
+    const toGroup = (_id, name) => {
+        
+        dispatch({type: SET_GROUP, payload: { currentGroup: {_id, name} }})
+    }
 /////////////////////////////////////////////////////////////// socket process here
     useEffect(() => {
         if (socket) {
@@ -143,10 +152,23 @@ function NewFeedPost({ post }) {
                 title={
                     <p style={{ marginBottom: 0 }}>
                         <b>
-                            {
-                                post.owner.name} {post.belongToGroup && 
+                            {/* { post.owner.name }{post.belongToGroup && 
                                 <span>
                                     <ArrowRightOutlined /> {post.belongToGroup.name}
+                                    </span>
+                            } */}
+                            
+                            <NavLink 
+                                        style={{color: 'black'}}
+                                        // onClick={() => toGroup(post.belongToGroup._id, post.belongToGroup.name)} 
+                                        to={`/users/${post.owner._id}`}>{post.owner.name}</NavLink>
+                            {post.belongToGroup && 
+                                <span>
+                                    <ArrowRightOutlined /> 
+                                    <NavLink 
+                                        style={{color: 'black'}}
+                                        onClick={() => toGroup(post.belongToGroup._id, post.belongToGroup.name)} 
+                                        to={`/groups/${post.belongToGroup._id}`}>{post.belongToGroup.name}</NavLink>
                                 </span>
                             }
                         </b>
