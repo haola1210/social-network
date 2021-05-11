@@ -1,0 +1,20 @@
+.title-search {
+    display: flex;
+    padding: 1em;
+    margin-top: 2em;
+    width: 100%;
+
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.5em;
+    
+    color: #007eff;
+    background-color: white;
+    border-radius: 10px;
+}
+
+@media screen and (min-width: 576px) {
+    .title-search {
+        max-width: 700px;
+    }
+}

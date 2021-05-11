@@ -1,4 +1,4 @@
-import React, { useContext, } from 'react';
+import React from 'react';
 import { 
     Row, 
     Col,
@@ -25,7 +25,6 @@ import {
 
 import SearchComponent from "../SearchComponent/SearchComponent"
 import GroupContainer from "../GroupContainer/GroupContainer"
-// import { GroupContext } from "../GroupContext/GroupContext"
 
 // import { CLEAR_JWT } from "../../redux/session/sessionActionType"
 import { SIGN_OUT } from '../../redux/signin/signinActionType';
@@ -36,7 +35,6 @@ function TopNav(props) {
     const { user } = useSelector(state => state.session)
     const dispatch = useDispatch();
     const history = useHistory();
-    // const groupContext = useContext(GroupContext);
 
     const styles={
         center : {

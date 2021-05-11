@@ -13,6 +13,7 @@ import Login from "./components/Login/Login"
 import Admin from "./components/Admin/Admin"
 import MainContainer from "./components/MainContainer/MainContainer"
 import Profile from "./components/Profile/Profile"
+import Search from "./components/Search/Search"
 
 import PrivateRoute from "./components/Route/PrivateRoute"
 import PublicRoute from "./components/Route/PublicRoute"
@@ -36,6 +37,7 @@ export default function App() {
 					<AdminRoute exact path="/admin" component={Admin} />
                     <PrivateRoute exact path="/profile" component={Profile}/>
                     <PrivateRoute path="/groups/:idGroup" component={Home}/>
+                    <PrivateRoute path="/search/:filter/:query" component={Search}/>
 					<PrivateRoute path="/" component={Home} />
 				</Switch>
 			</div>

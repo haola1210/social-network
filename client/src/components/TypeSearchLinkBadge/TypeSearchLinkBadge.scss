@@ -1,0 +1,15 @@
+.group-badge {
+    cursor: pointer;
+    
+    &__text {
+        padding: 1em;
+        border-radius: 1em ;
+        background-color: "#95cbff";
+        font-weight: "bold";
+
+        &:active {
+            background-color: #187cdc !important;
+            color: white !important;
+        }
+    }
+}
