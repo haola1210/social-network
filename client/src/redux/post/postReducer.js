@@ -44,7 +44,8 @@ export const postReducer = (state = initialState, action) => {
                 isFetching : false,
                 fetchError : null,
                 skip : state.posts.length + sortedPost.length,
-                posts : [...sortedPost, ...state.posts],
+                posts : [...sortedPost],
+                // posts : [...sortedPost, ...state.posts],
             }
 
         case FETCH_POST_FAILURE:

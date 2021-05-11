@@ -47,7 +47,7 @@ const WritePost = ( props ) => {
 			const post = {
 				content,
 				fileList: listFiles,
-				belongToGroup: groupId !== "" && groupId !== undefined ? groupId : null,
+				belongToGroup: idGroup !== "" && idGroup !== undefined ? idGroup : null,
 			}
 				
 			dispatch({ type: MAKING_POST, payload: post})
@@ -94,6 +94,10 @@ const WritePost = ( props ) => {
 		<div style={{ marginTop: 8 }}>Upload</div>
 		</div>
 	);
+
+	useEffect(() => {
+		console.log("idGroup", idGroup)
+	},[])
 
 	return (
 		<> 

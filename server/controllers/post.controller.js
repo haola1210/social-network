@@ -103,3 +103,29 @@ module.exports.reactComment = (req, res) => {
     })
 
 }
+
+module.exports.fetchPost = (req, res) => {
+    Post.find({ belongToGroup: req.params.idGroup }).sort({ "createdAt": -1 }).skip(0).limit(5)
+    .populate('owner')
+    .populate('belongToGroup')
+    .exec()
+    .then(async posts => {
+            
+        // console.log("send posts to client")
+        // socket.emit("server-init-post", { posts })
+        res.json({
+            message: "fetch successfully",
+            data: posts,
+        })
+    
+    })
+    .catch(error => {
+        // console.log(error.message)
+        // socket.emit("server-init-post", { error })
+        // socket.emit("server-send-error", { error: { message : "Can not fetch posts! Something wrong, plz contact developer" } })
+        res.json({
+            message: "Error Occurs",
+            error: error.message
+        })
+    })
+}

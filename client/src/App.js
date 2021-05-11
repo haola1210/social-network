@@ -35,7 +35,7 @@ export default function App() {
 					<PublicRoute exact path="/login" component={Login}/>
 					<AdminRoute exact path="/admin" component={Admin} />
                     <PrivateRoute exact path="/profile" component={Profile}/>
-                    <PrivateRoute path="/groups/:idGroup" component={Home}/>
+                    <PrivateRoute path="/groups/:idGroup" component={() => Home({test: "123"})}/>
 					<PrivateRoute path="/" component={Home} />
 				</Switch>
 			</div>

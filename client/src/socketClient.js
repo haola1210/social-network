@@ -29,6 +29,8 @@ export const socketMiddleware = storeAPI => next => action => {
 
     if(action.type === INIT_SOCKET){
 
+        const idGroup = action.payload.group
+        console.log("client send idGroup", idGroup)
         const handshake = {
             auth : {
                 userId : user._id
@@ -43,6 +45,7 @@ export const socketMiddleware = storeAPI => next => action => {
         next({
             type: FETCH_POST_START
         })
+        socket.emit("client-init-post", { group: idGroup? { belongToGroup: idGroup } : {} })
         socket.on("server-init-post", response => {
             if(response.error){
                 // dispatch fetch post failure here
