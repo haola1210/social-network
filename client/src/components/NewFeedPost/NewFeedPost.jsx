@@ -33,7 +33,7 @@ function NewFeedPost({ post }) {
     const dispatch = useDispatch()
 
     const onReact = ( reaction ) => {
-        console.log(reaction, " post ", post.content)
+        // console.log(reaction, " post ", post.content)
         socket.emit("client-react-post", { id: post._id, user: user._id, reaction})
     }
 
@@ -74,7 +74,7 @@ function NewFeedPost({ post }) {
                         error : response.error.message
                     })
                 } else if(response.comments && response.postId == post._id){
-                    console.log(post._id, response.comments)
+                    // console.log(post._id, response.comments)
                     setState({
                         ...state, 
                         loading: false,
@@ -114,7 +114,7 @@ function NewFeedPost({ post }) {
                 actions={[
                     <Like onClick={() => onReact("likes")} like={post.likes} />, 
                     <Dislike onClick={()=> onReact("dislikes")} dislike={post.dislikes} />,
-                    <CommentBtn cmtCounter={0} onClick={() => setState(prev => ({...prev, isShow : !prev.isShow}))} />
+                    <CommentBtn cmtCounter={state.comments.length} onClick={() => setState(prev => ({...prev, isShow : !prev.isShow}))} />
                 ]}
             >
                 <Meta

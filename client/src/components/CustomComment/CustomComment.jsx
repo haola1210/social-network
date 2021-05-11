@@ -97,7 +97,7 @@ function CustomComment({ data }) {
     return (
         <Comment
             style={{padding: "0 1em", backgroundColor: '#f1f1f1', width: "100%", borderRadius: "1em"}}
-            actions={actions}
+            // actions={actions}
             author={<p>{ data.owner.name }</p>}
             avatar={
                 data.owner.image 

@@ -55,8 +55,6 @@ export const postReducer = (state = initialState, action) => {
                 fetchError : action.payload.error.message,
                 skip : state.posts.length
             }
-        
-
 
         case PUSH_NEW_POST:
             const { post } = action.payload.post;
@@ -68,8 +66,6 @@ export const postReducer = (state = initialState, action) => {
                 posts : [post, ...state.posts],
             }
         
-
-
     //////////////////////////////////////
         case FETCH_MORE_POST_START:
             return {

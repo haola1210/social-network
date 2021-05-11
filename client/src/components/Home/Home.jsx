@@ -15,7 +15,6 @@ export default function Home(props) {
     const { idGroup } = useParams()
 
     useEffect(() => {
-        console.log("home", idGroup)
         dispatch({ type : INIT_SOCKET, payload : { group : idGroup } })
     }, [idGroup])
     
