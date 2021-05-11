@@ -1,15 +1,32 @@
-import React from 'react';
+import React, { useState, } from 'react';
 import { Input } from 'antd'
-// import { SearchOutlined } from "@ant-design/icons"
+import { 
+    useHistory, 
+    useRouteMatch, 
+} from 'react-router-dom'
 
 function SearchComponent(props) {
     const { Search } = Input
+    const [state, setState] = useState("")
+    const history = useHistory()
+    const { url } = useRouteMatch();
 
     const onSearch = () => {
-
+        if (state) {
+            const search = encodeURIComponent(state)
+            history.push(`/search/all/${search}`)
+        }
     }
+
     return (
-        <Search onSearch={onSearch} allowClear placeholder="search..." width={100} />
+        <Search 
+            allowClear 
+            width={100} 
+            value={state}
+            onSearch={onSearch} 
+            placeholder="search..." 
+            onChange={(event) => setState(event.target.value)}
+        />
     );
 }
 

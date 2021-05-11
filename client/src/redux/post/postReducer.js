@@ -44,7 +44,8 @@ export const postReducer = (state = initialState, action) => {
                 isFetching : false,
                 fetchError : null,
                 skip : state.posts.length + sortedPost.length,
-                posts : [...sortedPost, ...state.posts],
+                posts : [...sortedPost],
+                // posts : [...sortedPost, ...state.posts],
             }
 
         case FETCH_POST_FAILURE:
@@ -54,8 +55,6 @@ export const postReducer = (state = initialState, action) => {
                 fetchError : action.payload.error.message,
                 skip : state.posts.length
             }
-        
-
 
         case PUSH_NEW_POST:
             const { post } = action.payload.post;
@@ -64,11 +63,9 @@ export const postReducer = (state = initialState, action) => {
             return {
                 ...state,
                 skip : state.posts.length + 1,
-                posts : [post, ...state.posts]
+                posts : [post, ...state.posts],
             }
         
-
-
     //////////////////////////////////////
         case FETCH_MORE_POST_START:
             return {

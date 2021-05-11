@@ -81,22 +81,40 @@ io.on("connection", socket => {
     User.findByIdAndUpdate( userId, { socketId: socket.id }, { new: true })
         // .then(user => console.log(`update socketId ${user.socketId}`));
 
-    
-    Post.find({}).sort({ "createdAt": -1 }).skip(0).limit(5)
-    .populate('owner')
-    .populate('belongToGroup')
-    .exec()
-    .then(async posts => {
+    socket.on("client-init-post", data => {
+        console.log("group", data)
+        Post.find(data.group).sort({ "createdAt": -1 }).skip(0).limit(5)
+        .populate('owner')
+        .populate('belongToGroup')
+        .exec()
+        .then(async posts => {
+                
+            console.log("send posts to client")
+            socket.emit("server-init-post", { posts })
+        
+        })
+        .catch(error => {
+            console.log(error.message)
+            socket.emit("server-init-post", { error })
+            socket.emit("server-send-error", { error: { message : "Can not fetch posts! Something wrong, plz contact developer" } })
+        })
+    })
+
+    // Post.find({}).sort({ "createdAt": -1 }).skip(0).limit(5)
+    // .populate('owner')
+    // .populate('belongToGroup')
+    // .exec()
+    // .then(async posts => {
             
-        console.log("send posts to client")
-        socket.emit("server-init-post", { posts })
+    //     console.log("send posts to client")
+    //     socket.emit("server-init-post", { posts })
     
-    })
-    .catch(error => {
-        console.log(error.message)
-        socket.emit("server-init-post", { error })
-        socket.emit("server-send-error", { error: { message : "Can not fetch posts! Something wrong, plz contact developer" } })
-    })
+    // })
+    // .catch(error => {
+    //     console.log(error.message)
+    //     socket.emit("server-init-post", { error })
+    //     socket.emit("server-send-error", { error: { message : "Can not fetch posts! Something wrong, plz contact developer" } })
+    // })
 
     /////////////////////////////////////// init comment per post 
     socket.on("client-req-cmt", async data => {
@@ -106,9 +124,10 @@ io.on("connection", socket => {
             const skip = data.skip || 0
             const limit = 5
             const comments = await Comment.find({ belongToPost : postId })
-                .sort({ createdAt: -1 })
-                .skip(skip)
-                .limit(limit)
+                .sort({ createdAt: 1 })
+                // .sort({ createdAt: -1 })
+                // .skip(skip)
+                // .limit(limit)
                 .populate("owner")
             
             // console.log("cmt", comments)

@@ -10,22 +10,23 @@ function CommentContainer({ containerState, setContainerState }) {
 		
 	const { socket, user, } = useSelector(state => state.session)
 	const { posts, } = useSelector(state => state.posts)
-	const [ state, setState ] = useState({
+	const [ comment, setComment ] = useState({
 		content: "", 
 		belongToPost: containerState.postId,
 	})
+	const [ listComments, setListComments ] = useState([])
 	const dispatch = useDispatch()
 
 	const onComment = () => {
 		console.log("onComment", containerState)
-		console.log("state", state)
-		if (state.content) {
+		console.log("comment", comment)
+		if (comment.content) {
 			socket.emit("client-comment-post", { 
 				owner: user._id, 
-				content: state.content, 
-				belongToPost: state.belongToPost, 
+				content: comment.content, 
+				belongToPost: comment.belongToPost, 
 			})
-			setState(prev => {return{
+			setComment(prev => {return{
 				...prev, 
 				content: "",
 			}})
@@ -34,7 +35,7 @@ function CommentContainer({ containerState, setContainerState }) {
 
     const onFieldsChange = (changedFields, allFields) => {
         changedFields.forEach(field => {
-            setState(prev=>{return{
+            setComment(prev=>{return{
                 ...prev,
                 [`${field.name[0]}`]: field.value
             }})
@@ -42,7 +43,16 @@ function CommentContainer({ containerState, setContainerState }) {
     }
 
 	const onLoadMore = () => {
+		let moreComments = containerState.comments.filter(comment => !listComments.includes(comment))
+		
+		// loading some part of list
+		moreComments = listComments.length >= moreComments.length ? moreComments.slice() : moreComments.slice(-moreComments.length/2)
+		
+		setListComments([ ...moreComments, ...listComments,  ])
+	}
 
+	const onCollapseList = () => {
+		setListComments([...containerState.comments.slice(-2)])
 	}
 
 	const footer = (
@@ -51,7 +61,7 @@ function CommentContainer({ containerState, setContainerState }) {
 			onFieldsChange={onFieldsChange}
 		>
 		<Row>
-			{!containerState.loading && containerState.isShow ? (
+			{!containerState.loading && containerState.isShow ? listComments.length < containerState.comments.length ?(
 			<Button
 				style={{
 				margin: "10px 0",
@@ -63,13 +73,24 @@ function CommentContainer({ containerState, setContainerState }) {
 			>
 				loading more
 			</Button>
+			) : (<Button
+				style={{
+				margin: "10px 0",
+				border: "none",
+				outline: "none",
+				padding: 0
+				}}
+				onClick={onCollapseList}
+			>
+				collapse comments
+			</Button>
 			) : null}
 		</Row>
 		<Row>
 			<Col flex="4">
 			<Form.Item
 				name="content"
-				value={state.content}
+				value={comment.content}
 				rules={[{ required: true, message: "Please input your comment" }]}
 			>
 				<Input.TextArea
@@ -90,7 +111,13 @@ function CommentContainer({ containerState, setContainerState }) {
 		</Form>
 	);
 
-	
+	useEffect(() => {
+		setListComments([...containerState.comments.slice(-2)])
+	}, [ containerState ])
+
+	// useEffect(() => {
+	// 	console.log([ ...containerState.comments.filter(comment => !listComments.includes(comment)).splice(2) ])
+	// }, [ listComments ])
 
 	return (
 	<>
@@ -101,7 +128,7 @@ function CommentContainer({ containerState, setContainerState }) {
 			loading={containerState.loading} //state.initLoading
 			itemLayout="horizontal"
 			footer={footer}
-			dataSource={containerState.comments} //state.list
+			dataSource={listComments} //state.list
 			renderItem={(item) => (
 				<List.Item>
 					<CustomComment data={item}/>

@@ -23,7 +23,7 @@ import {
 const { Meta } = Card;
 const { Paragraph } = Typography;
 
-function NewFeedPost({ post }) {
+function SearchPost({ post }) {
 
     const [state, setState] = useState({
         postId: post._id,
@@ -149,38 +149,31 @@ function NewFeedPost({ post }) {
                         
                         >{post.owner.name[0]}</div>)
                     }
-                title={
-                    <p style={{ marginBottom: 0 }}>
-                        <b>
-                            {/* { post.owner.name }{post.belongToGroup && 
-                                <span>
-                                    <ArrowRightOutlined /> {post.belongToGroup.name}
+                    title={
+                        <p style={{ marginBottom: 0 }}>
+                            <b>
+                                <NavLink 
+                                            style={{color: 'black'}}
+                                            // onClick={() => toGroup(post.belongToGroup._id, post.belongToGroup.name)} 
+                                            to={`/users/${post.owner._id}`}>{post.owner.name}</NavLink>
+                                {post.belongToGroup && 
+                                    <span>
+                                        <ArrowRightOutlined /> 
+                                        <NavLink 
+                                            style={{color: 'black'}}
+                                            onClick={() => toGroup(post.belongToGroup._id, post.belongToGroup.name)} 
+                                            to={`/groups/${post.belongToGroup._id}`}>{post.belongToGroup.name}</NavLink>
                                     </span>
-                            } */}
-                            
-                            <NavLink 
-                                        style={{color: 'black'}}
-                                        // onClick={() => toGroup(post.belongToGroup._id, post.belongToGroup.name)} 
-                                        to={`/users/${post.owner._id}`}>{post.owner.name}</NavLink>
-                            {post.belongToGroup && 
-                                <span>
-                                    <ArrowRightOutlined /> 
-                                    <NavLink 
-                                        style={{color: 'black'}}
-                                        onClick={() => toGroup(post.belongToGroup._id, post.belongToGroup.name)} 
-                                        to={`/groups/${post.belongToGroup._id}`}>{post.belongToGroup.name}</NavLink>
-                                </span>
-                            }
-                        </b>
-                        <br />
-                        <small>
-                            { moment(post.createdAt).format('hh:mm, Do MMMM YYYY') }
-                        </small>
-                    </p>
-                }
-                style={{ padding: "1em", userSelect:"none" }}
+                                }
+                            </b>
+                            <br />
+                            <small>
+                                { moment(post.createdAt).format('hh:mm, Do MMMM YYYY') }
+                            </small>
+                        </p>
+                    }
+                    style={{ padding: "1em", userSelect:"none" }}
                 />
-
 
                 {/* content */}
                 <Card.Grid style={{ width: "100%", paddingBottom:0 }} hoverable={false}>
@@ -191,7 +184,6 @@ function NewFeedPost({ post }) {
                         }
                     </Paragraph>
                     
-                        
                         <Carousel ref={slider}>
                             {
                                 post.image.map((url, index) => (<Image 
@@ -217,4 +209,4 @@ function NewFeedPost({ post }) {
     );
 }
 
-export default React.memo(NewFeedPost);
+export default React.memo(SearchPost);
