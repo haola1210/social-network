@@ -9,10 +9,9 @@ export default function Home(props) {
     const { socket } = useSelector(state => state.session)
     const { filter, query, } = useParams();
     const searchQuery = decodeURIComponent(query)
-    const dispatch = useDispatch();
     
     useEffect(() =>{
-        console.log("filter", filter, "query", searchQuery)
+        // console.log("filter", filter, "query", searchQuery)
         socket.emit(`client-search-${filter}`, { query: searchQuery }) 
     }, [ filter, query, ])
 

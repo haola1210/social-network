@@ -366,7 +366,7 @@ const searchPost = async (socket, query) => {
 
     const searchContent = await Post.find({
         content: { $regex: `.*${query}.*`, $options: 'i', },
-    }).skip(0).limit(10)
+    }).populate("owner").populate("belongToGroup").skip(0).limit(10)
     
     const postsResult =  [...searchOwner, ...searchContent, ]
     socket.emit("server-send-search-results", { posts : postsResult})
