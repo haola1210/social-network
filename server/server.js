@@ -10,6 +10,7 @@ const bcrypt = require('bcrypt')
 
 const User = require("./models/user.model")
 const Post = require("./models/post.model")
+const Group = require("./models/group.model")
 const Comment = require("./models/comment.model")
 
 const { cloudinary } = require("./configs/cloudinary.setup")
@@ -322,8 +323,48 @@ io.on("connection", socket => {
             socket.emit("server-send-change-profile-password", { error })
         })
     })
+
+    socket.on("client-search-all", async ({ query }) => {
+        console.log("search all ", query)
+        searchAll(socket, query)
+    })
+
+    socket.on("client-search-posts", async ({ query }) => {
+        console.log("search posts ", query)
+        searchPost(socket, query)
+    })
+
+    socket.on("client-search-groups", async ({ query }) => {
+        console.log("search groups ", query)
+        searchGroup(socket, query)
+    })
+
+    socket.on("client-search-people", async ({ query }) => {
+        console.log("search people ", query)
+        searchPeople(socket, query)
+    })
 })
 
+const searchAll = async (socket, query) => {
+    console.log("use func search all ", query)
+    searchPost(socket, query)
+    searchGroup(socket, query)
+    searchPeople(socket, query)
+}
+const searchPost = async (socket, query) => {
+    console.log("use func search post ", query)
+    
+    const postsResult = await Post.find({}).populate("owner").populate("belongToGroup")
+    // .skip().limit(10)
+    socket.emit("server-send-search-results", { posts : postsResult})
+
+}
+const searchGroup = async (socket, query) => {
+    console.log("use func search group ", query)
+}
+const searchPeople = async (socket, query) => {
+    console.log("use func search people ", query)
+}
 
 server.listen( port, () => {
     console.log(`server listening on port ${port}: http://localhost:${port}`);

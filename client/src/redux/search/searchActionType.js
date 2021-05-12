@@ -1,0 +1,8 @@
+export const SEARCH_ALL = "SEARCH_ALL"
+export const SEARCH_POSTS = "SEARCH_POSTS"
+export const SEARCH_GROUPS = "SEARCH_GROUPS"
+export const SEARCH_PEOPLE = "SEARCH_PEOPLE"
+
+export const SEARCH_START = "SEARCH_START"
+export const SEARCH_SUCCESS = "SEARCH_SUCCESS"
+export const SEARCH_FAILURE = "SEARCH_FAILURE"

@@ -13,7 +13,7 @@ function SearchComponent(props) {
 
     const onSearch = () => {
         if (state) {
-            const search = encodeURIComponent(state)
+            const search = encodeURIComponent(state.replace("%", "%25")).replace("'", "%27")
             history.push(`/search/all/${search}`)
         }
     }

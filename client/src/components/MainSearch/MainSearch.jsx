@@ -8,7 +8,6 @@ import { Divider, Row, Spin, message } from "antd"
 import { LoadingOutlined } from '@ant-design/icons';
 
 import TypeSearchContainer from "../TypeSearchContainer/TypeSearchContainer"
-import NewFeedPost from "../NewFeedPost/NewFeedPost"
 import TitleSearch from "../TitleSearch/TitleSearch"
 import SearchContainer from "../SearchContainer/SearchContainer"
 
@@ -21,7 +20,6 @@ function MainSearch( props ) {
 
     const { posts, error, mess } = useSelector(state => state)
     const { filter } = useParams()
-    const types = [ "Posts", "People", "Groups", ]
 
     const dispatch = useDispatch()
 
@@ -37,6 +35,9 @@ function MainSearch( props ) {
             message.success(mess.content)
         }
     }, [mess.content])
+
+    useEffect(() => {
+    }, [])
 
     return (
         <div className="main">
@@ -59,57 +60,10 @@ function MainSearch( props ) {
                 }}>
                     <TitleSearch name={`${filter.charAt(0).toUpperCase() + filter.slice(1)}`}/>
                 </Row>
-                { filter === "all" ? 
-                    types.map(type => (
-                        <div>
-                            {type}
-                            <SearchContainer filter={filter} />
-                        </div> 
-                    )) : null
-                }
-                        {/* : 
-                        (<Row style={{
-                            display: "flex", 
-                            flexDirection: "row", 
-                            justifyContent: "center", 
-                            alignItems: "center",
-                        }}>
-                            <TitleSearch greeting={`Chào ${user.name}! Chúc ngày tốt lành`}/>
-                        </Row>)
-                } */}
-                {/* write post */}
-                {/* <Row style={{
-                    display: "flex", 
-                    flexDirection: "column", 
-                    justifyContent: "center", 
-                    alignItems: "center",
                 
-                }}>
-                    <WritePost  />
-                </Row> */}
-
-                {/* posts here */}
-                <Row style={{
-                    display: "flex", 
-                    flexDirection: "column", 
-                    justifyContent: "center", 
-                    alignItems: "center",
-                
-                }}>
-                    {
-                        posts.posts.map((post) => 
-                            <div className="post" key={post._id} >
-                                <NewFeedPost post={post}  />
-                            </div>
-                        )
-                    }
-
-                    {
-                        posts.isFetching ? 
-                        (<Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />) : 
-                        (<p className="load-more" onClick={ () => dispatch({ type : FETCH_MORE_POST })}> load more </p>)
-                    }
-               </Row>
+                <div>
+                    <SearchContainer filter={filter} />
+                </div> 
             </div>
             
         </div>
