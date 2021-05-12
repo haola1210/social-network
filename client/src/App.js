@@ -12,7 +12,7 @@ import Home from "./components/Home/Home"
 import Login from "./components/Login/Login"
 import Admin from "./components/Admin/Admin"
 import MainContainer from "./components/MainContainer/MainContainer"
-import Profile from "./components/Profile/Profile"
+import Profile from "./components/Wall/Wall"
 import Search from "./components/Search/Search"
 
 import PrivateRoute from "./components/Route/PrivateRoute"
