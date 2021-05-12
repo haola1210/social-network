@@ -11,7 +11,14 @@
     color: #007eff;
     background-color: white;
     border-radius: 10px;
+    
+    &__posts,
+    &__people,
+    &__groups {
+        margin-top: 0;
+    }
 }
+
 
 @media screen and (min-width: 576px) {
     .title-search {

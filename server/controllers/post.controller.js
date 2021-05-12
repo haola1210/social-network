@@ -129,3 +129,47 @@ module.exports.fetchPost = (req, res) => {
         })
     })
 }
+
+module.exports.searchPosts = (req, res) => {
+    let { search } = req.body;
+    // search = `/${search}$/`
+    Post
+    // .find({}).populate("owner").populate("belongToGroup")
+    // .find({
+    //     $or: [
+    //         // {"owner.name": {$regex: "`.*${search}.*`"}},
+    //         {"owner.name": "60892c8511952a46147146b8"},
+    //         // {owner: { name: {$regex: `.*${search.toUpperCase()}.*`}}},
+    //     ]
+    // }).populate("owner").populate("belongToGroup")
+    .aggregate([
+        { $lookup: {
+            "from": "users",
+            "localField": "owner",
+            "foreignField": "_id",
+            "as": "owner"
+        }},
+        { $match: { "owner.name": { $regex: `/${search}$/` } } },
+        // { $match: { "owner.name": { $regex: `.*${search}.*` } } },
+        // { "$group": {
+        //     _id: "$belongToGroup",
+            
+        // }}
+    ])
+    .then(posts => {
+        if (posts.length > 0) {
+            return res.json({
+                code: 200,
+                message: "Search Posts successfully",
+                data: posts,
+            })
+        }
+        else throw new Error("Non found posts")
+    }).catch(error => {
+        res.json({
+            code: 400,
+            message: "Error Occurs",
+            error: error.message,
+        })
+    })
+}

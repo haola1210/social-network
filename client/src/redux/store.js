@@ -11,6 +11,7 @@ import { groupReducer } from "./group/groupReducer"
 import { postReducer } from "./post/postReducer"
 import { errorReducer } from "./error/errorReducer"
 import { messReducer } from "./notification/notificationReducer"
+import { searchReducer } from "./search/searchReducer"
 
 import rootSaga from "../saga/rootSaga"
 import { socketMiddleware } from "../socketClient"
@@ -23,7 +24,8 @@ const rootReducer = combineReducers({
     groups: groupReducer,          
     posts : postReducer,
     error : errorReducer,
-    mess : messReducer
+    mess : messReducer,
+    search: searchReducer,
 })
 
 const store = createStore(

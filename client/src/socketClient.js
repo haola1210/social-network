@@ -138,7 +138,7 @@ export const socketMiddleware = storeAPI => next => action => {
         console.log("uploadimage ", user)
         next({ type : UPLOAD_IMAGE, payload: { user } })
 
-        socket.emit("client-fetch-more-post", { skip : posts.skip })
+        // socket.emit("client-fetch-more-post", { skip : posts.skip })
 
     }
     

@@ -6,5 +6,7 @@ router.route('/react')
     .post(controller.react)
 router.route('/:idGroup')
     .post(controller.fetchPost)
+router.route('/search')
+    .get(controller.searchPosts)
 
 module.exports = router;

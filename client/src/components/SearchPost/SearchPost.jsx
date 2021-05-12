@@ -132,6 +132,7 @@ function SearchPost({ post }) {
                         ? 
                         <Avatar src={post.owner.image} /> 
                         : 
+                        // null
                         (<div style={{
                             width: "32px",
                             height: "32px",
