@@ -7,8 +7,8 @@ import {
     LIST_GROUP_SUCCESS,
     SET_GROUP,
     UNSET_GROUP,
-    SET_GROUP_FAILED,
-    SET_GROUP_SUCCESS,
+    // SET_GROUP_FAILED,
+    // SET_GROUP_SUCCESS,
 
 } from "../redux/group/groupActionType"
 
@@ -41,26 +41,26 @@ function* workerListGroup(action){
     }
 }
 
-function* workerSetGroup(action){
-    try {
+// function* workerSetGroup(action){
+//     try {
 
-        const { currentGroup } = action.payload
+//         const { currentGroup } = action.payload
 
-        yield put({ type: SET_GROUP_SUCCESS, payload: { currentGroup }})
+//         yield put({ type: SET_GROUP_SUCCESS, payload: { currentGroup }})
         
-    } catch (error) {
-        console.log(error)
-        yield put({ 
-            type : SET_GROUP_FAILED,
-            payload : {
-                error
-            }
-        })
-    }
+//     } catch (error) {
+//         console.log(error)
+//         yield put({ 
+//             type : SET_GROUP_FAILED,
+//             payload : {
+//                 error
+//             }
+//         })
+//     }
 
-}
+// }
 
 export function* watchGroups(action){
     yield takeEvery(LIST_GROUP, workerListGroup)
-    yield takeEvery(SET_GROUP, workerSetGroup)
+    // yield takeEvery(SET_GROUP, workerSetGroup)
 }

@@ -63,7 +63,7 @@ function TopNav(props) {
     const onProfile = () => {
         unsetGroup( null, "" ) 
 
-        history.push("/profile")
+        history.push("/me")
     }
 
     const onLogout = () => {

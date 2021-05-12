@@ -19,11 +19,25 @@ import "./MainContainer.scss"
 
 function MainContainer( props ) {
 
-    const { currentGroup } = useSelector(state => state.groups)
+    const { location } = useSelector(state => state.groups)
     const { user } = useSelector(state => state.session)
     const { posts, error, mess } = useSelector(state => state)
 
     const dispatch = useDispatch()
+    const [greeting, setGreeting] = useState("")
+    useEffect(() => {
+    
+        if(location){
+            if(location.type === "g"){
+                setGreeting(`${location.name} xin chào!`)
+            } else if (location.type === "n"){
+                setGreeting(`Chào ${user.name}! Newfeed của bạn có điều mới đấy!`)
+            } else if (location.type === "u"){
+                setGreeting(`Đây là dòng thời gian của ${location.name}`)
+            }
+        }
+        console.log(greeting)
+    }, [location])
 
     useEffect(() => {
         if(error.content){
@@ -52,24 +66,16 @@ function MainContainer( props ) {
             <div className="main__right">
 
                 {
-                    currentGroup !== null && currentGroup._id !== null? 
-                        (<Row style={{
-                            display: "flex", 
-                            flexDirection: "row", 
-                            justifyContent: "center", 
-                            alignItems: "center",
-                        }}>
-                            <TitleGroup name={currentGroup.name} greeting="xin chào!"/>
-                        </Row>)
-                        : 
-                        (<Row style={{
-                            display: "flex", 
-                            flexDirection: "row", 
-                            justifyContent: "center", 
-                            alignItems: "center",
-                        }}>
-                            <TitleGroup greeting={`Chào ${user.name}! Chúc ngày tốt lành`}/>
-                        </Row>)
+                    
+                    (<Row style={{
+                        display: "flex", 
+                        flexDirection: "row", 
+                        justifyContent: "center", 
+                        alignItems: "center",
+                    }}>
+                        <TitleGroup greeting={ greeting } />
+                    </Row>)
+                        
                 }
                 {/* write post */}
                 <Row style={{

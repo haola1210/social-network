@@ -130,8 +130,8 @@ function SearchPeople({ item }) {
                             <b>
                                 <NavLink 
                                     style={{color: 'black'}}
-                                    onClick={() => toGroup(item._id, item.name)} 
-                                    to={`/users/${item._id}`}>{item.name}
+                                    // onClick={() => toGroup(item._id, item.name)} 
+                                    to={`/user/${item._id}`}>{item.name}
                                 </NavLink>
                             </b>
                             <br />

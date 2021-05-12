@@ -15,6 +15,11 @@ import {
 
 import { PUSH_ERROR } from "./redux/error/errorActionType"
 import { PUSH_MESS } from "./redux/notification/notificationActionType"
+import { 
+    FETCH_LOCATION,
+    SET_LOCATION_FAILED,
+    SET_LOCATION_SUCCESS
+} from './redux/group/groupActionType';
 
 export const INIT_SOCKET = "INIT_SOCKET"
 export const TERMINATE_SOCKET = "TERMINATE_SOCKET"
@@ -101,6 +106,20 @@ export const socketMiddleware = storeAPI => next => action => {
         })
 ////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////// handle response fetch location
+        socket.on("res-fetch-location", response => {
+            console.log(response)
+            if(response.error){
+                next({ type : SET_LOCATION_FAILED , payload: {error : response.error} })
+                next({ type: PUSH_ERROR, payload : { error : response.error } })
+            }
+
+            if(response.location){
+                next({ type: SET_LOCATION_SUCCESS, payload: { location: response.location } })
+            }
+        })
+//./////////////////////////////////////////////////////////////////////////
+
     } else if (action.type === MAKING_POST) {
         
         const { content, fileList, belongToGroup } = action.payload
@@ -140,6 +159,8 @@ export const socketMiddleware = storeAPI => next => action => {
     } else if(action.type === FETCH_POST ){
         next({ type : FETCH_POST_START })
         socket.emit("client-init-post", { location : action.payload.location })
+    } else if(action.type === FETCH_LOCATION){
+        socket.emit("fetch-location", { location : action.payload.location })
     }
     
     else return next(action)
