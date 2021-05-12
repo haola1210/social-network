@@ -1,67 +1,6 @@
 import React from 'react';
 import moment from "moment";
 import { Comment, Avatar } from "antd";
-// import {
-//   DislikeOutlined,
-//   LikeOutlined,
-//   DislikeFilled,
-//   LikeFilled
-// } from "@ant-design/icons";
-
-// const initialState = {
-//   likeNumber: 10,
-//   dislikeNumber: 10,
-//   status: null
-// };
-
-
-// const reducer = (state, action) => {
-//     switch (action.type) {
-//       case "like_start":
-//         return {
-//           ...state,
-//           status: null
-//         };
-  
-//       case "like_success":
-//         return {
-//           ...state,
-//           likeNumber: action.payload.likeNumber,
-//           dislike: action.payload.dislikeNumber,
-//           status: "liked"
-//         };
-//       case "like_failure":
-//         return {
-//           ...state,
-//           likeNumber: action.payload.likeNumber,
-//           dislike: action.payload.dislikeNumber,
-//           status: null
-//         };
-//       case "dislike_start":
-//         return {
-//           ...state,
-//           status: null
-//         };
-  
-//       case "dislike_success":
-//         return {
-//           ...state,
-//           likeNumber: action.payload.likeNumber,
-//           dislike: action.payload.dislikeNumber,
-//           status: "disliked"
-//         };
-//       case "dislike_failure":
-//         return {
-//           ...state,
-//           likeNumber: action.payload.likeNumber,
-//           dislike: action.payload.dislikeNumber,
-//           status: null
-//         };
-  
-//       default:
-//         return state;
-//     }
-//   };
 
 function CustomComment({ data }) {
 

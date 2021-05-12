@@ -20,6 +20,7 @@ import PublicRoute from "./components/Route/PublicRoute"
 import AdminRoute from "./components/Route/AdminRoute"
 
 import './App.scss';
+import Root from './components/Root/Root';
 
 export default function App() {
 	
@@ -35,10 +36,10 @@ export default function App() {
 				<Switch>
 					<PublicRoute exact path="/login" component={Login}/>
 					<AdminRoute exact path="/admin" component={Admin} />
-                    <PrivateRoute exact path="/profile" component={Profile}/>
+                    {/* <PrivateRoute exact path="/profile" component={Profile}/>
                     <PrivateRoute path="/groups/:idGroup" component={Home}/>
-                    <PrivateRoute path="/search/:filter/:query" component={Search}/>
-					<PrivateRoute path="/" component={Home} />
+                    <PrivateRoute path="/search/:filter/:query" component={Search}/> */}
+					<PrivateRoute path="/" component={Root} />
 				</Switch>
 			</div>
 		</Router>
