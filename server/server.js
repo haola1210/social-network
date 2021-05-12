@@ -139,17 +139,41 @@ io.on("connection", socket => {
             socket.emit("server-send-comment-list", { error, postId: data.postId })
         }
     })
+
+    socket.on("client-get-user-profile", async data => {
+        User.findById(data._id).then(user => {
+            if (!user) {
+                throw new Error("User is not available")
+            }
+            else {
+                socket.emit("server-send-user-profile", { user })
+            }
+        }).catch(error => {
+            socket.emit("server-send-user-profile", { error, })
+        })
+
+    })
+
+    socket.on("client-get-user-posts", async (data) => {
+        Post.find({ owner: data._id, }).populate("owner").populate("belongToGroup")
+        .limit(5).then(posts => {
+            // console.log("client-get-user-posts", posts)
+            socket.emit("server-send-user-posts", { posts })
+        }).catch (error => {
+            socket.emit("server-send-user-posts", { error })
+        })
+    })
     //////////////////////////////////////////////////////////////////////////
 
 
 
     /////////////////////////////////////// fetch more post
-    socket.on("client-fetch-more-post", async ({skip, location}) => {
+    socket.on("client-fetch-more-post", async ({skip, location, limit = 5}) => {
         try {
             const posts = await Post.find(location)
             .sort({"createdAt" : -1})
             .skip(skip)
-            .limit(5)
+            .limit(limit)
             .populate("owner")
             .populate("belongToGroup")
     

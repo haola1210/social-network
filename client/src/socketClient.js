@@ -126,7 +126,7 @@ export const socketMiddleware = storeAPI => next => action => {
         console.log(posts)
         next({ type : FETCH_MORE_POST_START })
         console.log(action.payload.location)
-        socket.emit("client-fetch-more-post", { skip : posts.skip, location : action.payload.location })
+        socket.emit("client-fetch-more-post", { skip : posts.skip, location : action.payload.location, limit: action.payload.limit })
 
     } else if(action.type === UPLOAD_IMAGE){
         const { user } = action.payload

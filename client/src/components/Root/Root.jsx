@@ -5,6 +5,7 @@ import {
     Route,
     Switch
 } from "react-router-dom";
+import Wall from '../Wall/Wall';
 import Profile from '../Profile/Profile';
 import Search from '../Search/Search';
 import Home from '../Home/Home';
@@ -24,11 +25,11 @@ function Root(props) {
 
     return (
         <Switch>
-            <Route path="/profile" component={Profile} />
-            <Route path="/me" component={Profile} />
+            <Route path="/profile/:idProfile" component={Wall} />
+            <Route exact path="/profile" component={Profile} />
             <Route path="/search/:filter/:query" component={Search} />
             <Route path="/group/:idGroup" component={Home} />
-            <Route path="/user/:idUser" component={Home} />
+            {/* <Route path="/user/:idUser" component={Home} /> */}
             <Route exact path="" component={Home} />
         </Switch>
     );

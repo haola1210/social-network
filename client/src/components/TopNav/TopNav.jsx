@@ -60,6 +60,12 @@ function TopNav(props) {
         history.push("/");
     }
 
+    const onWall = () => {
+        unsetGroup( null, "" ) 
+
+        history.push(`/profile/${user._id}`)
+    }
+
     const onProfile = () => {
         unsetGroup( null, "" ) 
 
@@ -125,7 +131,7 @@ function TopNav(props) {
                         {/*  */}
                         <Col xs={4} sm={6} style={styles.center} >
                             {/* <Link to="/profile">  */}
-                                <UserOutlined onClick={onProfile} /> 
+                                <UserOutlined onClick={onWall} /> 
                             {/* </Link> */}
                         </Col>
 
@@ -141,6 +147,9 @@ function TopNav(props) {
                                                 :
                                                 null
                                         }
+                                        <div onClick={onProfile}>
+                                            Profile
+                                        </div>
                                         <div onClick={onLogout}>
                                             Logout here
                                         </div>
