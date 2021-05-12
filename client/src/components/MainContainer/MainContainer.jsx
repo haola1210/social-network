@@ -101,7 +101,14 @@ function MainContainer( props ) {
                     {
                         posts.isFetching ? 
                         (<Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />) : 
-                        (<p className="load-more" onClick={ () => dispatch({ type : FETCH_MORE_POST })}> load more </p>)
+                        (
+                            <p className="load-more" onClick={ () => dispatch({ 
+                                type : FETCH_MORE_POST,
+                                payload : { location : props.location }
+                            })}> 
+                                load more 
+                            </p>
+                        )
                     }
                </Row>
             </div>
