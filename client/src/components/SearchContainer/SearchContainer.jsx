@@ -12,14 +12,49 @@ import {
 
 import TitleSearch from "../TitleSearch/TitleSearch"
 import SearchPost from "../SearchPost/SearchPost"
+import SearchGroup from "../SearchGroup/SearchGroup"
+import SearchPeople from "../SearchPeople/SearchPeople"
 
 export default function SearchContainer ({ type, filter }) {
 
-    const types = [ "posts", "people", "groups", ]
+    const types = [ 
+        "groups", 
+        "people", 
+        "posts", 
+    ]
     const { results } = useSelector(state => state.search)
     const { socket, } = useSelector(state => state.session)
     const dispatch = useDispatch()
 
+    const SearchItemType = (type) => {
+        console.log("searchItemType", type, results[type])
+        return (
+            <Row style={{
+                display: "flex", 
+                flexDirection: "column", 
+                justifyContent: "center", 
+                alignItems: "center",
+            }}>
+                {
+                    results[type].map((item) => 
+                        <div className="post" key={item._id} >
+                            {type==="posts" && <SearchPost item={item} />}
+                            {type==="groups" && <SearchGroup item={item} />}
+                            {type==="people" && <SearchPeople item={item} />}
+                        </div>
+                    )
+                }
+            </Row>
+        )
+    }
+    // {
+    //     // posts.isFetching ? 
+    //     // (<Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />) : 
+    //     // (<p 
+    //     //     className="load-more" 
+    //     //     onClick={ () => dispatch({ type : FETCH_MORE_POST })}
+    //     // > load more </p>)
+    // }
     useEffect(() => {
         if(socket) {
             socket.once("server-send-search-results", ({ posts, groups, people}) => {
@@ -29,9 +64,9 @@ export default function SearchContainer ({ type, filter }) {
                 } else if (posts) {
                     dispatch({type: SEARCH_POSTS, payload: { posts }})
                 } else if (groups) {
-                    dispatch({type: SEARCH_POSTS, payload: { groups }})
+                    dispatch({type: SEARCH_GROUPS, payload: { groups }})
                 } else if (people) {
-                    dispatch({type: SEARCH_POSTS, payload: { people }})
+                    dispatch({type: SEARCH_PEOPLE, payload: { people }})
                 }
             })
             
@@ -40,66 +75,32 @@ export default function SearchContainer ({ type, filter }) {
 
     return (
         <div>
-            
-            { filter === "all" ? 
-                types.map(type => (
-                    <div>
-                        <Row style={{
-                            display: "flex", 
-                            flexDirection: "column", 
-                            justifyContent: "center", 
-                            alignItems: "center",
-                            
-                        }}>
-                            <Divider style={{alignItems: "center"}}/>
-                            <TitleSearch filter={type} name={`${type.charAt(0).toUpperCase() + type.slice(1)}`}/>
-                        </Row>
-                        {type==="posts" &&
+            <div>
+                { filter === "all" && 
+                    types.map((type, index) => (
+                        <div key={index}>
                             <Row style={{
                                 display: "flex", 
                                 flexDirection: "column", 
                                 justifyContent: "center", 
                                 alignItems: "center",
+                                
                             }}>
-                                {
-                                    results.posts.map((post) => 
-                                        <div className="post" key={post._id} >
-                                            <SearchPost post={post}  />
-                                        </div>
-                                    )
-                                }
+                                <Divider style={{alignItems: "center"}}/>
+                                <TitleSearch filter={type} name={`${type.charAt(0).toUpperCase() + type.slice(1)}`}/>
                             </Row>
-                        }
-                    </div>
-                )) : null
-            }
-            {filter !== "all" && filter === "posts" && 
-                <Row style={{
-                    display: "flex", 
-                    flexDirection: "column", 
-                    justifyContent: "center", 
-                    alignItems: "center",
-                }}>
-                    {
-                        results.posts.map((post) => 
-                            <div className="post" key={post._id} >
-                                <SearchPost post={post}  />
-                            </div>
-                        )
-                    }
-
-                    {
-                        // posts.isFetching ? 
-                        // (<Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />) : 
-                        // (<p 
-                        //     className="load-more" 
-                        //     onClick={ () => dispatch({ type : FETCH_MORE_POST })}
-                        // > load more </p>)
-                    }
-
-
-                </Row>
-            }
+                            
+                            {type === "groups" && SearchItemType("groups")}
+                            {type === "people" && SearchItemType("people")}
+                            {type === "posts" && SearchItemType("posts")}
+                        </div>
+                    )) 
+                }
+            </div>
+            {filter !== "all" && filter === "posts" && SearchItemType(filter)}
+            {filter !== "all" && filter === "groups" && SearchItemType(filter)}
+            {filter !== "all" && filter === "people" && SearchItemType(filter)}
+            
         </div>
 
     )

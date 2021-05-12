@@ -23,10 +23,10 @@ import {
 const { Meta } = Card;
 const { Paragraph } = Typography;
 
-function SearchPost({ post }) {
+function SearchPost({ item }) {
 
     const [state, setState] = useState({
-        postId: post._id,
+        postId: item._id,
         comments : [],
         loading : false,
         error : null,
@@ -38,8 +38,8 @@ function SearchPost({ post }) {
     const dispatch = useDispatch()
 
     const onReact = ( reaction ) => {
-        // console.log(reaction, " post ", post.content)
-        socket.emit("client-react-post", { id: post._id, user: user._id, reaction})
+        // console.log(reaction, " post ", item.content)
+        socket.emit("client-react-post", { id: item._id, user: user._id, reaction})
     }
 
     const toGroup = (_id, name) => {
@@ -49,21 +49,21 @@ function SearchPost({ post }) {
 /////////////////////////////////////////////////////////////// socket process here
     useEffect(() => {
         if (socket) {
-            socket.once("server-send-react-post", ({ error, post : reactedPost, postId }) => {
-                if (error && error !== null && postId == post._id) {
+            socket.once("server-send-react-post", ({ error, item : reactedPost, postId }) => {
+                if (error && error !== null && postId == item._id) {
                     console.log(error)
                     setState({
                         ...state, 
                         loading: false,
                         error : error.message
                     })
-                } else if (reactedPost && postId === post._id) {
+                } else if (reactedPost && postId === item._id) {
                     console.log("reacted post", reactedPost)
                     dispatch({ type: REACT_POST, payload: { reactedPost }})
                 }
             })
         }
-    }, [ post ])
+    }, [ item ])
 
 
     useEffect(() => {
@@ -73,17 +73,17 @@ function SearchPost({ post }) {
             error : null
         })
         if (socket) {
-            socket.emit("client-req-cmt", { postId : post._id })
+            socket.emit("client-req-cmt", { postId : item._id })
             socket.on("server-send-comment-list", response => {
-                if(response.error && response.postId == post._id) {
+                if(response.error && response.postId == item._id) {
                     console.log(response.error.message)
                     setState({
                         ...state, 
                         loading: false,
                         error : response.error.message
                     })
-                } else if(response.comments && response.postId == post._id){
-                    // console.log(post._id, response.comments)
+                } else if(response.comments && response.postId == item._id){
+                    // console.log(item._id, response.comments)
                     setState({
                         ...state, 
                         loading: false,
@@ -94,7 +94,7 @@ function SearchPost({ post }) {
                 
             })
         }
-    }, [post._id])
+    }, [item._id])
 
 
     useEffect(() => {
@@ -103,7 +103,7 @@ function SearchPost({ post }) {
                 if (error !== null && error !== undefined && error) {
                     console.log("error", error.message)
                 }
-                if (comment && belongToPost === post._id ) {
+                if (comment && belongToPost === item._id ) {
                     
                     setState({
                         ...state,
@@ -121,55 +121,57 @@ function SearchPost({ post }) {
             <Card
                 style={{ width: "100%" }}
                 actions={[
-                    <Like onClick={() => onReact("likes")} like={post.likes} />, 
-                    <Dislike onClick={()=> onReact("dislikes")} dislike={post.dislikes} />,
+                    <Like onClick={() => onReact("likes")} like={item.likes} />, 
+                    <Dislike onClick={()=> onReact("dislikes")} dislike={item.dislikes} />,
                     <CommentBtn cmtCounter={state.comments.length} onClick={() => setState(prev => ({...prev, isShow : !prev.isShow}))} />
                 ]}
             >
                 <Meta
                     avatar={
-                        post.owner.image 
+                        item.owner.image 
                         ? 
-                        <Avatar src={post.owner.image} /> 
+                        <Avatar src={item.owner.image} /> 
                         : 
-                        // null
-                        (<div style={{
-                            width: "32px",
-                            height: "32px",
-                            paddingBottom: "5px",
-                            borderRadius: "16px",
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            color : "red",
-                            backgroundColor: "orange",
-                            fontWeight: "bold",
-                            fontSize: "1.5em",
-                            textTransform : "uppercase"
-                        }}
+                        <Avatar src={`https://ui-avatars.com/api/?background=random&size=400&name=${user.name.split(" ").join("+")}`} /> 
                         
-                        >{post.owner.name[0]}</div>)
+                        // null
+                        // (<div style={{
+                        //     width: "32px",
+                        //     height: "32px",
+                        //     paddingBottom: "5px",
+                        //     borderRadius: "16px",
+                        //     display: "flex",
+                        //     justifyContent: "center",
+                        //     alignItems: "center",
+                        //     color : "red",
+                        //     backgroundColor: "orange",
+                        //     fontWeight: "bold",
+                        //     fontSize: "1.5em",
+                        //     textTransform : "uppercase"
+                        // }}
+                        
+                        // >{item.owner.name[0]}</div>)
                     }
                     title={
                         <p style={{ marginBottom: 0 }}>
                             <b>
                                 <NavLink 
-                                            style={{color: 'black'}}
-                                            // onClick={() => toGroup(post.belongToGroup._id, post.belongToGroup.name)} 
-                                            to={`/users/${post.owner._id}`}>{post.owner.name}</NavLink>
-                                {post.belongToGroup && 
+                                    style={{color: 'black'}}
+                                    // onClick={() => toGroup(item.belongToGroup._id, item.belongToGroup.name)} 
+                                    to={`/users/${item.owner._id}`}>{item.owner.name}</NavLink>
+                                {item.belongToGroup && 
                                     <span>
                                         <ArrowRightOutlined /> 
                                         <NavLink 
                                             style={{color: 'black'}}
-                                            onClick={() => toGroup(post.belongToGroup._id, post.belongToGroup.name)} 
-                                            to={`/groups/${post.belongToGroup._id}`}>{post.belongToGroup.name}</NavLink>
+                                            onClick={() => toGroup(item.belongToGroup._id, item.belongToGroup.name)} 
+                                            to={`/groups/${item.belongToGroup._id}`}>{item.belongToGroup.name}</NavLink>
                                     </span>
                                 }
                             </b>
                             <br />
                             <small>
-                                { moment(post.createdAt).format('hh:mm, Do MMMM YYYY') }
+                                { moment(item.createdAt).format('hh:mm, Do MMMM YYYY') }
                             </small>
                         </p>
                     }
@@ -181,13 +183,13 @@ function SearchPost({ post }) {
 
                     <Paragraph ellipsis={{ rows: 3, expandable: true, symbol: "more" }}>
                         {
-                            post.content
+                            item.content
                         }
                     </Paragraph>
                     
                         <Carousel ref={slider}>
                             {
-                                post.image.map((url, index) => (<Image 
+                                item.image.map((url, index) => (<Image 
                                     key= {index}
                                     style={{ width: "100%" }}
                                     src={url}
@@ -195,8 +197,8 @@ function SearchPost({ post }) {
                             }  
                         </Carousel>
                         <div style={{width: "100%", display:"flex", justifyContent:"space-between", padding:5}}>
-                            { post.image.length > 1 ?  <LeftOutlined onClick={() => slider.current.next()} onSelect={() => false} /> : null }
-                            { post.image.length > 1 ? (<RightOutlined onClick={() => slider.current.prev()} onSelect={() => false}/>) : null }
+                            { item.image.length > 1 ?  <LeftOutlined onClick={() => slider.current.next()} onSelect={() => false} /> : null }
+                            { item.image.length > 1 ? (<RightOutlined onClick={() => slider.current.prev()} onSelect={() => false}/>) : null }
                         </div>
                 
                 
