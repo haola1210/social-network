@@ -8,6 +8,8 @@ import {
 import Profile from '../Profile/Profile';
 import Search from '../Search/Search';
 import Home from '../Home/Home';
+import AdminRoute from '../Route/AdminRoute';
+import Admin from '../Admin/Admin';
 
 function Root(props) {
 
@@ -24,8 +26,9 @@ function Root(props) {
 
     return (
         <Switch>
-            <Route path="/profile" component={Profile} />
-            <Route path="/me" component={Profile} />
+            <AdminRoute path="/admin" component={Admin} />
+            <Route path="/me" component={Home} />
+            <Route path="/setting" component={Profile} />
             <Route path="/search/:filter/:query" component={Search} />
             <Route path="/group/:idGroup" component={Home} />
             <Route path="/user/:idUser" component={Home} />

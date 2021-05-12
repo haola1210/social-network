@@ -4,12 +4,12 @@ import { useDispatch } from "react-redux"
 import {
     useHistory,
     useParams,
+    NavLink
 } from "react-router-dom"
 
 import {
     SET_GROUP,
 } from "../../redux/group/groupActionType"
-import "./GroupLinkBadge.scss"
 
 
 function GroupLinkBadge(props) {
@@ -26,24 +26,28 @@ function GroupLinkBadge(props) {
     };
 
     return (
-        <div style={{margin: "0.5em", maxWidth: "200px", minWidth: "150px"}}>
+        <div style={{margin: "0.5em", maxWidth: "200px", minWidth: "150px", cursor: "pointer"}}>
             <Badge 
                 className="group-badge"
                 count={props.count}
                 >
-                <div 
-                    // onClick={() => chooseGroup( props._id, props.name )}
-                    onClick={() => chooseGroup( idGroup, props.name )}
-                    className="group-badge__text"
-                    style={{
-                        padding: "1em",
+                <NavLink 
+                    to={`/group/${props._id}`} 
+                    style = {{
+                        display: "inline-block",
                         borderRadius: "1em",
+                        color: "black",
                         backgroundColor: "#95cbff",
-                        fontWeight: "bold"
+                        fontWeight: "bold",
+                        padding: "1em",
                     }}
-                    >
+                    activeStyle={{
+                        backgroundColor: "#187cdc",
+                        color: "white"
+                    }}
+                >   
                     {props.name}
-                </div>
+                </NavLink>
             </Badge>    
         </div>
     );

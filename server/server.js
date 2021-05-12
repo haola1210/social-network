@@ -117,6 +117,44 @@ io.on("connection", socket => {
     //     socket.emit("server-send-error", { error: { message : "Can not fetch posts! Something wrong, plz contact developer" } })
     // })
 
+    socket.on("fetch-location", async ({ location }) => {
+        console.log(location)
+        try {
+            
+            let res 
+            if(location.belongToGroup){
+                const gr = await Group.findById(location.belongToGroup).exec()
+                res = {
+                    type : "g",  //group
+                    name : gr.name,
+                    _id : gr._id
+                }
+            }
+    
+            if(location.owner){
+                const us = await User.findById(location.owner).exec()
+                res = {
+                    type : "u",  //user profile
+                    name : us.name,
+                    _id : us._id
+                }
+            }
+
+            if(!location.belongToGroup && !location.owner){
+                res = {
+                    type : "n"  //new feed
+                }
+            }
+
+            socket.emit("res-fetch-location", { location : res })
+
+        } catch (error) {
+            console.log(error)
+            socket.emit("res-fetch-location", { error : { message : "Can not get location, some feature will not work correctly" }})
+        }
+
+    })
+
     /////////////////////////////////////// init comment per post 
     socket.on("client-req-cmt", async data => {
         console.log("client: "+data.postId)

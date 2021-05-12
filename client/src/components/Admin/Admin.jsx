@@ -9,10 +9,10 @@ import { INIT_SOCKET } from "../../socketClient"
 
 export default function Admin() {
     
-    const dispatch = useDispatch()
-    useEffect(() => {
-        dispatch({ type : INIT_SOCKET })
-    }, [])
+    // const dispatch = useDispatch()
+    // useEffect(() => {
+    //     dispatch({ type : INIT_SOCKET })
+    // }, [])
 
     return (
         <div>

@@ -16,6 +16,7 @@ import {
 } from '@ant-design/icons'
 import axios from "axios"
 
+import "./CreateUser.scss"
 export default function CreateUser (){
 
     const dispatch = useDispatch();
@@ -122,9 +123,11 @@ export default function CreateUser (){
     }, [])
     
     return (
-        <div>
-            New User
-            <div>
+        <div className="main-admin">
+            <div className="main-admin__left">
+                <h3 className="main-admin__title">
+                    Create new user
+                </h3>
                 <div >
                     <Form
                         initialValues={{...initialValues}}
@@ -193,6 +196,7 @@ export default function CreateUser (){
                                         <Link to="/forgot">Forgot password</Link>
                                     </p>
                                 </div> */}
+                                <small style={{padding: "0.5em"}}>Remeber to select group for new user!</small>
                                 <div className="login-form__body-action-submit">                               
                                     {/* <Form.Item>
                                         <RadioGroup>
@@ -201,7 +205,7 @@ export default function CreateUser (){
                                     </Form.Item> */}
                                     <Form.Item name="submit">
                                         <Button type="primary" htmlType="submit">
-                                            Submit
+                                            Create
                                         </Button>
                                     </Form.Item>
                                 </div>
@@ -210,14 +214,17 @@ export default function CreateUser (){
                     </Form>
                 </div>
             </div>
-            Manage Group
-            <div>
+            <div className="main-admin__right">
+                <h3 className="main-admin__title">
+                    Select group(s) for your new user
+                </h3>
+                <div className="main-admin__right__list">
                 { 
                     groups.map( group => {
                         // console.log("manage group ", group)
 
                         return (
-                            <Row key={group._id} >
+                            <Row key={group._id} className="main-admin__right__list__item" >
                                 <Col span={8}>
                                     <Checkbox 
                                         onChange={onCheckedGroupChange}
@@ -231,6 +238,7 @@ export default function CreateUser (){
                         )
                     })
                 }
+                </div>
             </div>
         </div>
     )

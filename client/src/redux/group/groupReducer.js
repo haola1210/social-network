@@ -1,8 +1,8 @@
 import { 
     LIST_GROUP_SUCCESS,
     LIST_GROUP_FAILED,
-    SET_GROUP_SUCCESS,
-    SET_GROUP_FAILED,
+    SET_LOCATION_SUCCESS,
+    SET_LOCATION_FAILED,
 } from "./groupActionType"
 
 const initialState = {
@@ -11,6 +11,7 @@ const initialState = {
         _id: null,
         name: null,
     },
+    location: null,
     error: null,
 }
 
@@ -24,19 +25,19 @@ export const groupReducer = (state = initialState, action) => {
                 listGroup: action.payload.listGroup
             }
         
-        case SET_GROUP_SUCCESS:
-            return {
-                ...state,
-                currentGroup: action.payload.currentGroup,
-            }
-        
         case LIST_GROUP_FAILED:
             return {
                 ...state,
                 error: action.payload.error,
             }
+            
+        case SET_LOCATION_SUCCESS:
+            return {
+                ...state,
+                location: action.payload.location,
+            }
         
-        case SET_GROUP_FAILED:
+        case SET_LOCATION_FAILED:
             return {
                 ...state,
                 error: action.payload.error,

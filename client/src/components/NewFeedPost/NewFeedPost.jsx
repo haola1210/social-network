@@ -42,10 +42,10 @@ function NewFeedPost({ post }) {
         socket.emit("client-react-post", { id: post._id, user: user._id, reaction})
     }
 
-    const toGroup = (_id, name) => {
+    // const toGroup = (_id, name) => {
         
-        dispatch({type: SET_GROUP, payload: { currentGroup: {_id, name} }})
-    }
+    //     dispatch({type: SET_GROUP, payload: { currentGroup: {_id, name} }})
+    // }
 /////////////////////////////////////////////////////////////// socket process here
     useEffect(() => {
         if (socket) {
@@ -167,8 +167,8 @@ function NewFeedPost({ post }) {
                                     <ArrowRightOutlined /> 
                                     <NavLink 
                                         style={{color: 'black'}}
-                                        onClick={() => toGroup(post.belongToGroup._id, post.belongToGroup.name)} 
-                                        to={`/groups/${post.belongToGroup._id}`}>{post.belongToGroup.name}</NavLink>
+                                        // onClick={() => toGroup(post.belongToGroup._id, post.belongToGroup.name)} 
+                                        to={`/group/${post.belongToGroup._id}`}>{post.belongToGroup.name}</NavLink>
                                 </span>
                             }
                         </b>
