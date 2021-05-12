@@ -9,13 +9,15 @@ import {
     FETCH_MORE_POST,
     FETCH_MORE_POST_START,
     FETCH_MORE_POST_FAILURE,
-    FETCH_MORE_POST_SUCCESS
+    FETCH_MORE_POST_SUCCESS,
+    FETCH_POST
 } from './redux/post/postActionType'
 
 import { PUSH_ERROR } from "./redux/error/errorActionType"
 import { PUSH_MESS } from "./redux/notification/notificationActionType"
 
 export const INIT_SOCKET = "INIT_SOCKET"
+export const TERMINATE_SOCKET = "TERMINATE_SOCKET"
 export const STORE_SOCKET = "STORE_SOCKET"
 export const REACT_COMMENT = "REACT_COMMENT"
 export const UPLOAD_IMAGE = "UPLOAD_IMAGE"
@@ -29,8 +31,6 @@ export const socketMiddleware = storeAPI => next => action => {
 
     if(action.type === INIT_SOCKET){
 
-        const idGroup = action.payload.group
-        console.log("client send idGroup", idGroup)
         const handshake = {
             auth : {
                 userId : user._id
@@ -40,12 +40,7 @@ export const socketMiddleware = storeAPI => next => action => {
 
         next({type: STORE_SOCKET, payload: { socket }})
 
-////////////////////////////////////////////////////////////////////// init post here
-        // dispatch fetch-post-start here
-        next({
-            type: FETCH_POST_START
-        })
-        socket.emit("client-init-post", { group: idGroup? { belongToGroup: idGroup } : {} })
+/////////////////////////////////////////////////////////////////////// handle init post here
         socket.on("server-init-post", response => {
             if(response.error){
                 // dispatch fetch post failure here
@@ -67,7 +62,7 @@ export const socketMiddleware = storeAPI => next => action => {
                 })
             }
         })
-
+////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////         handle new post from server
         socket.on("server-send-new-post", function(post) {
@@ -130,8 +125,8 @@ export const socketMiddleware = storeAPI => next => action => {
     } else if(action.type === FETCH_MORE_POST){
         console.log(posts)
         next({ type : FETCH_MORE_POST_START })
-
-        socket.emit("client-fetch-more-post", { skip : posts.skip })
+        console.log(action.payload.location)
+        socket.emit("client-fetch-more-post", { skip : posts.skip, location : action.payload.location })
 
     } else if(action.type === UPLOAD_IMAGE){
         const { user } = action.payload
@@ -140,6 +135,11 @@ export const socketMiddleware = storeAPI => next => action => {
 
         // socket.emit("client-fetch-more-post", { skip : posts.skip })
 
+    } else if(action.type === TERMINATE_SOCKET){
+        socket.disconnect()
+    } else if(action.type === FETCH_POST ){
+        next({ type : FETCH_POST_START })
+        socket.emit("client-init-post", { location : action.payload.location })
     }
     
     else return next(action)

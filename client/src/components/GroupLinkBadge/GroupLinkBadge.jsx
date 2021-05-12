@@ -22,7 +22,7 @@ function GroupLinkBadge(props) {
         // get routing here
         // ...
         dispatch({type: SET_GROUP, payload: { currentGroup: {_id, name} }})
-        history.push(`/groups/${props._id}`)
+        history.push(`/group/${props._id}`)
     };
 
     return (

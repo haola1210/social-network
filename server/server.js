@@ -84,7 +84,7 @@ io.on("connection", socket => {
 
     socket.on("client-init-post", data => {
         // console.log("group", data)
-        Post.find(data.group).sort({ "createdAt": -1 }).skip(0).limit(5)
+        Post.find(data.location).sort({ "createdAt": -1 }).skip(0).limit(5)
         .populate('owner')
         .populate('belongToGroup')
         .exec()
@@ -144,9 +144,9 @@ io.on("connection", socket => {
 
 
     /////////////////////////////////////// fetch more post
-    socket.on("client-fetch-more-post", async ({skip}) => {
+    socket.on("client-fetch-more-post", async ({skip, location}) => {
         try {
-            const posts = await Post.find({})
+            const posts = await Post.find(location)
             .sort({"createdAt" : -1})
             .skip(skip)
             .limit(5)
