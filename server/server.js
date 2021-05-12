@@ -83,7 +83,7 @@ io.on("connection", socket => {
         // .then(user => console.log(`update socketId ${user.socketId}`));
 
     socket.on("client-init-post", data => {
-        console.log("group", data)
+        // console.log("group", data)
         Post.find(data.location).sort({ "createdAt": -1 }).skip(0).limit(5)
         .populate('owner')
         .populate('belongToGroup')
@@ -354,16 +354,54 @@ const searchAll = async (socket, query) => {
 const searchPost = async (socket, query) => {
     console.log("use func search post ", query)
     
-    const postsResult = await Post.find({}).populate("owner").populate("belongToGroup")
-    // .skip().limit(10)
+    const searchOwner = await Post.aggregate([
+        { $lookup: {
+            "from": "users",
+            "localField": "owner",
+            "foreignField": "_id",
+            "as": "owner"
+        }}, {$unwind: '$owner'}, // unwind pair with lookup to convert the output into object instead of array, destruct
+        { $match: { "owner.name": { $regex: `.*${query}.*` , $options: 'i', } } },
+    ]).skip(0).limit(10)
+
+    const searchContent = await Post.find({
+        content: { $regex: `.*${query}.*`, $options: 'i', },
+    }).populate("owner").populate("belongToGroup").skip(0).limit(10)
+    
+    const postsResult =  [...searchOwner, ...searchContent, ]
     socket.emit("server-send-search-results", { posts : postsResult})
 
 }
+
 const searchGroup = async (socket, query) => {
     console.log("use func search group ", query)
+    const groups = (await Group.find({ 
+        name : { $regex: `.*${query}.*` , $options: 'i', 
+    }})).map(group => group._doc)
+    // const searchPostsBelongToGroup = Group
+
+    const groupsResult =  [...groups, ]
+    console.log("test", groups)
+
+    socket.emit("server-send-search-results", { groups : groupsResult})
+
 }
+
 const searchPeople = async (socket, query) => {
     console.log("use func search people ", query)
+    const people = (await User.find({ 
+        $or : [
+            { name : { $regex: `.*${query}.*` , $options: 'i', }},
+            { firstName : { $regex: `.*${query}.*` , $options: 'i', }},
+            { firstName : { $regex: `.*${query}.*` , $options: 'i', }},
+
+        ]
+    })).map(person => person._doc)
+    // const searchPostsBelongToGroup = Group
+    console.log("test", people)
+    const peopleResult =  [...people, ]
+    socket.emit("server-send-search-results", { people : peopleResult})
+
 }
 
 server.listen( port, () => {

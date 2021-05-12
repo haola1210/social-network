@@ -1,8 +1,9 @@
-import React, { useState, } from 'react';
+import React, { useState, useEffect, } from 'react';
 import { Input } from 'antd'
 import { 
     useHistory, 
     useRouteMatch, 
+    useParams,
 } from 'react-router-dom'
 
 function SearchComponent(props) {
@@ -10,6 +11,7 @@ function SearchComponent(props) {
     const [state, setState] = useState("")
     const history = useHistory()
     const { url } = useRouteMatch();
+    const { query, filter } = useParams()
 
     const onSearch = () => {
         if (state) {
@@ -17,6 +19,14 @@ function SearchComponent(props) {
             history.push(`/search/all/${search}`)
         }
     }
+
+    useEffect(() => {
+        if (filter && query) {
+            
+            const search = decodeURIComponent(query)
+            setState(search)
+        }
+    }, [ query ])
 
     return (
         <Search 

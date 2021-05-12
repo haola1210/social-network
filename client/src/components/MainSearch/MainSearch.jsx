@@ -36,9 +36,6 @@ function MainSearch( props ) {
         }
     }, [mess.content])
 
-    useEffect(() => {
-    }, [])
-
     return (
         <div className="main">
             {/* left nav link for desktop */}

@@ -38,7 +38,7 @@ export const searchReducer = (state = initialState, action) => {
                 fetchError : null,
                 results: {
                     ...state.results,
-                    groups: action.payload.groups,
+                    groups: [ ...action.payload.groups ],
                 }
             }
 
@@ -49,7 +49,7 @@ export const searchReducer = (state = initialState, action) => {
                 fetchError : null,
                 results: {
                     ...state.results,
-                    posts: action.payload.posts,
+                    posts: [ ...action.payload.posts ],
                 }
             }
 
@@ -60,7 +60,7 @@ export const searchReducer = (state = initialState, action) => {
                 fetchError : null,
                 results: {
                     ...state.results,
-                    people: action.payload.people,
+                    people: [ ...action.payload.people ],
                 }
             }
             
@@ -79,9 +79,9 @@ export const searchReducer = (state = initialState, action) => {
                 fetchError : null,
                 results: {
                     ...state,
-                    posts: action.payload.posts? action.payload.posts : state.results.posts,
-                    groups: action.payload.groups? action.payload.groups : state.results.groups,
-                    people: action.payload.people? action.payload.people : state.results.people,
+                    posts: action.payload.posts? [...action.payload.posts] : [...state.results.posts],
+                    groups: action.payload.groups? [...action.payload.groups] : [...state.results.groups],
+                    people: action.payload.people? [...action.payload.people] : [...state.results.people],
                 }
                 
             }

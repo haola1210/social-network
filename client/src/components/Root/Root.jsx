@@ -6,6 +6,7 @@ import {
     Switch
 } from "react-router-dom";
 import Profile from '../Profile/Profile';
+import Search from '../Search/Search';
 import Home from '../Home/Home';
 
 function Root(props) {
@@ -23,7 +24,9 @@ function Root(props) {
 
     return (
         <Switch>
+            <Route path="/profile" component={Profile} />
             <Route path="/me" component={Profile} />
+            <Route path="/search/:filter/:query" component={Search} />
             <Route path="/group/:idGroup" component={Home} />
             <Route path="/user/:idUser" component={Home} />
             <Route exact path="" component={Home} />

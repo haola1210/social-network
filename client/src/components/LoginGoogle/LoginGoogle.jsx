@@ -1,8 +1,8 @@
-import React, { useState, useEffect, } from 'react';
+import React, { useEffect, } from 'react';
 import { 
     GoogleLogin, 
 } from 'react-google-login';
-import { useSelector, useDispatch, } from "react-redux"
+import { useDispatch, } from "react-redux"
 
 import { SIGN_IN_GOOGLE } from "../../redux/signin/signinActionType"
 
