@@ -39,32 +39,84 @@ const WritePost = ( props ) => {
 		setVisible(true);
 	};
 
+	function openModal(message, type="success", secondToGo = 3) {
+        
+        let modal = null;
+		if (type === "success") {
+			modal = Modal.success({
+				title: "Thông báo",
+				content: message,
+			})
+		} else {
+			modal = Modal.info({
+				title: "Cảnh báo",
+				content: message,
+			})
+		}
+        
+        const timer = setInterval(() =>{
+            secondToGo -= 1;
+            // modal.update
+        }, 1000)
+
+        setTimeout(() =>{
+            clearInterval(timer);
+            modal.destroy();
+        }, secondToGo * 1000);
+    }
+
+	const offModal = () => {
+		setContent("")
+		setVisible(false);
+		// clear validate message
+		form.resetFields();
+		setConfirmLoading(false);
+	}
+
+	const writePost = (belongToGroup) => {
+		setTimeout(async () => {
+				
+			const listFiles = await Promise.all([...state.fileList.map(async file => 
+				await getBase64(file.originFileObj))])
+			const post = {
+				content,
+				fileList: listFiles,
+				belongToGroup,
+			}
+				
+			dispatch({ type: MAKING_POST, payload: post})
+			offModal()
+		}, 2000);
+	}
+
 	const handleOk = () => {
 		
 		// validation for non text in textArea
 		textAreaRefSubmit.current.click()
 		if (content !== "") {
-		// handleCancel();
-		// else {
+
 			setModalText("The modal will be closed after two seconds");
 			setConfirmLoading(true);
-			setTimeout(async () => {
+			const belongToGroup = idGroup !== "" && idGroup !== undefined ? idGroup : null
+			console.log("test belongToGroup", belongToGroup)
+			if (belongToGroup === null) {
+				writePost(belongToGroup)
+				openModal("Đăng bài lên tường thành công")
 				
-				const listFiles = await Promise.all([...state.fileList.map(async file => 
-					await getBase64(file.originFileObj))])
-				const post = {
-					content,
-					fileList: listFiles,
-					belongToGroup: idGroup !== "" && idGroup !== undefined ? idGroup : null,
-				}
+			} else {
+				if (user.role === "admin") {
+					writePost(belongToGroup)
+					openModal("Đăng thông báo thành công")
 					
-				dispatch({ type: MAKING_POST, payload: post})
-				setContent("")
-				setVisible(false);
-				// clear validate message
-				form.resetFields();
-				setConfirmLoading(false);
-			}, 2000);
+				} else if (user.role !== "admin" && user.manageGroup.includes(belongToGroup)) {
+					writePost(belongToGroup)
+					openModal("Đăng thông báo thành công")
+
+				} else {
+					offModal()
+					openModal("Bạn không có quyền đăng bài", "info")
+				}
+			}
 		}
 	};
 
