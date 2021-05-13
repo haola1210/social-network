@@ -22,7 +22,7 @@ export const groupReducer = (state = initialState, action) => {
         case LIST_GROUP_SUCCESS:
             return {
                 ...state,
-                listGroup: action.payload.listGroup
+                listGroup: [...action.payload.listGroup]
             }
         
         case LIST_GROUP_FAILED:

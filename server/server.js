@@ -381,6 +381,43 @@ io.on("connection", socket => {
         console.log("search people ", query)
         searchPeople(socket, query)
     })
+
+    socket.on("client-get-list-groups", async () => {
+        const listGroup = await Group.find({})
+        // const listGroup = groups.map( async ({_doc: group}) => {
+        //     const unreadPosts = await Post.find({ belongToGroup: group._id,})
+        //     return {
+        //         _id: group._id,
+        //         name: group.name,
+        //         count: unreadPosts.length,
+        //     }
+        // })
+        // console.log(listGroup)
+        if (listGroup.length > 0) {
+            socket.emit("server-send-list-groups", { listGroup })
+        }
+    })
+
+    socket.on("client-get-unread-posts", async ({ idGroup, idUser }) => {
+        const unreadPosts = await Post.find({ 
+            belongToGroup: idGroup, 
+            // read: {
+            // $or: [
+            //     { read: {$eq: []}}, 
+            //     // { read: {$elemMatch: {$ne: idUser}}}, 
+            //     // { read: {$all: [{$elemMatch: {$eq: idUser}}]}}, 
+            //     { read: {$nin : [idUser]}}, 
+            //     // { read: {$elemMatch: { $ne: idUser }}}, 
+            //     // { read: {$in: [{$elemMatch: {$ne: idUser}}] }}, 
+            // ],
+
+        // }
+            // read: { $elemMatch: { $ne: idUser }},
+        })
+        if (unreadPosts) {
+            socket.emit("server-send-unread-posts", { idGroup, count: unreadPosts})
+        }
+    })
 })
 
 const searchAll = async (socket, query) => {
@@ -389,6 +426,7 @@ const searchAll = async (socket, query) => {
     searchGroup(socket, query)
     searchPeople(socket, query)
 }
+
 const searchPost = async (socket, query) => {
     console.log("use func search post ", query)
     

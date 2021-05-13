@@ -40,7 +40,8 @@ const WritePost = ( props ) => {
 	};
 
 	const handleOk = () => {
-
+		
+		// validation for non text in textArea
 		textAreaRefSubmit.current.click()
 		if (content !== "") {
 		// handleCancel();
