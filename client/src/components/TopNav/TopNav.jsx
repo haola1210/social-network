@@ -141,6 +141,9 @@ function TopNav(props) {
                                                 :
                                                 null
                                         }
+                                        <Link to="/setting" style={{color: "black"}}>
+                                            Profile info
+                                        </Link>
                                         <div onClick={onLogout}>
                                             Logout here
                                         </div>

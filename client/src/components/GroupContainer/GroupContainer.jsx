@@ -3,6 +3,7 @@ import { List, Divider } from "antd"
 import { useSelector, useDispatch } from "react-redux"
 import {
     LIST_GROUP,
+    LIST_GROUP_SUCCESS,
 } from "../../redux/group/groupActionType"
 import {
     useParams,
@@ -12,16 +13,24 @@ import GroupLinkBadge from "../GroupLinkBadge/GroupLinkBadge"
 import "./GroupContainer.scss"
 function GroupContainer(props) {
 
+    const { socket, user, } = useSelector(state => state.session)
     const { listGroup } = useSelector(state => state.groups)
     const dispatch = useDispatch();
-    const { idGroup } = useParams()
-
 
     const title = props.title || false
 
     useEffect( () => {
-        dispatch({ type: LIST_GROUP })
-    }, [])
+        // dispatch({ type: LIST_GROUP })
+        if(socket) {
+            socket.emit("client-get-list-groups")
+            socket.once("server-send-list-groups", ({listGroup}) =>{
+                if (listGroup.length > 0) {
+                    dispatch({ type: LIST_GROUP_SUCCESS , payload: { listGroup }})
+
+                }
+            })
+        }
+    }, [socket])
 
     return (
         <div style={ title ? { 

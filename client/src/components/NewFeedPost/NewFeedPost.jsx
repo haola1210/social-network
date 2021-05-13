@@ -159,9 +159,9 @@ function NewFeedPost({ post }) {
                             } */}
                             
                             <NavLink 
-                                        style={{color: 'black'}}
-                                        // onClick={() => toGroup(post.belongToGroup._id, post.belongToGroup.name)} 
-                                        to={`/users/${post.owner._id}`}>{post.owner.name}</NavLink>
+                                style={{color: 'black'}}
+                                // onClick={() => toGroup(post.belongToGroup._id, post.belongToGroup.name)} 
+                                to={`/user/${post.owner._id}`}>{post.owner.name}</NavLink>
                             {post.belongToGroup && 
                                 <span>
                                     <ArrowRightOutlined /> 
