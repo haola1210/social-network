@@ -65,7 +65,7 @@ module.exports.register = (req, res) => {
         if (user.length > 0) {
             throw new Error("There is already a user")
         }
-        return User.create({ name, username, password, manageGroup })
+        return User.create({ name, username, password, manageGroup, role: "faculty-room" })
     }).then(newUser => {
         if (newUser) {
             return res.json({

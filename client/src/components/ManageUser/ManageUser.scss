@@ -1,0 +1,44 @@
+.main-admin{
+    width: 100%;
+    height: calc(100vh - 118px);
+    display: flex;
+    
+
+    &__left {
+        height: 100%;
+        padding: 1em;
+        flex-grow: 1;
+    }
+
+    &__right{
+        flex-grow: 2;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        &__list{
+
+            flex-grow: 1;
+            overflow-y: scroll;
+            &__item{
+                padding: 0.5em 0;
+            }
+        }
+
+    }
+
+    .main-admin__title{
+        width: 100%;
+        position: sticky;
+        top: 0;
+        background-color: white !important;
+        padding: 1em;
+    }
+}
+
+@media screen and (min-width: 576px) {
+    .main-admin{
+        height: calc(100vh - 72px);
+    }
+    
+    
+}

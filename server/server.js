@@ -418,6 +418,22 @@ io.on("connection", socket => {
             socket.emit("server-send-unread-posts", { idGroup, count: unreadPosts})
         }
     })
+
+    socket.on("client-get-list-users", async () => {
+        const list = await User.find({ role: "faculty-room"})
+        if (list.length > 0) {socket.emit("server-send-list-users", { list })}
+    })
+
+    socket.on("client-request-admin-delete-user", async ({ _id }) => {
+        console.log("admin req del user", _id)
+        if (_id) {
+            const message = await User.findByIdAndDelete(_id) 
+            if (message) {
+                console.log(message)
+                socket.emit("server-send-admin-delete-user", { message, })
+            }
+        }
+    })
 })
 
 const searchAll = async (socket, query) => {
