@@ -3,7 +3,8 @@ import React, { useEffect } from 'react';
 import { useDispatch } from "react-redux"
 
 import TopNav from "../TopNav/TopNav"
-import CreateUser from "../CreateUser/CreateUser"
+import AdminContainer from "../AdminContainer/AdminContainer"
+// import CreateUser from "../CreateUser/CreateUser"
 
 import { INIT_SOCKET } from "../../socketClient"
 
@@ -17,7 +18,8 @@ export default function Admin() {
     return (
         <div>
             <TopNav />
-            <CreateUser />
+            <AdminContainer />
+            {/* <CreateUser /> */}
         </div>
     )
 }
