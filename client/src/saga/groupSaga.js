@@ -1,5 +1,5 @@
 import { call, put, takeEvery, select, takeLatest } from 'redux-saga/effects'
-import axios from 'axios'
+import axios from '../utils/axios.manual'
 
 import {  
     LIST_GROUP,
@@ -15,7 +15,7 @@ import {
 function* workerListGroup(action){
     try {
         
-        const response = yield axios.get("http://localhost:4000/groups/")
+        const response = yield axios.get("/groups/")
         if (response.data.code === 200) {
             
             const groups = response.data.data.map(group => {

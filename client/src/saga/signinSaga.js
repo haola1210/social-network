@@ -1,5 +1,5 @@
 import { call, put, takeEvery, select, takeLatest } from 'redux-saga/effects'
-import axios from 'axios'
+import axios from '../utils/axios.manual'
 
 import {  
     SIGN_IN,
@@ -19,7 +19,7 @@ function* workerSigninLocal(action){
         const { username, password } = action.payload
         if(!username && !password) throw new Error("Fields are lack!")
         
-        const response = yield axios.post("http://localhost:4000/auths/login", {
+        const response = yield axios.post("/auths/login", {
             username, 
             password
         })
@@ -63,7 +63,7 @@ function* workerSigninGoogle(action){
         if(!action.payload.user) throw new Error("Login with Google failed")
 
         const { name, email, imageUrl } = action.payload.user
-        const response = yield axios.post("http://localhost:4000/auths/login",{
+        const response = yield axios.post("/auths/login",{
             name,
             email,
             imageUrl
