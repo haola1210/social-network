@@ -1,5 +1,5 @@
 import { call, put, takeEvery, select, takeLatest } from 'redux-saga/effects'
-import axios from 'axios'
+import axios from '../utils/axios.manual'
 
 import {
     SET_SESSION,
@@ -38,7 +38,7 @@ function* workerFetchSession(action){
 
         if(!jwt) throw new Error("No jwt for your old session")
 
-        const response  = yield axios.post("http://localhost:4000/auths/keep-session", { jwt })
+        const response  = yield axios.post("/auths/keep-session", { jwt })
         if(response.data.error) throw response.data.error
 
         yield put({
