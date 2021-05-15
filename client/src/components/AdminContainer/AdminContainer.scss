@@ -1,0 +1,9 @@
+.admin-container{
+    height: calc(100vh - 118px);
+
+    @media screen and (min-width: 576px) {
+        .admin-container{
+            height: calc(100vh - 72px);
+        }
+    }
+}

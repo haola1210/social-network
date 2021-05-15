@@ -6,6 +6,7 @@ import { PageHeader, Button, Descriptions } from 'antd';
 import CreateUser from "../CreateUser/CreateUser"
 import ManageUser from "../ManageUser/ManageUser"
 
+import "./AdminContainer.scss"
 export default function AdminContainer () {
 
     const [state, setState] = useState(false);
@@ -15,7 +16,7 @@ export default function AdminContainer () {
     }, [])
 
     return(
-        <div>
+        <div className="admin-container">
             <PageHeader
                 ghost={false}
                 onBack={() => window.history.back()}

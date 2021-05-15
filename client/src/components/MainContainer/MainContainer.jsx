@@ -16,6 +16,7 @@ import { CLEAR_ERROR } from "../../redux/error/errorActionType"
 import { FETCH_MORE_POST } from '../../redux/post/postActionType';
 
 import "./MainContainer.scss"
+import { CLEAR_MESS } from '../../redux/notification/notificationActionType';
 
 function MainContainer( props ) {
 
@@ -49,6 +50,7 @@ function MainContainer( props ) {
     useEffect(() => {
         if(mess.content){
             message.success(mess.content)
+            dispatch({ type : CLEAR_MESS })
         }
     }, [mess.content])
 
